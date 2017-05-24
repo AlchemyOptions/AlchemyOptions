@@ -40,9 +40,25 @@ if ( ! function_exists( 'alch_concat_select_options' ) ) {
     function alch_concat_select_options( $options ) {
         $optionsHTML = "";
 
-        if( is_array( $options ) && count( $options ) > 0 ) {
-            foreach ( $options[ 'options' ] as $choice ) {
-                $optionsHTML .= '<option value="' . $choice[ 'value' ] . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . '>' . $choice[ 'value' ] . '</option>';
+        if( is_array( $options[ 'optgroups' ] ) && count( $options[ 'optgroups' ] ) > 0 ) {
+            foreach ( $options[ 'optgroups' ] as $group ) {
+                $optionsHTML .= '<optgroup label="' . $group[ 'label' ] . '" ' . ( isset( $group[ 'disabled' ] ) ? disabled( $group[ 'disabled' ], true, false ) : "" ) . '>';
+
+                foreach ( $group[ 'options' ] as $choice ) {
+                    $optionsHTML .= '<option value="' . $choice[ 'value' ] . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'text' ] . '</option>';
+                }
+
+                $optionsHTML .= '</optgroup>';
+            }
+        } else if( is_array( $options[ 'options' ] ) && count( $options[ 'options' ] ) > 0 ) {
+            if( ! alch_array_has_string_keys( $options[ 'options' ] ) && 'array' !== gettype( $options[ 'options' ][0] ) ) {
+                foreach ( $options[ 'options' ] as $choice ) {
+                    $optionsHTML .= '<option value="' . $choice . '" ' . selected( $options[ 'selected' ], $choice, false ) . '>' . $choice . '</option>';
+                }
+            } else {
+                foreach ( $options[ 'options' ] as $choice ) {
+                    $optionsHTML .= '<option value="' . $choice[ 'value' ] . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'text' ] . '</option>';
+                }
             }
         }
 
@@ -78,6 +94,15 @@ if ( ! function_exists( 'alch_populate_field_template' ) ) {
 
         return $fileTemplate;
     }
+}
+
+if ( ! function_exists( 'alch_array_has_string_keys' ) ) {
+    function alch_array_has_string_keys( $array ) {
+        return count( array_filter( array_keys( $array ), 'is_string' ) ) > 0;
+    }
+}
+function alch_array_has_string_keys( $array ) {
+    return count( array_filter( array_keys( $array ), 'is_string' ) ) > 0;
 }
 
 if ( ! function_exists( 'alch_get_option' ) ) {
