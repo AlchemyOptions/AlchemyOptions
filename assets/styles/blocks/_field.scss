@@ -1,0 +1,20 @@
+.field {
+    &__label {
+        display: block;
+        margin-bottom: .8em;
+
+        font-size: 16px;
+    }
+
+    &__description {
+        padding-top: .5em;
+
+        font-style: italic;
+        font-size: 14px;
+
+        p {
+            padding-top: 0;
+            margin-top:0;
+        }
+    }
+}

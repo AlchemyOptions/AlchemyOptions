@@ -1,0 +1,22 @@
+.alchemy {
+    &__options {
+        padding: 3em 0;
+    }
+
+    &__fields {
+        margin: 2em 0;
+        border: 1px dashed transparent;
+        border-top-color: #ccc;
+        border-bottom-color: #ccc;
+    }
+
+    &__field {
+        & + & {
+            margin-top: 2em;
+        }
+    }
+
+    .dashicons, .dashicons-before:before {
+        vertical-align: text-top;
+    }
+}
