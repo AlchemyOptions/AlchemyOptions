@@ -19,7 +19,7 @@ if ( ! function_exists( 'alch_text_field' ) ) {
                 'class' => 'alchemy__input',
                 'value' => $value
             ) ),
-            'description' => $data[ 'desc' ]
+            'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : null,
         ) );
     }
 }

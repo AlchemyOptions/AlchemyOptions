@@ -18,11 +18,12 @@ class Alchemy_Option_Fields {
         include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/password.php" );
         include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/email.php" );
         include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/textarea.php" );
+        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/select.php" );
         include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/repeater.php" ); //should always be the last include since it can render all of the types
 
         $this->passed_opts = $options;
         $this->valid_field_types = array(
-            'text', 'url', 'email', 'password', 'textarea', 'repeater'
+            'text', 'url', 'email', 'password', 'textarea', 'select', 'repeater'
         );
     }
 

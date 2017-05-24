@@ -18,7 +18,7 @@ if ( ! function_exists( 'alch_textarea_field' ) ) {
                 'class' => 'alchemy__input alchemy__input--textarea'
             ) ),
             'value' => esc_textarea( $value ),
-            'description' => $data[ 'desc' ]
+            'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : null,
         ) );
     }
 }

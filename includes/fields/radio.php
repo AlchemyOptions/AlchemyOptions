@@ -9,13 +9,13 @@ if ( ! function_exists( 'alch_radio_field' ) ) {
         $value = '' !== $value ? $value : get_option( $data[ 'name' ], '' );
 
         return alch_populate_field_template( 'radio', array(
-            'name' => $data[ 'name' ],
-            'title' => $data[ 'title' ],
+            'name' => isset( $data[ 'name' ] ) ? $data[ 'name' ] : '',
+            'title' => isset( $data[ 'title' ] ) ? $data[ 'title' ] : '',
             'choices' => alch_get_radios_html( array(
                 'checked' => $value,
-                'radios' => $data[ 'choices' ]
+                'radios' => isset( $data[ 'choices' ] ) ? $data[ 'choices' ] : array()
             ) ),
-            'description' => $data[ 'desc' ]
+            'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : '',
         ) );
     }
 }
