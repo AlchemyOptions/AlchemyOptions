@@ -101,9 +101,6 @@ if ( ! function_exists( 'alch_array_has_string_keys' ) ) {
         return count( array_filter( array_keys( $array ), 'is_string' ) ) > 0;
     }
 }
-function alch_array_has_string_keys( $array ) {
-    return count( array_filter( array_keys( $array ), 'is_string' ) ) > 0;
-}
 
 if ( ! function_exists( 'alch_get_option' ) ) {
     function alch_get_option( $optionID, $default = "" ) {
