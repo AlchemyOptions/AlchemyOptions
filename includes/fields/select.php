@@ -9,7 +9,7 @@ if ( ! function_exists( 'alch_select_field' ) ) {
         $storedVal = get_option( $data[ 'id' ], '' );
         $valToHave = '' !== $value
             ? $value
-            : $storedVal;
+            : $storedVal[ 'value' ];
 
         $valToHave = ( '' == $valToHave && isset( $data[ 'selected' ] ) ) ? $data[ 'selected' ] : $valToHave;
 

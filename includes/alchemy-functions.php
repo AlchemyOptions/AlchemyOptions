@@ -22,30 +22,64 @@ if ( ! function_exists( 'alch_max_repeater_nesting_level' ) ) {
     }
 }
 
-if ( ! function_exists( 'alch_get_radios_html' ) ) {
-    function alch_get_radios_html( $choices ) {
-        $radiosHTML = "";
+if ( ! function_exists( 'alch_get_checkboxes_html' ) ) {
+    function alch_get_checkboxes_html( $data ) {
+        $checksHTML = "";
 
-        if( is_array( $choices ) && count( $choices ) > 0 ) {
-            foreach ( $choices[ 'radios' ] as $choice ) {
-                $radiosHTML .= '<label for="' . esc_attr( $choice[ 'id' ] ) . '"><input type="radio" name="' . esc_attr( $choice[ 'name' ] ) . '" id="' . esc_attr( $choice[ 'id' ] ) . '" ' . checked( $choices[ 'checked' ], $choice[ 'value' ], false ) . '></label>';
+        if( is_array( $data[ 'choices' ] ) && count( $data[ 'choices' ] ) > 0 ) {
+            foreach ( $data[ 'choices' ] as $choice ) {
+                $id = esc_attr( $data[ 'id' ] . '_' . alch_make_label( $choice[ 'value' ] ) );
+
+                $checksHTML .= sprintf (
+                    '<label%1$s><input%2$s data-value=\'' . esc_attr( $choice[ 'value' ] ) . '\' ' . alch_disabled( $choice[ 'disabled' ] ) . ' ' . alch_checked( $choice[ 'checked' ] ) . '/> ' . $choice[ 'label' ] . '</label><br>',
+                    alch_concat_attributes( array( 'for' => $id ) ),
+                    alch_concat_attributes( array( 'id' => $id, 'name' => $id, 'type' => 'checkbox' ) )
+                );
             }
         }
 
-        return $radiosHTML;
+        return $checksHTML;
+    }
+}
+
+if ( ! function_exists( 'alch_get_radios_html' ) ) {
+    function alch_get_radios_html( $data ) {
+        $checksHTML = "";
+
+        if( is_array( $data[ 'choices' ] ) && count( $data[ 'choices' ] ) > 0 ) {
+            foreach ( $data[ 'choices' ] as $choice ) {
+                $id = esc_attr( $data[ 'id' ] . '_' . alch_make_label( $choice[ 'value' ] ) );
+
+                $checksHTML .= sprintf (
+                    '<label%1$s><input%2$s data-value=\'' . esc_attr( $choice[ 'value' ] ) . '\' ' . alch_disabled( $choice[ 'disabled' ] ) . ' ' . alch_checked( $choice[ 'checked' ] ) . '/> ' . $choice[ 'label' ] . '</label><br>',
+                    alch_concat_attributes( array( 'for' => $id ) ),
+                    alch_concat_attributes( array( 'id' => $id, 'name' => $data[ 'id' ], 'type' => 'radio' ) )
+                );
+            }
+        }
+
+        return $checksHTML;
     }
 }
 
 if ( ! function_exists( 'alch_concat_select_options' ) ) {
     function alch_concat_select_options( $options ) {
+        //todo: refactor HTML formation
+
         $optionsHTML = "";
 
         if( is_array( $options[ 'optgroups' ] ) && count( $options[ 'optgroups' ] ) > 0 ) {
             foreach ( $options[ 'optgroups' ] as $group ) {
                 $optionsHTML .= '<optgroup label="' . $group[ 'label' ] . '" ' . ( isset( $group[ 'disabled' ] ) ? disabled( $group[ 'disabled' ], true, false ) : "" ) . '>';
 
-                foreach ( $group[ 'options' ] as $choice ) {
-                    $optionsHTML .= '<option value="' . $choice[ 'value' ] . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'text' ] . '</option>';
+                if( ! alch_array_has_string_keys( $group[ 'options' ] ) && 'array' !== gettype( $group[ 'options' ][0] ) ) {
+                    foreach ( $group[ 'options' ] as $choice ) {
+                        $optionsHTML .= '<option value="' . $choice . '" ' . selected( $options[ 'selected' ], $choice, false ) . '>' . $choice . '</option>';
+                    }
+                } else {
+                    foreach ( $group[ 'options' ] as $choice ) {
+                        $optionsHTML .= '<option value="' . $choice[ 'value' ] . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'text' ] . '</option>';
+                    }
                 }
 
                 $optionsHTML .= '</optgroup>';
@@ -102,8 +136,40 @@ if ( ! function_exists( 'alch_array_has_string_keys' ) ) {
     }
 }
 
+if ( ! function_exists( 'alch_disabled' ) ) {
+    function alch_disabled( $value ) {
+        return disabled( $value, true, false );
+    }
+}
+
+if ( ! function_exists( 'alch_selected' ) ) {
+    function alch_selected( $value ) {
+        return selected( $value, true, false );
+    }
+}
+
+if ( ! function_exists( 'alch_checked' ) ) {
+    function alch_checked( $value ) {
+        return checked( $value, true, false );
+    }
+}
+
+if ( ! function_exists( 'alch_make_label' ) ) {
+    function alch_make_label( $text ) {
+        return strtolower( str_replace( " ", "_", trim( $text ) ) );
+    }
+}
+
 if ( ! function_exists( 'alch_get_option' ) ) {
     function alch_get_option( $optionID, $default = "" ) {
         //todo: use get_option() but filter hidden values
+
+        /*
+         * e.g. alch_get_option( 'second-checkbox-option' ) returns
+         *
+         * array(
+         *      'one value', 'two value'
+         * );
+         * */
     }
 }
