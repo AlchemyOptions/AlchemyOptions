@@ -6,21 +6,27 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 
 if ( ! function_exists( 'alch_url_field' ) ) {
     function alch_url_field( $data, $value = '' ) {
-        $value = '' !== $value ? $value : get_option( $data[ 'id' ], '' );
+        $id = isset( $data[ 'id' ] ) ? esc_attr( $data[ 'id' ] ) : '';
+
+        if( ! $id ) {
+            return "";
+        }
+
+        $value = '' !== $value ? $value : get_option( $id, '' );
 
         return alch_populate_field_template( 'text', array(
             'type' => 'url',
-            'id' => esc_attr( $data[ 'id' ] ),
-            'title' => $data[ 'title' ],
+            'id' => $id,
+            'title' => isset( $data[ 'title' ] ) ? $data[ 'title' ] : '',
             'attributes' => alch_concat_attributes( array(
                 'placeholder' => 'http://',
                 'type' => 'url',
-                'id' => $data[ 'id' ],
-                'name' => $data[ 'id' ],
+                'id' => $id,
+                'name' => $id,
                 'class' => 'alchemy__input',
-                'value' => $value
+                'value' => $value[ 'value' ]
             ) ),
-            'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : null,
+            'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : '',
         ) );
     }
 }
