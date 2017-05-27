@@ -4,8 +4,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'alch_radio_field' ) ) {
-    function alch_radio_field( $data, $value = '' ) {
+if ( ! function_exists( 'alch_checkbox_field' ) ) {
+    function alch_checkbox_field( $data, $value = '' ) {
         $id = isset( $data[ 'id' ] ) ? esc_attr( $data[ 'id' ] ) : '';
 
         if( ! $id ) {
@@ -33,10 +33,10 @@ if ( ! function_exists( 'alch_radio_field' ) ) {
             }
         }
 
-        return alch_populate_field_template( 'radio', array(
+        return alch_populate_field_template( 'checkbox', array(
             'name' => $id,
             'title' => isset( $data[ 'title' ] ) ? $data[ 'title' ] : '',
-            'choices' => alch_get_radios_html( array(
+            'choices' => alch_get_checkboxes_html( array(
                 'id' => $id,
                 'choices' => $choices
             ) ),

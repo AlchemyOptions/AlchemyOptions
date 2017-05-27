@@ -1,4 +1,4 @@
-<div class="alchemy__field field field--radio" id="field--{{NAME}}" data-alchemy='{"id":"{{NAME}}","type":"radio"}'>
+<div class="alchemy__field field field--checkbox" id="field--{{NAME}}" data-alchemy='{"id":"{{NAME}}","type":"checkbox"}'>
     <fieldset>
         <legend class="field__label">{{TITLE}}</legend>
         {{CHOICES}}
