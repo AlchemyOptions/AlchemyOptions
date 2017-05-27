@@ -2,10 +2,40 @@ export default function() {
     const $form = $("#jsAlchemyForm");
 
     if( $form[0] ) {
+        const formData = {};
+        const $formFields = $form.find( '.field' );
+
+        $formFields.each((i, field) => {
+            const data = $(field).data('alchemy');
+
+            formData[data.id] = {
+                type: data.type
+            };
+        });
 
         $form.on('submit', e => {
-            console.log($form);
-            console.log($form.serializeArray());
+            $.each(formData, (name, fieldObj) => {
+                switch (fieldObj.type) {
+                    case 'text' :
+                    case 'url' :
+                    case 'password' :
+                    case 'email' :
+                    case 'select' :
+                    case 'textarea' :
+                        formData[name]['value'] = $(`#${name}`).val();
+                    break;
+                    case 'checkbox':
+                    case 'radio':
+                        formData[name]['value'] = [];
+
+                        $(`#field--${name}`).find(':checked').each((i, el) => {
+                            formData[name]['value'].push($(el).data('value'));
+                        });
+                    default : break;
+                }
+            });
+
+            console.log(formData);
 
             e.preventDefault();
 
@@ -15,7 +45,7 @@ export default function() {
                 'data': {
                     'action': 'alchemy_save_options',
                     'nonce': alchemyData.nonce,
-                    'fields': $form.serializeArray() //todo: find inputs and construct the fields data by hand, sending fieldsType, Name, Value
+                    'fields': formData
                 },
                 'success': data => {
                     console.log('success', data);
