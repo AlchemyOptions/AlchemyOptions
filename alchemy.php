@@ -24,5 +24,4 @@ function alch_run_plugin() {
     $alch_options->activate();
 }
 
-add_action( 'after_setup_theme', 'alch_run_plugin', 1 );
-
+add_action( 'plugins_loaded', 'alch_run_plugin' );
