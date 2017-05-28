@@ -68,30 +68,30 @@ if ( ! function_exists( 'alch_concat_select_options' ) ) {
 
         $optionsHTML = "";
 
-        if( is_array( $options[ 'optgroups' ] ) && count( $options[ 'optgroups' ] ) > 0 ) {
+        if( isset( $options[ 'optgroups' ] ) && is_array( $options[ 'optgroups' ] ) && count( $options[ 'optgroups' ] ) > 0 ) {
             foreach ( $options[ 'optgroups' ] as $group ) {
-                $optionsHTML .= '<optgroup label="' . $group[ 'label' ] . '" ' . ( isset( $group[ 'disabled' ] ) ? disabled( $group[ 'disabled' ], true, false ) : "" ) . '>';
+                $optionsHTML .= '<optgroup label="' . esc_attr( $group[ 'label' ] ) . '" ' . ( isset( $group[ 'disabled' ] ) ? disabled( $group[ 'disabled' ], true, false ) : "" ) . '>';
 
-                if( ! alch_array_has_string_keys( $group[ 'options' ] ) && 'array' !== gettype( $group[ 'options' ][0] ) ) {
-                    foreach ( $group[ 'options' ] as $choice ) {
-                        $optionsHTML .= '<option value="' . $choice . '" ' . selected( $options[ 'selected' ], $choice, false ) . '>' . $choice . '</option>';
+                if( ! alch_array_has_string_keys( $group[ 'choices' ] ) && 'array' !== gettype( $group[ 'choices' ][0] ) ) {
+                    foreach ( $group[ 'choices' ] as $choice ) {
+                        $optionsHTML .= '<option value="' . esc_attr( $choice ) . '" ' . selected( $options[ 'selected' ], $choice, false ) . '>' . $choice . '</option>';
                     }
                 } else {
-                    foreach ( $group[ 'options' ] as $choice ) {
-                        $optionsHTML .= '<option value="' . $choice[ 'value' ] . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'text' ] . '</option>';
+                    foreach ( $group[ 'choices' ] as $choice ) {
+                        $optionsHTML .= '<option value="' . esc_attr( $choice[ 'value' ] ) . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'label' ] . '</option>';
                     }
                 }
 
                 $optionsHTML .= '</optgroup>';
             }
-        } else if( is_array( $options[ 'options' ] ) && count( $options[ 'options' ] ) > 0 ) {
-            if( ! alch_array_has_string_keys( $options[ 'options' ] ) && 'array' !== gettype( $options[ 'options' ][0] ) ) {
-                foreach ( $options[ 'options' ] as $choice ) {
-                    $optionsHTML .= '<option value="' . $choice . '" ' . selected( $options[ 'selected' ], $choice, false ) . '>' . $choice . '</option>';
+        } else if( is_array( $options[ 'choices' ] ) && count( $options[ 'choices' ] ) > 0 ) {
+            if( ! alch_array_has_string_keys( $options[ 'choices' ] ) && 'array' !== gettype( $options[ 'choices' ][0] ) ) {
+                foreach ( $options[ 'choices' ] as $choice ) {
+                    $optionsHTML .= '<option value="' . esc_attr( $choice ) . '" ' . selected( $options[ 'selected' ], $choice, false ) . '>' . $choice . '</option>';
                 }
             } else {
-                foreach ( $options[ 'options' ] as $choice ) {
-                    $optionsHTML .= '<option value="' . $choice[ 'value' ] . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'text' ] . '</option>';
+                foreach ( $options[ 'choices' ] as $choice ) {
+                    $optionsHTML .= '<option value="' . esc_attr( $choice[ 'value' ] ) . '" ' . selected( $options[ 'selected' ], $choice[ 'value' ], false ) . ( isset( $choice[ 'disabled' ] ) ? disabled( $choice[ 'disabled' ], true, false ) : "" ) . '>' . $choice[ 'label' ] . '</option>';
                 }
             }
         }

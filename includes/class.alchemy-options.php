@@ -24,7 +24,11 @@ class Alchemy_Options {
     }
 
     public function enqueue_assets() {
-        wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', array( 'jquery', 'jquery-ui-sortable', 'editor' ), '0.0.1', true );
+        wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', array(
+            'jquery',
+            'jquery-ui-sortable',
+            'jquery-ui-autocomplete'
+        ), '0.0.1', true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
             'adminURL' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'alchemy_ajax_nonce' )
@@ -47,8 +51,21 @@ class Alchemy_Options {
         add_action( 'admin_menu', array( $this, 'create_options_submenu_page' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
         add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_ajax_request' ) );
+        add_action( 'wp_ajax_alchemy_datalist_search', array( $this, 'handle_datalist_search' ) );
 
         //todo: add plugin_text_domain()
+    }
+
+    public function handle_datalist_search() {
+        if ( ! isset( $_GET[ 'nonce' ] ) || ! is_array( $_GET[ 'nonce' ] ) || ! wp_verify_nonce( $_GET[ 'nonce' ][ 'value' ], $_GET[ 'nonce' ][ 'id' ] ) ) {
+            die();
+        }
+
+        $fields = $_GET[ 'search-string' ];
+
+        if( ! $fields ) {
+            return;
+        }
     }
 
     public function handle_ajax_request() {
@@ -63,16 +80,20 @@ class Alchemy_Options {
         }
 
         if( count( $fields ) > 0 ) {
-            foreach ( $fields as $fieldData ) {
+            foreach ( $fields as $id => $payload ) {
                 //todo: sanitize values based on type - https://developer.wordpress.org/plugins/security/securing-input/
-                update_option( $fieldData[ 'name' ], $fieldData[ 'value' ] );
+
+                update_option( $id, array(
+                    'type' => $payload[ 'type' ],
+                    'value' => $payload[ 'value' ],
+                ) );
             }
         }
     }
 
     public function create_network_options_page() {
         add_submenu_page(
-            'plugins.php',
+            'themes.php',
             __( 'Alchemy Multisite Options', 'alchemy-options' ),
             __( 'Alchemy Multisite Options', 'alchemy-options' ),
             'manage_options',
@@ -83,7 +104,7 @@ class Alchemy_Options {
 
     public function create_options_submenu_page() {
         add_submenu_page(
-            'plugins.php',
+            'themes.php',
             __( 'Alchemy Options', 'alchemy-options' ),
             __( 'Alchemy Options', 'alchemy-options' ),
             'manage_options',
@@ -170,14 +191,14 @@ class Alchemy_Options {
         //todo: various checks when tab info is missing or tab is not supplied
         $optionFields = new Alchemy_Option_Fields( $filteredOptions );
 
-        $optionsHTML .= '<form action="#" id="jsAlchemyForm">';
-        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button>';
+        $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm">';
+        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';
 
         $optionsHTML .= '<div class="alchemy__fields">';
         $optionsHTML .= $optionFields->get_fields_html();
         $optionsHTML .= '</div>';
 
-        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button>';
+        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';
         $optionsHTML .= '</form>';
 
         return $optionsHTML;

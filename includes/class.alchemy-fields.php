@@ -13,18 +13,19 @@ class Alchemy_Option_Fields {
     private $valid_field_types;
 
     public function __construct( $options ) {
-        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/text.php" );
-        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/url.php" );
-        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/password.php" );
-        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/email.php" );
-        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/textarea.php" );
-        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/select.php" );
-        include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/repeater.php" ); //should always be the last include since it can render all of the types
-
         $this->passed_opts = $options;
+
+        //repeater should always be the last one since it can render all of the types
         $this->valid_field_types = array(
-            'text', 'url', 'email', 'password', 'textarea', 'select', 'repeater'
+            'text', 'url', 'email',
+            'password', 'textarea', 'select',
+            'checkbox', 'radio', 'datalist',
+            'repeater'
         );
+
+        foreach( $this->valid_field_types as $type ) {
+            include_once ( ALCHEMY_OPTIONS_PLUGIN_DIR . "includes/fields/" . $type . ".php" );
+        }
     }
 
     public function get_fields_html() {

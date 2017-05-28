@@ -14,6 +14,8 @@ export default function() {
         });
 
         $form.on('submit', e => {
+            e.preventDefault();
+
             $.each(formData, (name, fieldObj) => {
                 switch (fieldObj.type) {
                     case 'text' :
@@ -31,13 +33,25 @@ export default function() {
                         $(`#field--${name}`).find(':checked').each((i, el) => {
                             formData[name]['value'].push($(el).data('value'));
                         });
+                    break;
+                    case 'datalist' :
+                        const $activeEl = $(`#field--${name}`).find(':selected, :checked');
+
+                        if( $activeEl[0] ) {
+                            if( 'INPUT' === $activeEl.get(0).nodeName ) {
+                                formData[name]['value'] = $activeEl.data('value');
+                            } else if( 'OPTION' === $activeEl.get(0).nodeName ) {
+                                formData[name]['value'] = $activeEl.val();
+                            }
+                        } else {
+                            formData[name]['value'] = $(`#field--${name}`).find('input').val();
+                        }
+                    break;
                     default : break;
                 }
             });
 
             console.log(formData);
-
-            e.preventDefault();
 
             $.ajax({
                 'type': 'post',

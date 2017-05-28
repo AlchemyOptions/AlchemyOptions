@@ -7,9 +7,12 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if ( ! function_exists( 'alch_select_field' ) ) {
     function alch_select_field( $data, $value = '' ) {
         $storedVal = get_option( $data[ 'id' ], '' );
+
         $valToHave = '' !== $value
             ? $value
-            : $storedVal[ 'value' ];
+            : '' !== $storedVal
+                ? $storedVal[ 'value' ]
+                : '';
 
         $valToHave = ( '' == $valToHave && isset( $data[ 'selected' ] ) ) ? $data[ 'selected' ] : $valToHave;
 
@@ -25,7 +28,7 @@ if ( ! function_exists( 'alch_select_field' ) ) {
             ) ),
             'options' => alch_concat_select_options( array(
                 'selected' => $valToHave,
-                'options' => isset( $data[ 'options' ] ) ? $data[ 'options' ] : array(),
+                'choices' => isset( $data[ 'choices' ] ) ? $data[ 'choices' ] : array(),
                 'optgroups' => isset( $data[ 'optgroups' ] ) ? $data[ 'optgroups' ] : array(),
             ) ),
             'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : '',
