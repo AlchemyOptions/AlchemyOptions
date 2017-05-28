@@ -136,6 +136,37 @@ if ( ! function_exists( 'alch_array_has_string_keys' ) ) {
     }
 }
 
+if ( ! function_exists( 'alch_get_repeater_fields' ) ) {
+    function alch_get_repeater_fields( $id, $repeateeID, $index = 0, $value = '' ) {
+        $optionFields = new Alchemy_Option_Fields();
+
+        $savedOptions = get_option( alch_options_id(), array() );
+        $neededRepeater = array_filter( $savedOptions[ 'options' ], function( $option ) use( $id ) {
+            return $option[ 'id' ] === $id;
+        } )[0];
+
+        if( ! $neededRepeater ) {
+            return '';
+        }
+
+        $repeateesHTML ="";
+        $repeatees = array_filter( $neededRepeater[ 'repeatees' ], function( $repeatee ) use( $repeateeID ) {
+            return $repeatee[ 'repeatee_id' ] === $repeateeID;
+        } );
+
+        foreach( $repeatees[0][ 'fields' ] as $i => $field ) {
+            $repeatees[0][ 'fields' ][ $i ][ 'id' ] = sprintf( '%1$s_%2$s_%3$s_%4$s', $id, $repeateeID, $repeatees[0][ 'fields' ][ $i ][ 'id' ], $index );
+        }
+
+        $repeateesHTML .= '<div class="repeatee jsAlchemyRepeatee" id="' . sprintf( '%1$s_%2$s_%3$s', $id, $repeateeID, $index ) . '">';
+        $repeateesHTML .= '<input type="hidden" name="' . sprintf( '%1$s_%2$s_%3$s', $id, $repeateeID, $index ) . '" value="" />';
+        $repeateesHTML .= $optionFields->get_fields_html( $repeatees[0][ 'fields' ] );
+        $repeateesHTML .= '</div>';
+
+        return $repeateesHTML;
+    }
+}
+
 if ( ! function_exists( 'alch_disabled' ) ) {
     function alch_disabled( $value ) {
         return disabled( $value, true, false );

@@ -9,12 +9,9 @@ if( class_exists( 'Alchemy_Option_Fields' ) ) {
 }
 
 class Alchemy_Option_Fields {
-    private $passed_opts;
     private $valid_field_types;
 
-    public function __construct( $options ) {
-        $this->passed_opts = $options;
-
+    public function __construct() {
         //repeater should always be the last one since it can render all of the types
         $this->valid_field_types = array(
             'text', 'url', 'email',
@@ -28,11 +25,11 @@ class Alchemy_Option_Fields {
         }
     }
 
-    public function get_fields_html() {
+    public function get_fields_html( $options ) {
         $fieldType = null;
         $fieldsHTML = "";
 
-        foreach ( $this->passed_opts as $field ) {
+        foreach ( $options as $field ) {
             if ( $this->is_valid_field_type( $field[ 'type' ] ) ) {
                 $fieldsHTML .= call_user_func( 'alch_' . $field[ 'type' ] . '_field', $field );
             }

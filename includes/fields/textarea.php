@@ -12,7 +12,12 @@ if ( ! function_exists( 'alch_textarea_field' ) ) {
             return "";
         }
 
-        $value = '' !== $value ? $value : get_option( $id, '' );
+        $storedVal = get_option( $id, '' );
+        $valToHave = '' !== $value
+            ? $value
+            : '' !== $storedVal
+                ? $storedVal[ 'value' ]
+                : '';
 
         return alch_populate_field_template( 'textarea', array(
             'type' => 'textarea',
@@ -23,7 +28,7 @@ if ( ! function_exists( 'alch_textarea_field' ) ) {
                 'name' => $id,
                 'class' => 'alchemy__input alchemy__input--textarea'
             ) ),
-            'value' => esc_textarea( $value[ 'value' ] ),
+            'value' => esc_textarea( $valToHave ),
             'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : '',
         ) );
     }

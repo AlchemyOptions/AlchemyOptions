@@ -12,7 +12,13 @@ if ( ! function_exists( 'alch_text_field' ) ) {
             return "";
         }
 
-        $value = '' !== $value ? $value : get_option( $id, '' );
+        $storedVal = get_option( $data[ 'id' ], '' );
+
+        $valToHave = '' !== $value
+            ? $value
+            : '' !== $storedVal
+                ? $storedVal[ 'value' ]
+                : '';
 
         return alch_populate_field_template( 'text', array(
             'type' => 'text',
@@ -23,7 +29,7 @@ if ( ! function_exists( 'alch_text_field' ) ) {
                 'id' => $id,
                 'name' => $id,
                 'class' => 'alchemy__input',
-                'value' => esc_attr( $value[ 'value' ] )
+                'value' => esc_attr( $valToHave )
             ) ),
             'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : '',
         ) );

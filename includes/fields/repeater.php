@@ -5,34 +5,32 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 }
 
 if ( ! function_exists( 'alch_repeater_field' ) ) {
-    function alch_repeater_field( $data ) {
+    function alch_repeater_field( $data, $value = '' ) {
+        $id = isset( $data[ 'id' ] ) ? esc_attr( $data[ 'id' ] ) : '';
 
-        //todo: store repeaters top-level, concatenate ids with a delimiter to target
-        //todo: each repeatee has hidden fields to hide/show it
-
-        $textFieldHTML = "";
-
-        if( isset( $data[ 'repeatees' ] ) && is_array( $data[ 'repeatees' ] ) ) {
-            $repeateesCount = count( $data[ 'repeatees' ] );
-
-            $textFieldHTML .= '<div class="alchemy__field alchemy__field--repeater jsAlchemyRepeaterField">';
-
-            if( $data[ 'desc' ] ) {
-                $textFieldHTML .= '<p>' . $data[ 'desc' ] . '</p>';
-            }
-
-            $textFieldHTML .= '<ul class="jsAlchemyRepeaterSortable">';
-            $textFieldHTML .= '</ul>';
-
-            if( $repeateesCount > 1 ) {
-                $textFieldHTML .= '<button class="jsAlchemyRepeaterAdd button button-primary" type="button" data-repeatees=\'' . json_encode( $data[ 'repeatees' ] ) . '\'>' . __( 'Add new', 'alchemy-options' ) . '</button><button class="jsAlchemyRepeaterArrow button button-primary" type="button" data-repeatees=\'' . json_encode( $data[ 'repeatees' ] ) . '\'><span class="dashicons dashicons-arrow-down-alt2"></span></button>';
-            } else {
-                $textFieldHTML .= '<button class="jsAlchemyRepeaterAdd button button-primary" type="button" data-repeatees=\'' . json_encode( $data[ 'repeatees' ] ) . '\'>' . __( 'Add new', 'alchemy-options' ) . '</button><button class="jsAlchemyRepeaterArrow button button-primary" type="button" data-repeatees=\'' . json_encode( $data[ 'repeatees' ] ) . '\'>' . __( 'Choose type', 'alchemy-options' ) . ' <span class="dashicons dashicons-arrow-down-alt2"></span></button>';
-            }
-
-            $textFieldHTML .= '</div>';
+        if( ! $id ) {
+            return "";
         }
 
-        return $textFieldHTML;
+        $repeateeID = $data[ 'repeatees' ][0][ 'repeatee_id' ];
+
+        $value = '' !== $value ? $value : get_option( $id, '' );
+
+        return alch_populate_field_template( 'repeater', array(
+            'id' => $id,
+            'title' => isset( $data[ 'title' ] ) ? $data[ 'title' ] : '',
+            'add' => sprintf(
+                '<button%1$s data-nonce=\'%5$s\' data-repeatee-id=\'%4$s\' data-repeater-id=\'%3$s\'>%2$s</button>',
+                    alch_concat_attributes( array(
+                        'class' => 'button button-primary jsAlchemyRepeaterAdd',
+                        'type' => 'button'
+                    ) ),
+                    __( 'Add new', 'alchemy-options' ),
+                    $id,
+                    $repeateeID,
+                    json_encode( array( 'id' => $id . '_repeater_nonce', 'value' => wp_create_nonce( $id . '_repeater_nonce' ) ) )
+            ),
+            'description' => isset( $data[ 'desc' ] ) ? $data[ 'desc' ] : '',
+        ) );
     }
 }

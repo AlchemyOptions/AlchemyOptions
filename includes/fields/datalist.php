@@ -19,9 +19,6 @@ if ( ! function_exists( 'alch_datalist_field' ) ) {
                 ? $storedVal[ 'value' ]
                 : '';
 
-        var_dump($id);
-        var_dump($storedVal);
-
         $choices = isset( $data[ 'choices' ] ) ? $data[ 'choices' ] : array();
         $choicesCount = count( $choices );
 

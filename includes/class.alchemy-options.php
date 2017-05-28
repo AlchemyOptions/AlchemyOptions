@@ -52,6 +52,7 @@ class Alchemy_Options {
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
         add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_ajax_request' ) );
         add_action( 'wp_ajax_alchemy_datalist_search', array( $this, 'handle_datalist_search' ) );
+        add_action( 'wp_ajax_alchemy_repeater_item_add', array( $this, 'handle_repeater_item_add' ) );
 
         //todo: add plugin_text_domain()
     }
@@ -66,6 +67,20 @@ class Alchemy_Options {
         if( ! $fields ) {
             return;
         }
+    }
+
+    public function handle_repeater_item_add() {
+        if ( ! isset( $_GET[ 'nonce' ] ) || ! wp_verify_nonce( $_GET[ 'nonce' ][1], $_GET[ 'nonce' ][0] ) ) {
+            die();
+        }
+
+        $rID = $_GET[ 'repeater' ][0];
+        $repeateeID = $_GET[ 'repeater' ][1];
+        $index = $_GET[ 'index' ];
+
+        $result = alch_get_repeater_fields( $rID, $repeateeID, $index );
+
+        wp_send_json( $result );
     }
 
     public function handle_ajax_request() {
@@ -118,7 +133,7 @@ class Alchemy_Options {
     }
 
     public function render_multisite_options_submenu (  ) {
-        printf( $this->get_options_page( alch_network_options_id(), __( 'Alchemy multisite options', 'alchemy-options' ) ) );
+        echo $this->get_options_page( alch_network_options_id(), __( 'Alchemy multisite options', 'alchemy-options' ) );
     }
 
     public function get_options_page( $type, $pageTitle ) {
@@ -189,13 +204,13 @@ class Alchemy_Options {
         } );
 
         //todo: various checks when tab info is missing or tab is not supplied
-        $optionFields = new Alchemy_Option_Fields( $filteredOptions );
+        $optionFields = new Alchemy_Option_Fields();
 
         $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm">';
         $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';
 
         $optionsHTML .= '<div class="alchemy__fields">';
-        $optionsHTML .= $optionFields->get_fields_html();
+        $optionsHTML .= $optionFields->get_fields_html( $filteredOptions );
         $optionsHTML .= '</div>';
 
         $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';
