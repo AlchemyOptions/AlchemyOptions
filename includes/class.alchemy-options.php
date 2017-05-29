@@ -20,7 +20,16 @@ class Alchemy_Options {
 
     public function includes() {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/alchemy-functions.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemy-fields.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/interface.alchemyField.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyDBValue.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyField.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyText.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyPassword.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRadio.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyCheckbox.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySelect.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRepeater.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
     }
 
     public function enqueue_assets() {
@@ -50,11 +59,35 @@ class Alchemy_Options {
 
         add_action( 'admin_menu', array( $this, 'create_options_submenu_page' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-        add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_ajax_request' ) );
-        add_action( 'wp_ajax_alchemy_datalist_search', array( $this, 'handle_datalist_search' ) );
+        add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_save_options' ) );
         add_action( 'wp_ajax_alchemy_repeater_item_add', array( $this, 'handle_repeater_item_add' ) );
+//
+//        add_action( 'wp_ajax_alchemy_datalist_search', array( $this, 'handle_datalist_search' ) );
 
         //todo: add plugin_text_domain()
+    }
+
+    public function handle_save_options() {
+        if ( ! isset( $_POST[ 'nonce' ] ) || ! wp_verify_nonce( $_POST[ 'nonce' ], 'alchemy_ajax_nonce' ) ) {
+            die();
+        }
+
+        $fields = $_POST[ 'fields' ];
+
+        if( ! $fields ) {
+            return;
+        }
+
+        if( count( $fields ) > 0 ) {
+            foreach ( $fields as $id => $payload ) {
+                $value = new Alchemy_DB_Value( $payload );
+
+                update_option( $id, array(
+                    'type' => $payload[ 'type' ],
+                    'value' => $value->get_safe_value(),
+                ) );
+            }
+        }
     }
 
     public function handle_datalist_search() {
@@ -74,36 +107,21 @@ class Alchemy_Options {
             die();
         }
 
+        $classExists = class_exists( 'Alchemy_Repeater_Field' );
+
         $rID = $_GET[ 'repeater' ][0];
         $repeateeID = $_GET[ 'repeater' ][1];
         $index = $_GET[ 'index' ];
 
-        $result = alch_get_repeater_fields( $rID, $repeateeID, $index );
+        $repeater = new Alchemy_Repeater_Field();
 
-        wp_send_json( $result );
-    }
+        $repeaterHTML = $repeater->generate_repeatee( array(
+            'id' => $rID,
+            'repeatee_id' => $repeateeID,
+            'index' => $index
+        ) );
 
-    public function handle_ajax_request() {
-        if ( ! isset( $_POST[ 'nonce' ] ) || ! wp_verify_nonce( $_POST[ 'nonce' ], 'alchemy_ajax_nonce' ) ) {
-            die();
-        }
-
-        $fields = $_POST[ 'fields' ];
-
-        if( ! $fields ) {
-            return;
-        }
-
-        if( count( $fields ) > 0 ) {
-            foreach ( $fields as $id => $payload ) {
-                //todo: sanitize values based on type - https://developer.wordpress.org/plugins/security/securing-input/
-
-                update_option( $id, array(
-                    'type' => $payload[ 'type' ],
-                    'value' => $payload[ 'value' ],
-                ) );
-            }
-        }
+        wp_send_json( $repeaterHTML );
     }
 
     public function create_network_options_page() {
@@ -204,7 +222,7 @@ class Alchemy_Options {
         } );
 
         //todo: various checks when tab info is missing or tab is not supplied
-        $optionFields = new Alchemy_Option_Fields();
+        $optionFields = new Alchemy_Fields_Loader();
 
         $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm">';
         $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';

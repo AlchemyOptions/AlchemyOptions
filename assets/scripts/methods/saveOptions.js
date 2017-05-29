@@ -22,6 +22,7 @@ export default function() {
                     case 'url' :
                     case 'password' :
                     case 'email' :
+                    case 'tel' :
                     case 'select' :
                     case 'textarea' :
                         formData[name]['value'] = $(`#${name}`).val();
