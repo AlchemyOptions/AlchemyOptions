@@ -16,6 +16,15 @@
         }
     }
 
+    &__clearfix {
+        &:before,
+        &:after {
+            display: table;
+            content: " ";
+            clear: both;
+        }
+    }
+
     .dashicons, .dashicons-before:before {
         vertical-align: text-top;
     }

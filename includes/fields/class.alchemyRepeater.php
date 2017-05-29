@@ -107,14 +107,35 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 $repeatees[0][ 'fields' ][ $i ][ 'id' ] = sprintf( '%1$s_%2$s_%3$s_%4$s', $data[ 'id' ], $data[ 'repeatee_id' ], $repeatees[0][ 'fields' ][ $i ][ 'id' ], $data[ 'index' ] );
             }
 
-            $repeateesHTML .= '<div class="repeatee jsAlchemyRepeatee" id="' . sprintf( '%1$s_%2$s_%3$s', $data[ 'id' ], $data[ 'repeatee_id' ], $data[ 'index' ] ) . '">';
-            $repeateesHTML .= '<input type="hidden" name="' . sprintf( '%1$s_%2$s_%3$s', $data[ 'id' ], $data[ 'repeatee_id' ], $data[ 'index' ] ) . '" value="" />';
+            $repeateeID = sprintf( '%1$s_%2$s_%3$s', $data[ 'id' ], $data[ 'repeatee_id' ], $data[ 'index' ] );
 
+            $repeateesHTML .= '<div class="repeatee jsAlchemyRepeatee" id="' . $repeateeID . '">';
+            $repeateesHTML .= '<input type="hidden" name="' . $repeateeID . '" value="" />';
+
+            $repeateesHTML .= $this->generate_repeatee_toolbar( $repeatees[0], $repeateeID );
             $repeateesHTML .= $optionFields->get_fields_html( $repeatees[0][ 'fields' ] );
 
             $repeateesHTML .= '</div>';
 
             return $repeateesHTML;
+        }
+
+        public function generate_repeatee_toolbar( $repeatee, $repeateeID ) {
+            $toolbarHTML = '';
+
+            $toolbarHTML .= '<div class="repeatee__toolbar alchemy__clearfix">';
+            $toolbarHTML .= sprintf( '<small>%1$s</small>', $repeatee[ 'title' ] );
+
+            $toolbarHTML .= '<span class="repeatee__actions">';
+            $toolbarHTML .= '<span class="dashicons dashicons-move jsAlchemyRepeateeSortableHandle"></span>';
+            $toolbarHTML .= sprintf( '<button type="button" class="button button-primary jsAlchemyHideRepeatee" data-repeatee-id=\'%s\'><span class="dashicons dashicons-visibility"></span></button>', $repeateeID );
+            $toolbarHTML .= sprintf( '<button type="button" class="button button-primary jsAlchemyRepeateeTiming" data-repeatee-id=\'%s\'><span class="dashicons dashicons-clock"></span></button>', $repeateeID );
+            $toolbarHTML .= sprintf( '<button type="button" class="button button-primary jsAlchemyRepeateeRemove" data-repeatee-id=\'%s\'><span class="dashicons dashicons-trash"></span></button>', $repeateeID );
+            $toolbarHTML .= '</span>';
+
+            $toolbarHTML .= '</div>';
+
+            return $toolbarHTML;
         }
     }
 }
