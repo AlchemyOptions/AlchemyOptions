@@ -14,7 +14,7 @@ if( ! class_exists( 'Alchemy_Field' ) ) {
         }
 
         public function normalize_field_keys( $field ) {
-            $field[ 'description' ] = $field[ 'desc' ];
+            $field[ 'description' ] = isset( $field[ 'desc' ] ) ? $field[ 'desc' ] : '';
             unset( $field[ 'desc' ] );
 
             $savedData = get_option( $field[ 'id' ] );
@@ -27,7 +27,9 @@ if( ! class_exists( 'Alchemy_Field' ) ) {
             $fieldHTML = $this->template;
 
             foreach ( $data as $key => $val ) {
-                $fieldHTML = str_replace( "{{" . strtoupper( $key ) . "}}", $val, $fieldHTML );
+                if( 'string' === gettype( $val ) ) {
+                    $fieldHTML = str_replace( "{{" . strtoupper( $key ) . "}}", $val, $fieldHTML );
+                }
             }
 
             return $fieldHTML;
