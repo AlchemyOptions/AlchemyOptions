@@ -13,9 +13,33 @@ export default function() {
             };
         });
 
+        console.log(formData);
+
         $form.on('submit', e => {
             e.preventDefault();
 
+            parseData(formData);
+
+            //console.log(formData);
+
+            // $.ajax({
+            //     'type': 'post',
+            //     'url': alchemyData.adminURL,
+            //     'data': {
+            //         'action': 'alchemy_save_options',
+            //         'nonce': alchemyData.nonce,
+            //         'fields': formData
+            //     },
+            //     'success': data => {
+            //         console.log('success', data);
+            //     },
+            //     'error': err => {
+            //         console.error('error', err);
+            //     }
+            // });
+        });
+
+        function parseData (formData) {
             $.each(formData, (name, fieldObj) => {
                 switch (fieldObj.type) {
                     case 'text' :
@@ -26,7 +50,7 @@ export default function() {
                     case 'select' :
                     case 'textarea' :
                         formData[name]['value'] = $(`#${name}`).val();
-                    break;
+                        break;
                     case 'checkbox':
                     case 'radio':
                         formData[name]['value'] = [];
@@ -34,41 +58,13 @@ export default function() {
                         $(`#field--${name}`).find(':checked').each((i, el) => {
                             formData[name]['value'].push($(el).data('value'));
                         });
-                    break;
-                    case 'datalist' :
-                        const $activeEl = $(`#field--${name}`).find(':selected, :checked');
-
-                        if( $activeEl[0] ) {
-                            if( 'INPUT' === $activeEl.get(0).nodeName ) {
-                                formData[name]['value'] = $activeEl.data('value');
-                            } else if( 'OPTION' === $activeEl.get(0).nodeName ) {
-                                formData[name]['value'] = $activeEl.val();
-                            }
-                        } else {
-                            formData[name]['value'] = $(`#field--${name}`).find('input').val();
-                        }
+                        break;
+                    case 'repeater' :
+                        console.log($(`#field--${name}`));
                     break;
                     default : break;
                 }
             });
-
-            console.log(formData);
-
-            $.ajax({
-                'type': 'post',
-                'url': alchemyData.adminURL,
-                'data': {
-                    'action': 'alchemy_save_options',
-                    'nonce': alchemyData.nonce,
-                    'fields': formData
-                },
-                'success': data => {
-                    console.log('success', data);
-                },
-                'error': err => {
-                    console.error('error', err);
-                }
-            });
-        });
+        }
     }
 }

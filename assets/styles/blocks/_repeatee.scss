@@ -1,20 +1,86 @@
 .repeatee {
-    border: 1px solid #ccc;
-    padding: .5em 2em 2em 2em;
-    border-radius: 5px;
+    margin-bottom: .5em;
 
-    & + & {
-        margin-top: 5px;
-    }
+    background: #fafafa;
 
     &__toolbar {
         border: 1px solid #ccc;
-        border-radius: 5px;
-        margin: 0 -1.5em 1em;
+        border-radius: 2px;
         padding: .5em;
+
+        cursor: pointer;
+
+        small {
+            vertical-align: sub;
+        }
+    }
+
+    &__title {
+        display: inline-block;
+        margin: 0 .5em;
+        vertical-align: middle;
+    }
+
+    &__content {
+        padding: 1em 1.5em .8em;
+        border: 1px solid #ccc;
+        border-top: 0;
+
+        display: none;
     }
 
     &__actions {
         float: right;
+        margin-top: -1px;
+    }
+
+    &__btn {
+        transition: opacity .3s;
+        opacity: 0;
+    }
+
+    &:hover {
+        .repeatee__btn {
+            opacity: 1;
+        }
+
+        .repeatee__toolbar {
+            border-color: #c4c4c4;
+        }
+    }
+
+    &--expanded {
+        .repeatee__toolbar {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-color: #c4c4c4;
+
+            background: #e5e5e5;
+        }
+
+        .repeatee__content {
+            display: block;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+            border-color: #c4c4c4;
+        }
+
+        .repeatee__btn {
+            opacity: 1;
+        }
+    }
+
+    &--hidden {
+        opacity: .7;
+
+        .jsAlchemyRepeateeHide {
+            opacity: 1;
+        }
+    }
+
+    &--placeholder {
+        margin-bottom: .5em;
+        border: 1px dashed #ccc;
+        border-radius: 3px;
     }
 }

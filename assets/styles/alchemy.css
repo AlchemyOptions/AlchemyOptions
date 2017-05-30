@@ -15,6 +15,15 @@ html {
     padding-top: 0;
     margin-top: 0;
     margin-bottom: 0; }
+.field--repeater .field__label {
+  margin-bottom: 0; }
+.field--repeater .repeatee .field__label {
+  margin-bottom: .8em; }
+.field--repeater .field__description {
+  margin-bottom: 1.5em; }
+.field--repeater .ui-sortable {
+  overflow: hidden;
+  position: relative; }
 
 .alchemy__options {
   padding: 3em 0; }
@@ -29,21 +38,59 @@ html {
   display: table;
   content: " ";
   clear: both; }
+.alchemy__repeater-add.button {
+  margin-top: 1em; }
 .alchemy .dashicons, .alchemy .dashicons-before:before {
   vertical-align: text-top; }
 
 .repeatee {
-  border: 1px solid #ccc;
-  padding: .5em 2em 2em 2em;
-  border-radius: 5px; }
-  .repeatee + .repeatee {
-    margin-top: 5px; }
+  margin-bottom: .5em;
+  background: #fafafa; }
   .repeatee__toolbar {
     border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 0 -1.5em 1em;
-    padding: .5em; }
+    border-radius: 2px;
+    padding: .5em;
+    cursor: pointer; }
+    .repeatee__toolbar small {
+      vertical-align: sub; }
+  .repeatee__title {
+    display: inline-block;
+    margin: 0 .5em;
+    vertical-align: middle; }
+  .repeatee__content {
+    padding: 1em 1.5em .8em;
+    border: 1px solid #ccc;
+    border-top: 0;
+    display: none; }
   .repeatee__actions {
-    float: right; }
+    float: right;
+    margin-top: -1px; }
+  .repeatee__btn {
+    transition: opacity .3s;
+    opacity: 0; }
+  .repeatee:hover .repeatee__btn {
+    opacity: 1; }
+  .repeatee:hover .repeatee__toolbar {
+    border-color: #c4c4c4; }
+  .repeatee--expanded .repeatee__toolbar {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: #c4c4c4;
+    background: #e5e5e5; }
+  .repeatee--expanded .repeatee__content {
+    display: block;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-color: #c4c4c4; }
+  .repeatee--expanded .repeatee__btn {
+    opacity: 1; }
+  .repeatee--hidden {
+    opacity: .7; }
+    .repeatee--hidden .jsAlchemyRepeateeHide {
+      opacity: 1; }
+  .repeatee--placeholder {
+    margin-bottom: .5em;
+    border: 1px dashed #ccc;
+    border-radius: 3px; }
 
 /*# sourceMappingURL=alchemy.css.map */

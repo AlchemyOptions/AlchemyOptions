@@ -22,6 +22,9 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 case 'tel' :
                     $this->value[ 'value' ] = sanitize_text_field( $this->value[ 'value' ] );
                 break;
+                case 'repeater' :
+                    $this->value[ 'value' ] = $this->sanitize_repeater_field( $this->value[ 'value' ] );
+                break;
                 case 'email' :
                     $this->value[ 'value' ] = sanitize_email( $this->value[ 'value' ] );
                 break;
@@ -29,8 +32,8 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
             }
         }
 
-        public function sanitize_repeater( $value ) {
-
+        public function sanitize_repeater_field( $value ) {
+            return $value;
         }
 
         public function get_safe_value() {

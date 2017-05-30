@@ -6,7 +6,7 @@ export default function() {
             const $repeater = $(el);
             const $dropIn = $('.jsAlchemyRepeaterSortable', $repeater);
 
-            let clickIndex = 0;
+            let clickIndex = $dropIn.children().length;
 
             $repeater.on('click', '.jsAlchemyRepeaterAdd', function() {
                 const $btn = $(this);
@@ -25,7 +25,12 @@ export default function() {
                     },
                     'success': data => {
                         console.log('success');
-                        $dropIn.append(data);
+
+                        const $data = $(data);
+                        $data.find('.field--text').eq(0).find('input').addClass('jsAlchemyRepeateeTitle');
+
+                        $dropIn.append($data);
+                        $dropIn.sortable( "refresh" );
                     },
                     'error': err => {
                         console.error('error', err);
@@ -34,6 +39,43 @@ export default function() {
 
                 clickIndex++;
             });
+
+            $repeater.on('input', '.jsAlchemyRepeateeTitle', function() {
+                const $input = $(this);
+
+                $input.closest('.repeatee').children('.jsAlchemyRepeateeToolbar').find('.jsAlchemyRepeateeTitle').text($input.val());
+            });
+
+            $repeater.on('click', '.jsAlchemyRepeateeToolbar', function(e) {
+                const $toolbar = $(this);
+
+                $toolbar.closest( '.repeatee' ).toggleClass('repeatee--expanded')
+            });
+
+            $repeater.on('click', '.jsAlchemyRepeateeHide', function(e) {
+                const $toolbar = $(this);
+                const $parent = $toolbar.closest( '.repeatee' );
+                const $visibilityInput = $parent.find('.jsAlchemyRepeateeVisible');
+
+                $toolbar.find('span').toggleClass('dashicons-hidden');
+                $parent.removeAttr('style').toggleClass('repeatee--hidden');
+
+                $visibilityInput.val( $visibilityInput.val() === 'true' ? 'false' : 'true' );
+            });
+
+            $repeater.on('click', '.repeatee__actions', e => {
+                e.stopPropagation();
+            });
+
+            $dropIn.sortable({
+                placeholder: "repeatee--placeholder",
+                opacity: 0.8,
+                start: function( event, ui ) {
+                    $dropIn.find('.repeatee--placeholder').height( ui.helper.height() - 2 )
+                }
+            });
+
+            $dropIn.disableSelection();
         });
     }
 };

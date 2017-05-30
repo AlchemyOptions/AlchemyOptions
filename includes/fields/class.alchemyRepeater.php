@@ -14,14 +14,14 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 <div class="alchemy__field field field--repeater jsAlchemyRepeaterField" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"repeater"}\'>
                     <fieldset>
                         <legend class="field__label">{{TITLE}}</legend>
+                        <div class="field__description">
+                            <p>{{DESCRIPTION}}</p>
+                        </div>
                         <div class="jsAlchemyRepeaterSortable">
                             {{REPEATEES}}
                         </div>
                     </fieldset>
                     {{ADD}}
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
                 </div>
             ';
 
@@ -36,13 +36,12 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             }
 
             $repeateesCount = count( $field[ 'repeatees' ] );
-            $addBtn = '';
 
             if( 1 == $repeateesCount ) {
                 $addBtn = sprintf(
                     '<button%1$s data-nonce=\'%5$s\' data-repeatee-id=\'%4$s\' data-repeater-id=\'%3$s\'>%2$s</button>',
                         $this->concat_attributes( array(
-                            'class' => 'button button-primary jsAlchemyRepeaterAdd',
+                            'class' => 'alchemy__repeater-add button button-primary jsAlchemyRepeaterAdd',
                             'type' => 'button'
                         ) ),
                         __( 'Add new', 'alchemy-options' ),
@@ -57,7 +56,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 $addBtn = sprintf(
                     '<button%1$s data-nonce=\'%4$s\' data-repeater-id=\'%3$s\'>%2$s</button>',
                         $this->concat_attributes( array(
-                            'class' => 'button button-primary jsAlchemyRepeaterAddType',
+                            'class' => 'alchemy__repeater-add button button-primary jsAlchemyRepeaterAddType',
                             'type' => 'button'
                         ) ),
                         __( 'Choose type {{icon}}', 'alchemy-options' ),
@@ -81,6 +80,31 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
         }
 
         public function parse_value( $value ) {
+            /*
+             * $value
+             *
+             * array(
+             *      array(
+                        'title' => 'Repeater field',
+             *          'type' => 'repeater-fields',
+             *          'values' => array(
+             *              'organization' => 'Some text',
+             *              'description' => 'Some description',
+             *              'radio' => 'some value'
+             *          )
+             *      ),
+             *      array(
+                        'title' => 'Repeater field',
+             *          'type' => 'repeater-fields',
+             *          'values' => array(
+             *              'organization' => 'Some text',
+             *              'description' => 'Some description',
+             *              'radio' => 'some value'
+             *          )
+             *      ),
+             * )
+             * */
+
             $repeateesHTML = '';
 
             return $repeateesHTML;
@@ -99,21 +123,53 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             }
 
             $repeateesHTML ="";
+
             $repeatees = array_filter( $neededRepeater[ 'repeatees' ], function( $repeatee ) use( $data ) {
                 return $repeatee[ 'repeatee_id' ] === $data[ 'repeatee_id' ];
             } );
 
+            array_unshift( $repeatees[0][ 'fields' ], array(
+                'title' => __( 'Title', 'alchemy-options' ),
+                'id' => 'title',
+                'type' => 'text',
+            ) );
+
             foreach( $repeatees[0][ 'fields' ] as $i => $field ) {
-                $repeatees[0][ 'fields' ][ $i ][ 'id' ] = sprintf( '%1$s_%2$s_%3$s_%4$s', $data[ 'id' ], $data[ 'repeatee_id' ], $repeatees[0][ 'fields' ][ $i ][ 'id' ], $data[ 'index' ] );
+                $repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ] = sprintf(
+                    '%1$s_%2$s_%3$s_%4$s',
+                        $data[ 'id' ],
+                        $data[ 'repeatee_id' ],
+                        $repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ],
+                        $data[ 'index' ]
+                    );
             }
 
-            $repeateeID = sprintf( '%1$s_%2$s_%3$s', $data[ 'id' ], $data[ 'repeatee_id' ], $data[ 'index' ] );
+            $repeateeID = sprintf(
+                '%1$s_%2$s_%3$s',
+                    $data[ 'id' ],
+                    $data[ 'repeatee_id' ],
+                    $data[ 'index' ]
+                );
 
-            $repeateesHTML .= '<div class="repeatee jsAlchemyRepeatee" id="' . $repeateeID . '">';
-            $repeateesHTML .= '<input type="hidden" name="' . $repeateeID . '" value="" />';
+            $repeateesHTML .= sprintf(
+                '<div class="repeatee repeatee--expanded jsAlchemyRepeatee" data-alchemy=\'%2$s\' id="%1$s">',
+                    $repeateeID,
+                    json_encode( array(
+                        'repeater_id' => $data[ 'id' ],
+                        'repeatee_title' => $repeatees[0][ 'title' ],
+                        'repeatee_id' => $data[ 'repeatee_id' ],
+                        'index' => $data[ 'index' ]
+                    ) )
+                );
+
+            $repeateesHTML .= '<input type="hidden" class="jsAlchemyRepeateeVisible" name="' . $repeateeID . '_visible" value="true" />';
 
             $repeateesHTML .= $this->generate_repeatee_toolbar( $repeatees[0], $repeateeID );
-            $repeateesHTML .= $optionFields->get_fields_html( $repeatees[0][ 'fields' ] );
+
+            $repeateesHTML .= sprintf(
+                '<div class="repeatee__content">%1$s</div>',
+                    $optionFields->get_fields_html( $repeatees[0][ 'fields' ] )
+                );
 
             $repeateesHTML .= '</div>';
 
@@ -123,19 +179,51 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
         public function generate_repeatee_toolbar( $repeatee, $repeateeID ) {
             $toolbarHTML = '';
 
-            $toolbarHTML .= '<div class="repeatee__toolbar alchemy__clearfix">';
-            $toolbarHTML .= sprintf( '<small>%1$s</small>', $repeatee[ 'title' ] );
-
-            $toolbarHTML .= '<span class="repeatee__actions">';
-            $toolbarHTML .= '<span class="dashicons dashicons-move jsAlchemyRepeateeSortableHandle"></span>';
-            $toolbarHTML .= sprintf( '<button type="button" class="button button-primary jsAlchemyHideRepeatee" data-repeatee-id=\'%s\'><span class="dashicons dashicons-visibility"></span></button>', $repeateeID );
-            $toolbarHTML .= sprintf( '<button type="button" class="button button-primary jsAlchemyRepeateeTiming" data-repeatee-id=\'%s\'><span class="dashicons dashicons-clock"></span></button>', $repeateeID );
-            $toolbarHTML .= sprintf( '<button type="button" class="button button-primary jsAlchemyRepeateeRemove" data-repeatee-id=\'%s\'><span class="dashicons dashicons-trash"></span></button>', $repeateeID );
-            $toolbarHTML .= '</span>';
+            $toolbarHTML .= sprintf(
+                '<div class="%1$s" title="%2$s">',
+                    'repeatee__toolbar alchemy__clearfix jsAlchemyRepeateeToolbar',
+                    __( 'Click to edit, drag to reorder', 'alchemy-options' )
+            );
+            $toolbarHTML .= sprintf( '<h3 class="repeatee__title jsAlchemyRepeateeTitle"> </h3><small>%1$s</small>', $repeatee[ 'title' ] );
+            $toolbarHTML .= $this->generate_actions_group( $repeateeID );
 
             $toolbarHTML .= '</div>';
 
             return $toolbarHTML;
+        }
+
+        public function generate_actions_group( $repeateeID ) {
+            $actionGroupHTML = '';
+
+            $actionGroupHTML .= '<span class="repeatee__actions button-group">';
+
+            $actionGroupHTML .= sprintf(
+                '<button type="button" class="%2$s" data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
+                $repeateeID,
+                'repeatee__btn button button-secondary jsAlchemyRepeateeHide',
+                '<span class="dashicons dashicons-visibility"></span>',
+                __( 'Exclude this item from showing', 'alchemy-options' )
+            );
+
+            $actionGroupHTML .= sprintf(
+                '<button type="button" class="%2$s" data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
+                $repeateeID,
+                'repeatee__btn button button-secondary jsAlchemyRepeateeTiming',
+                '<span class="dashicons dashicons-clock"></span>',
+                __( 'Choose when to show this item', 'alchemy-options' )
+            );
+
+            $actionGroupHTML .= sprintf(
+                '<button type="button" class="%2$s" data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
+                $repeateeID,
+                'repeatee__btn button button-secondary jsAlchemyRepeateeRemove',
+                '<span class="dashicons dashicons-trash"></span>',
+                __( 'Delete this item', 'alchemy-options' )
+            );
+
+            $actionGroupHTML .= '</span>';
+
+            return $actionGroupHTML;
         }
     }
 }

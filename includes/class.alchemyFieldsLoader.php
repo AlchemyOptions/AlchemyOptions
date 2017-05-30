@@ -65,6 +65,9 @@ class Alchemy_Fields_Loader {
             case 'select' :
                 return new Alchemy_Select_Field();
             break;
+            case 'textarea' :
+                return new Alchemy_Textarea_Field();
+            break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field();
             break;
