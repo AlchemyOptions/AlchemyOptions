@@ -10,9 +10,13 @@ export default function() {
 
             $repeater.on('click', '.jsAlchemyRepeaterAdd', function() {
                 const $btn = $(this);
+                const $loader = $(this).next('.jsAlchemyRepeaterLoader');
                 const nonce = $btn.data('nonce');
                 const rID = $btn.data('repeater-id');
                 const repeateeID = $btn.data('repeatee-id');
+
+                $btn.attr('disabled', true);
+                $loader.removeClass('alchemy__repeater-add-spinner--hidden');
 
                 $.ajax({
                     'type': 'get',
@@ -26,14 +30,15 @@ export default function() {
                     'success': data => {
                         console.log('success');
 
-                        const $data = $(data);
-                        $data.find('.field--text').eq(0).find('input').addClass('jsAlchemyRepeateeTitle');
-
-                        $dropIn.append($data);
+                        $dropIn.append(data);
                         $dropIn.sortable( "refresh" );
                     },
                     'error': err => {
                         console.error('error', err);
+                    },
+                    'complete': () => {
+                        $btn.removeAttr('disabled');
+                        $loader.addClass('alchemy__repeater-add-spinner--hidden');
                     }
                 });
 
@@ -63,6 +68,17 @@ export default function() {
                 $visibilityInput.val( $visibilityInput.val() === 'true' ? 'false' : 'true' );
             });
 
+            $repeater.on('click', '.jsAlchemyRepeateeRemove', function(e) {
+                const $toolbar = $(this);
+                const $parent = $toolbar.closest( '.repeatee' );
+
+                $parent.fadeOut(() => {
+                    $parent.remove();
+
+                    $dropIn.sortable( "refresh" );
+                });
+            });
+
             $repeater.on('click', '.repeatee__actions', e => {
                 e.stopPropagation();
             });
@@ -70,8 +86,8 @@ export default function() {
             $dropIn.sortable({
                 placeholder: "repeatee--placeholder",
                 opacity: 0.8,
-                start: function( event, ui ) {
-                    $dropIn.find('.repeatee--placeholder').height( ui.helper.height() - 2 )
+                start: (event, ui) => {
+                    $dropIn.find('.repeatee--placeholder').height(ui.helper.height() - 2)
                 }
             });
 

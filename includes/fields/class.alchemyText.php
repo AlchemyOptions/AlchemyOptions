@@ -23,12 +23,14 @@ if( ! class_exists( 'Alchemy_Text_Field' ) ) {
 
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
-
-            $field[ 'attributes' ] = $this->concat_attributes(array(
+            $passedAttrs = isset( $field[ 'attributes' ] ) ? $field[ 'attributes' ] : array();
+            $mergedAttrs = array_merge( array(
                 'type' => $field[ 'type' ],
                 'id' => $field[ 'id' ],
                 'value' => $field[ 'value' ]
-            ));
+            ), $passedAttrs );
+
+            $field[ 'attributes' ] = $this->concat_attributes( $mergedAttrs );
 
             return $field;
         }

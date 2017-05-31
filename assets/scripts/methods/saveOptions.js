@@ -3,7 +3,7 @@ export default function() {
 
     if( $form[0] ) {
         const formData = {};
-        const $formFields = $form.find( '.field' );
+        const $formFields = $form.find( '.alchemy__fields' ).children('.alchemy__field');
 
         $formFields.each((i, field) => {
             const data = $(field).data('alchemy');
@@ -13,58 +13,86 @@ export default function() {
             };
         });
 
-        console.log(formData);
-
         $form.on('submit', e => {
             e.preventDefault();
 
-            parseData(formData);
+            $.each(formData, name => {
+                formData[name]['value'] = getFieldValue($(`#field--${name}`));
+            });
 
-            //console.log(formData);
-
-            // $.ajax({
-            //     'type': 'post',
-            //     'url': alchemyData.adminURL,
-            //     'data': {
-            //         'action': 'alchemy_save_options',
-            //         'nonce': alchemyData.nonce,
-            //         'fields': formData
-            //     },
-            //     'success': data => {
-            //         console.log('success', data);
-            //     },
-            //     'error': err => {
-            //         console.error('error', err);
-            //     }
-            // });
-        });
-
-        function parseData (formData) {
-            $.each(formData, (name, fieldObj) => {
-                switch (fieldObj.type) {
-                    case 'text' :
-                    case 'url' :
-                    case 'password' :
-                    case 'email' :
-                    case 'tel' :
-                    case 'select' :
-                    case 'textarea' :
-                        formData[name]['value'] = $(`#${name}`).val();
-                        break;
-                    case 'checkbox':
-                    case 'radio':
-                        formData[name]['value'] = [];
-
-                        $(`#field--${name}`).find(':checked').each((i, el) => {
-                            formData[name]['value'].push($(el).data('value'));
-                        });
-                        break;
-                    case 'repeater' :
-                        console.log($(`#field--${name}`));
-                    break;
-                    default : break;
+            $.ajax({
+                'type': 'post',
+                'url': alchemyData.adminURL,
+                'data': {
+                    'action': 'alchemy_save_options',
+                    'nonce': alchemyData.nonce,
+                    'fields': formData
+                },
+                'success': data => {
+                    console.log('success', data);
+                },
+                'error': err => {
+                    console.error('error', err);
                 }
             });
+        });
+    }
+
+    function getFieldValue( alchemyField ) {
+        const data = alchemyField.data('alchemy');
+
+        let value;
+
+        switch (data.type) {
+            case 'text' :
+            case 'url' :
+            case 'password' :
+            case 'email' :
+            case 'tel' :
+            case 'select' :
+            case 'textarea' :
+                value = alchemyField.find('input,select,textarea').val();
+            break;
+            case 'checkbox':
+            case 'radio':
+                value = [];
+
+                alchemyField.find(':checked').each((i, el) => {
+                    value.push($(el).data('value'));
+                });
+            break;
+            case 'repeater' :
+                value = [];
+
+                const fields = alchemyField.find('.repeatee');
+
+                if( fields[0] ) {
+                    fields.each((i, el) => {
+                        const $repeatee = $(el);
+                        const repeateeData = $repeatee.data('alchemy');
+                        const $childFields = $repeatee.children('.repeatee__content').children('.alchemy__field');
+                        const valueToStore = {
+                            isVisible: $repeatee.children('.jsAlchemyRepeateeVisible').val(),
+                            type: repeateeData.repeatee_id,
+                            title: repeateeData.repeatee_title,
+                            fields: {}
+                        };
+
+                        if( repeateeData.fieldIDs ) {
+
+                            $.each(repeateeData.fieldIDs, (ind, field) => {
+                                valueToStore.fields[field.id] = getFieldValue( $childFields.eq(ind) );
+                            });
+
+                        }
+
+                        value.push(valueToStore);
+                    });
+                }
+            break;
+            default : break;
         }
+
+        return value;
     }
 }

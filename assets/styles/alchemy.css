@@ -38,8 +38,15 @@ html {
   display: table;
   content: " ";
   clear: both; }
-.alchemy__repeater-add.button {
-  margin-top: 1em; }
+.alchemy__repeater-add.button, .alchemy__repeater-add-spinner {
+  margin-top: 1em;
+  vertical-align: middle; }
+.alchemy__repeater-add-spinner {
+  transition: opacity .3s;
+  opacity: 1;
+  margin-left: .5em; }
+  .alchemy__repeater-add-spinner--hidden {
+    opacity: 0; }
 .alchemy .dashicons, .alchemy .dashicons-before:before {
   vertical-align: text-top; }
 

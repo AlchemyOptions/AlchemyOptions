@@ -18,7 +18,10 @@ if( ! class_exists( 'Alchemy_Field' ) ) {
             unset( $field[ 'desc' ] );
 
             $savedData = get_option( $field[ 'id' ] );
-            $field[ 'value' ] = $savedData[ 'value' ];
+
+            if( ! isset( $field[ 'value' ] ) ) {
+                $field[ 'value' ] = is_array( $savedData ) ? $savedData[ 'value' ] : '';
+            }
 
             return $field;
         }

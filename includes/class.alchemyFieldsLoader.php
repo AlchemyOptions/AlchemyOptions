@@ -24,12 +24,14 @@ class Alchemy_Fields_Loader {
     public function get_fields_html( $options ) {
         $fieldsHTML = "";
 
-        foreach ( $options as $field ) {
+        foreach ( $options as $i => $field ) {
 
             if ( $this->is_valid_field_type( $field[ 'type' ] ) ) {
                 if( ! isset( $field[ 'id' ] ) ) {
                     return '';
                 }
+
+                $options[$i][ 'id' ] = sanitize_key( $field[ 'id' ] );
 
                 $fieldInstance = $this->choose_class( $field[ 'type' ] );
 

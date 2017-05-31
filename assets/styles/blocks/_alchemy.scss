@@ -25,8 +25,20 @@
         }
     }
 
-    &__repeater-add.button {
+    &__repeater-add.button,
+    &__repeater-add-spinner {
         margin-top: 1em;
+        vertical-align: middle;
+    }
+
+    &__repeater-add-spinner {
+        transition: opacity .3s;
+        opacity: 1;
+        margin-left: .5em;
+
+        &--hidden {
+            opacity: 0;
+        }
     }
 
     .dashicons, .dashicons-before:before {

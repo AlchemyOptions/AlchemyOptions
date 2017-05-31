@@ -39,7 +39,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
 
             if( 1 == $repeateesCount ) {
                 $addBtn = sprintf(
-                    '<button%1$s data-nonce=\'%5$s\' data-repeatee-id=\'%4$s\' data-repeater-id=\'%3$s\'>%2$s</button>',
+                    '<button%1$s data-nonce=\'%5$s\' data-repeatee-id=\'%4$s\' data-repeater-id=\'%3$s\'>%2$s</button><img src="%6$s" class="alchemy__repeater-add-spinner alchemy__repeater-add-spinner--hidden jsAlchemyRepeaterLoader" width="20" height="20" />',
                         $this->concat_attributes( array(
                             'class' => 'alchemy__repeater-add button button-primary jsAlchemyRepeaterAdd',
                             'type' => 'button'
@@ -50,7 +50,8 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                         json_encode( array(
                             'id' => $field[ 'id' ] . '_repeater_nonce',
                             'value' => wp_create_nonce( $field[ 'id' ] . '_repeater_nonce' )
-                        ) )
+                        ) ),
+                        get_site_url() . '/wp-includes/images/spinner-2x.gif'
                 );
             } else {
                 $addBtn = sprintf(
@@ -71,7 +72,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             $field[ 'add' ] = $addBtn;
 
             if( $field[ 'value' ] ) {
-                $field[ 'repeatees' ] = $this->parse_value( $field[ 'value' ] );
+                $field[ 'repeatees' ] = $this->parse_value( $field );
             } else {
                 $field[ 'repeatees' ] = '';
             }
@@ -79,15 +80,17 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             return $field;
         }
 
-        public function parse_value( $value ) {
+        public function parse_value( $field ) {
+
             /*
-             * $value
+             * $field[ 'value' ]
              *
              * array(
              *      array(
                         'title' => 'Repeater field',
              *          'type' => 'repeater-fields',
-             *          'values' => array(
+             *          'isVisible' => 'false',
+             *          'fields' => array(
              *              'organization' => 'Some text',
              *              'description' => 'Some description',
              *              'radio' => 'some value'
@@ -96,7 +99,8 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
              *      array(
                         'title' => 'Repeater field',
              *          'type' => 'repeater-fields',
-             *          'values' => array(
+             *          'isVisible' => 'true',
+             *          'fields' => array(
              *              'organization' => 'Some text',
              *              'description' => 'Some description',
              *              'radio' => 'some value'
@@ -107,10 +111,25 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
 
             $repeateesHTML = '';
 
+            if( is_array( $field[ 'value' ] ) && count( $field[ 'value' ] ) > 0 ) {
+                foreach ( $field[ 'value' ] as $i => $repeatee ) {
+
+                    $repeateesHTML .= $this->generate_repeatee(array(
+                        'id' => $field[ 'id' ],
+                        'repeatee_id' => $repeatee[ 'type' ],
+                        'index' => $i,
+                        'isVisible' => $repeatee[ 'isVisible' ],
+                        'timer' => array(),
+                        'savedFields' => $repeatee[ 'fields' ]
+                    ), true);
+
+                }
+            }
+
             return $repeateesHTML;
         }
 
-        public function generate_repeatee( $data ) {
+        public function generate_repeatee( $data, $ssr = false ) {
             $savedOptions = get_option( alch_options_id(), array() );
             $optionFields = new Alchemy_Fields_Loader();
 
@@ -122,6 +141,8 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 return '';
             }
 
+            $repeateesCount = count( $neededRepeater[ 'repeatees' ] );
+
             $repeateesHTML ="";
 
             $repeatees = array_filter( $neededRepeater[ 'repeatees' ], function( $repeatee ) use( $data ) {
@@ -132,9 +153,31 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 'title' => __( 'Title', 'alchemy-options' ),
                 'id' => 'title',
                 'type' => 'text',
+                'attributes' => array(
+                    'class' => 'jsAlchemyRepeateeTitle'
+                )
             ) );
 
+            $repeateesFieldIDs = array();
+
+            $repeateeTitle = '';
+
             foreach( $repeatees[0][ 'fields' ] as $i => $field ) {
+                $repeateesFieldIDs[] = array(
+                    'id' => $repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ],
+                    'type' => $repeatees[ 0 ][ 'fields' ][ $i ][ 'type' ]
+                );
+
+                if( isset( $data[ 'savedFields' ], $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]] ) ) {
+                    $repeatees[ 0 ][ 'fields' ][ $i ][ 'value' ] = $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]];
+
+                    if( 'title' === $repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ] ) {
+                        $repeateeTitle = $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]];
+                    }
+                } else {
+                    $repeatees[ 0 ][ 'fields' ][ $i ][ 'value' ] = '';
+                }
+
                 $repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ] = sprintf(
                     '%1$s_%2$s_%3$s_%4$s',
                         $data[ 'id' ],
@@ -151,20 +194,36 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                     $data[ 'index' ]
                 );
 
+            $repeateeClass = 'repeatee jsAlchemyRepeatee';
+
+            if( ! $ssr ) {
+                $repeateeClass .= ' repeatee--expanded';
+                $repeateeVisible = "true";
+            } else {
+                $repeateeVisible = $data[ 'isVisible' ];
+
+                if( $repeateeVisible === 'false' ) {
+                    $repeateeClass .= ' repeatee--hidden';
+                }
+            }
+
             $repeateesHTML .= sprintf(
-                '<div class="repeatee repeatee--expanded jsAlchemyRepeatee" data-alchemy=\'%2$s\' id="%1$s">',
+                '<div class="%3$s" data-alchemy=\'%2$s\' id="%1$s">',
                     $repeateeID,
                     json_encode( array(
                         'repeater_id' => $data[ 'id' ],
                         'repeatee_title' => $repeatees[0][ 'title' ],
                         'repeatee_id' => $data[ 'repeatee_id' ],
+                        'fieldIDs' => $repeateesFieldIDs,
                         'index' => $data[ 'index' ]
-                    ) )
+                    ) ),
+                    $repeateeClass
                 );
 
-            $repeateesHTML .= '<input type="hidden" class="jsAlchemyRepeateeVisible" name="' . $repeateeID . '_visible" value="true" />';
 
-            $repeateesHTML .= $this->generate_repeatee_toolbar( $repeatees[0], $repeateeID );
+            $repeateesHTML .= '<input type="hidden" class="jsAlchemyRepeateeVisible" name="' . $repeateeID . '_visible" value="' . $repeateeVisible . '" />';
+
+            $repeateesHTML .= $this->generate_repeatee_toolbar( $repeatees[0], $repeateeID, $repeateesCount, $repeateeVisible, $repeateeTitle );
 
             $repeateesHTML .= sprintf(
                 '<div class="repeatee__content">%1$s</div>',
@@ -176,7 +235,8 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             return $repeateesHTML;
         }
 
-        public function generate_repeatee_toolbar( $repeatee, $repeateeID ) {
+        public function generate_repeatee_toolbar( $repeatee, $repeateeID, $repeateesCount, $repeateeVisible, $repeateeTitle ) {
+            $repeateeVisible = $repeateeVisible === 'true';
             $toolbarHTML = '';
 
             $toolbarHTML .= sprintf(
@@ -184,25 +244,36 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                     'repeatee__toolbar alchemy__clearfix jsAlchemyRepeateeToolbar',
                     __( 'Click to edit, drag to reorder', 'alchemy-options' )
             );
-            $toolbarHTML .= sprintf( '<h3 class="repeatee__title jsAlchemyRepeateeTitle"> </h3><small>%1$s</small>', $repeatee[ 'title' ] );
-            $toolbarHTML .= $this->generate_actions_group( $repeateeID );
+
+            $toolbarHTML .= '<h3 class="repeatee__title jsAlchemyRepeateeTitle">' . $repeateeTitle . '</h3>';
+
+            if( $repeateesCount > 1 ) {
+                $toolbarHTML .= sprintf( '<small>%1$s</small>', $repeatee[ 'title' ] );
+            }
+
+            $toolbarHTML .= $this->generate_actions_group( $repeateeID, $repeateeVisible );
 
             $toolbarHTML .= '</div>';
 
             return $toolbarHTML;
         }
 
-        public function generate_actions_group( $repeateeID ) {
+        public function generate_actions_group( $repeateeID, $repeateeVisible ) {
             $actionGroupHTML = '';
+            $visibilityIcon = 'dashicons dashicons-visibility';
+
+            if( ! $repeateeVisible ) {
+                $visibilityIcon .= ' dashicons-hidden';
+            }
 
             $actionGroupHTML .= '<span class="repeatee__actions button-group">';
 
             $actionGroupHTML .= sprintf(
                 '<button type="button" class="%2$s" data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
-                $repeateeID,
-                'repeatee__btn button button-secondary jsAlchemyRepeateeHide',
-                '<span class="dashicons dashicons-visibility"></span>',
-                __( 'Exclude this item from showing', 'alchemy-options' )
+                    $repeateeID,
+                    'repeatee__btn button button-secondary jsAlchemyRepeateeHide',
+                    sprintf( '<span class="%s"></span>', $visibilityIcon ),
+                    __( 'Exclude this item from showing', 'alchemy-options' )
             );
 
             $actionGroupHTML .= sprintf(
