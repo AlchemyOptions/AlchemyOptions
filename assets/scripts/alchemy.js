@@ -3,6 +3,7 @@ import saveOptions from './methods/saveOptions';
 import togglePassword from './methods/togglePasswordVisibility';
 import datalistFunctions from './methods/datalistFunctions';
 import colorpicker from './methods/colorpicker';
+import datepicker from './methods/datepicker';
 
 (function(document, window, $){
     $(() => {
@@ -11,5 +12,6 @@ import colorpicker from './methods/colorpicker';
         togglePassword();
         datalistFunctions();
         colorpicker();
+        datepicker();
     });
 })(document, window, jQuery);

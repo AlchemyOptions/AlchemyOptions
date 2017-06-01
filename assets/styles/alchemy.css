@@ -34,6 +34,15 @@ html {
     top: -1px; }
   .field--colorpicker ~ .alchemy__field {
     z-index: 4; }
+.field--datepicker input {
+  position: relative;
+  z-index: 10; }
+.field--datepicker .dashicons {
+  pointer-events: none;
+  margin-left: -25px;
+  margin-top: -2px;
+  position: relative;
+  z-index: 11; }
 
 .alchemy__options {
   padding: 3em 0; }
@@ -126,5 +135,9 @@ html {
     margin-bottom: .5em;
     border: 1px dashed #ccc;
     border-radius: 3px; }
+
+.appearance_page_alchemy-options .ui-datepicker-prev,
+.appearance_page_alchemy-options .ui-datepicker-next {
+  transition: none; }
 
 /*# sourceMappingURL=alchemy.css.map */

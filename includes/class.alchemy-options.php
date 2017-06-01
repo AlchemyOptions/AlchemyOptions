@@ -30,6 +30,7 @@ class Alchemy_Options {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyCheckbox.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySelect.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyColorpicker.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyDatepicker.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRepeater.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
     }
@@ -39,6 +40,7 @@ class Alchemy_Options {
             'jquery',
             'jquery-ui-sortable',
             'jquery-ui-autocomplete',
+            'jquery-ui-datepicker',
             'iris'
         ), '0.0.1', true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
@@ -46,7 +48,8 @@ class Alchemy_Options {
             'nonce' => wp_create_nonce( 'alchemy_ajax_nonce' )
         ) );
 
-        wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/styles/alchemy.css', false, '0.0.1' );
+        wp_register_style( 'alchemy-jquery', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', array(), '1.12.1' );
+        wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/styles/alchemy.css', array( 'alchemy-jquery' ), '0.0.1' );
 
         if( is_admin() ) {
             wp_enqueue_script( 'alchemy-scripts' );

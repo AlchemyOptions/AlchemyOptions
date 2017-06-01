@@ -1,3 +1,10 @@
 @import "base";
 
 @import "blocks/blocks";
+
+.appearance_page_alchemy-options {
+    .ui-datepicker-prev,
+    .ui-datepicker-next {
+        transition: none;
+    }
+}

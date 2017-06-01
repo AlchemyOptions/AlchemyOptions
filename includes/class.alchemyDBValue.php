@@ -21,6 +21,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 case 'password' :
                 case 'tel' :
                 case 'colorpicker' :
+                case 'datepicker' :
                     $this->value[ 'value' ] = sanitize_text_field( $this->value[ 'value' ] );
                 break;
                 case 'repeater' :
@@ -34,6 +35,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
         }
 
         public function sanitize_repeater_field( $value ) {
+            //todo: wel... sanitize it
             return $value;
         }
 
