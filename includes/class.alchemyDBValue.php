@@ -21,6 +21,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 case 'password' :
                 case 'tel' :
                 case 'colorpicker' :
+                case 'button-group' :
                 case 'datepicker' :
                     $this->value[ 'value' ] = sanitize_text_field( $this->value[ 'value' ] );
                 break;

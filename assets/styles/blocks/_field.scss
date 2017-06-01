@@ -77,5 +77,10 @@
         .button-group {
             will-change: transform;
         }
+
+        .field__label {
+            color: inherit;
+            font-weight: normal;
+        }
     }
 }

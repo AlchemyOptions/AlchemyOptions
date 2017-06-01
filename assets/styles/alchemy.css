@@ -45,6 +45,9 @@ html {
   z-index: 11; }
 .field--button-group .button-group {
   will-change: transform; }
+.field--button-group .field__label {
+  color: inherit;
+  font-weight: normal; }
 
 .alchemy__options {
   padding: 3em 0; }
