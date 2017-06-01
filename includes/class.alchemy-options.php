@@ -29,6 +29,7 @@ class Alchemy_Options {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRadio.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyCheckbox.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySelect.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyColorpicker.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRepeater.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
     }
@@ -37,7 +38,8 @@ class Alchemy_Options {
         wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', array(
             'jquery',
             'jquery-ui-sortable',
-            'jquery-ui-autocomplete'
+            'jquery-ui-autocomplete',
+            'iris'
         ), '0.0.1', true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
             'adminURL' => admin_url( 'admin-ajax.php' ),
@@ -107,8 +109,6 @@ class Alchemy_Options {
         if ( ! isset( $_GET[ 'nonce' ] ) || ! wp_verify_nonce( $_GET[ 'nonce' ][1], $_GET[ 'nonce' ][0] ) ) {
             die();
         }
-
-        $classExists = class_exists( 'Alchemy_Repeater_Field' );
 
         $rID = $_GET[ 'repeater' ][0];
         $repeateeID = $_GET[ 'repeater' ][1];

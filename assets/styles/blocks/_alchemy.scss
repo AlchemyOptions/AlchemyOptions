@@ -41,6 +41,31 @@
         }
     }
 
+    &__colorpicker {
+        &-toolbar {
+            position: relative;
+            z-index: 0;
+        }
+
+        &-sample {
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 40px;
+            height: 26px;
+            box-shadow: 0 1px 0 #ccc;
+
+            vertical-align: top;
+        }
+
+        .iris-picker {
+            position: absolute;
+            left: 0;
+            top: 30px;
+            z-index: 1;
+        }
+    }
+
     .dashicons, .dashicons-before:before {
         vertical-align: text-top;
     }

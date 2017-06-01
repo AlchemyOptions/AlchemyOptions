@@ -133,9 +133,9 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             $savedOptions = get_option( alch_options_id(), array() );
             $optionFields = new Alchemy_Fields_Loader();
 
-            $neededRepeater = array_filter( $savedOptions[ 'options' ], function( $option ) use( $data ) {
+            $neededRepeater = array_values( array_filter( $savedOptions[ 'options' ], function( $option ) use( $data ) {
                 return $option[ 'id' ] === $data[ 'id' ];
-            } )[0];
+            } ) )[0];
 
             if( ! $neededRepeater ) {
                 return '';

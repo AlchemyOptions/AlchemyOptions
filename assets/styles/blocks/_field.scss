@@ -39,4 +39,20 @@
             position: relative;
         }
     }
+
+    &--colorpicker {
+        position: relative;
+        z-index: 5;
+
+        input {
+            max-width: 80px;
+            padding-top: 4px;
+            position: relative;
+            top: -1px;
+        }
+
+        ~ .alchemy__field {
+            z-index: 4;
+        }
+    }
 }
