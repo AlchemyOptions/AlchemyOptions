@@ -17,7 +17,7 @@ class Alchemy_Fields_Loader {
             'text', 'url', 'email', 'tel',
             'password', 'textarea', 'select',
             'checkbox', 'radio', 'datalist',
-            'colorpicker', 'datepicker',
+            'colorpicker', 'datepicker', 'button-group',
             'repeater'
         );
     }
@@ -76,6 +76,9 @@ class Alchemy_Fields_Loader {
             break;
             case 'datepicker' :
                 return new Alchemy_Datepicker_Field();
+            break;
+            case 'button-group' :
+                return new Alchemy_Button_Group_Field();
             break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field();

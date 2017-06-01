@@ -7,4 +7,10 @@
     .ui-datepicker-next {
         transition: none;
     }
+
+    #wpadminbar,
+    #adminmenuback,
+    #adminmenuwrap {
+        will-change: transform;
+    }
 }

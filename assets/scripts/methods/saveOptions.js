@@ -53,6 +53,7 @@ export default function() {
             case 'textarea' :
             case 'colorpicker' :
             case 'datepicker' :
+            case 'button-group' :
                 value = alchemyField.find('input,select,textarea').val();
             break;
             case 'checkbox':

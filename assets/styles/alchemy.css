@@ -43,6 +43,8 @@ html {
   margin-top: -2px;
   position: relative;
   z-index: 11; }
+.field--button-group .button-group {
+  will-change: transform; }
 
 .alchemy__options {
   padding: 3em 0; }
@@ -139,5 +141,9 @@ html {
 .appearance_page_alchemy-options .ui-datepicker-prev,
 .appearance_page_alchemy-options .ui-datepicker-next {
   transition: none; }
+.appearance_page_alchemy-options #wpadminbar,
+.appearance_page_alchemy-options #adminmenuback,
+.appearance_page_alchemy-options #adminmenuwrap {
+  will-change: transform; }
 
 /*# sourceMappingURL=alchemy.css.map */
