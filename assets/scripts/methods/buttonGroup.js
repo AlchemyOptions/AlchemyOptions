@@ -1,5 +1,5 @@
-export default function () {
-    const $btnGroups = $('.jsAlchemyButtonGroup');
+export default function (scope = document) {
+    const $btnGroups = $('.jsAlchemyButtonGroup', scope);
 
     if( $btnGroups[0] ) {
         $btnGroups.each((i, el) => {

@@ -48,6 +48,16 @@ html {
 .field--button-group .field__label {
   color: inherit;
   font-weight: normal; }
+.field--upload .field__results {
+  padding-top: .5em; }
+  .field--upload .field__results img {
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    max-width: 100%;
+    height: auto;
+    background: #fafafa; }
 
 .alchemy__options {
   padding: 3em 0; }

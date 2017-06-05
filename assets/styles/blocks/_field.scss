@@ -83,4 +83,21 @@
             font-weight: normal;
         }
     }
+
+    &--upload {
+        .field__results {
+            padding-top: .5em;
+
+            img {
+                display: inline-block;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                max-width: 100%;
+                height: auto;
+
+                background: #fafafa;
+            }
+        }
+    }
 }

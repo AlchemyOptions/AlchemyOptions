@@ -1,5 +1,5 @@
-export default function() {
-    const $passwordToggles = $('.jsAlchemyTogglePassword');
+export default function(scope = document) {
+    const $passwordToggles = $('.jsAlchemyTogglePassword', scope);
 
     if( $passwordToggles[0] ) {
         $passwordToggles.each((i, toggle) => {

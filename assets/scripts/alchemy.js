@@ -5,6 +5,7 @@ import datalistFunctions from './methods/datalistFunctions';
 import colorpicker from './methods/colorpicker';
 import datepicker from './methods/datepicker';
 import buttonGroup from './methods/buttonGroup';
+import mediaUploader from './methods/mediaUploader';
 
 (function(document, window, $){
     $(() => {
@@ -15,5 +16,6 @@ import buttonGroup from './methods/buttonGroup';
         colorpicker();
         datepicker();
         buttonGroup();
+        mediaUploader();
     });
 })(document, window, jQuery);

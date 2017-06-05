@@ -1,3 +1,8 @@
+import mediaUploader from './mediaUploader';
+import togglePassword from './togglePasswordVisibility';
+import colorpicker from './colorpicker';
+import datepicker from './datepicker';
+
 export default function() {
     const $repeaterFields = $('.jsAlchemyRepeaterField');
 
@@ -30,8 +35,15 @@ export default function() {
                     'success': data => {
                         console.log('success');
 
-                        $dropIn.append(data);
+                        const $data = $(data);
+
+                        $dropIn.append($data);
                         $dropIn.sortable( "refresh" );
+
+                        mediaUploader($data);
+                        togglePassword($data);
+                        colorpicker($data);
+                        datepicker($data);
                     },
                     'error': err => {
                         console.error('error', err);

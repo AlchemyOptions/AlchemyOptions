@@ -18,6 +18,7 @@ class Alchemy_Fields_Loader {
             'password', 'textarea', 'select',
             'checkbox', 'radio', 'datalist',
             'colorpicker', 'datepicker', 'button-group',
+            'upload',
             'repeater'
         );
     }
@@ -79,6 +80,9 @@ class Alchemy_Fields_Loader {
             break;
             case 'button-group' :
                 return new Alchemy_Button_Group_Field();
+            break;
+            case 'upload' :
+                return new Alchemy_Upload_Field();
             break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field();

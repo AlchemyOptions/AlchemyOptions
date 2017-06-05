@@ -1,5 +1,5 @@
-export default function () {
-    const $datalists = $('.jsAlchemyDatalist');
+export default function (scope = document) {
+    const $datalists = $('.jsAlchemyDatalist', scope);
 
     if( $datalists[0] ) {
         $datalists.each((i, el) => {

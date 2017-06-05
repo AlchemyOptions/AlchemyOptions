@@ -1,5 +1,5 @@
-export default function () {
-    const $colorpickers = $('.jsAlchemyColorpicker');
+export default function (scope = document) {
+    const $colorpickers = $('.jsAlchemyColorpicker', scope);
 
     if( $colorpickers[0] ) {
         const $html = $('html');
