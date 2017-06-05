@@ -18,7 +18,7 @@ class Alchemy_Fields_Loader {
             'password', 'textarea', 'select',
             'checkbox', 'radio', 'datalist',
             'colorpicker', 'datepicker', 'button-group',
-            'upload',
+            'upload', 'editor',
             'repeater'
         );
     }
@@ -83,6 +83,9 @@ class Alchemy_Fields_Loader {
             break;
             case 'upload' :
                 return new Alchemy_Upload_Field();
+            break;
+            case 'editor' :
+                return new Alchemy_Editor_Field();
             break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field();

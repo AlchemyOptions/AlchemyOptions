@@ -2,6 +2,7 @@ import mediaUploader from './mediaUploader';
 import togglePassword from './togglePasswordVisibility';
 import colorpicker from './colorpicker';
 import datepicker from './datepicker';
+import editor from './editor';
 
 export default function() {
     const $repeaterFields = $('.jsAlchemyRepeaterField');
@@ -44,6 +45,7 @@ export default function() {
                         togglePassword($data);
                         colorpicker($data);
                         datepicker($data);
+                        editor($data);
                     },
                     'error': err => {
                         console.error('error', err);

@@ -58,6 +58,12 @@ html {
     max-width: 100%;
     height: auto;
     background: #fafafa; }
+.field--editor .wp-editor-tools {
+  min-height: 32px; }
+.field--editor .wp-editor-container {
+  clear: both;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); }
 
 .alchemy__options {
   padding: 3em 0; }

@@ -33,6 +33,7 @@ class Alchemy_Options {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyDatepicker.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyButtonGroup.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyUpload.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyEditor.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRepeater.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
     }
@@ -157,6 +158,10 @@ class Alchemy_Options {
 
     public function render_options_submenu () {
         echo $this->get_options_page( alch_options_id(), __( 'Alchemy options', 'alchemy-options' ) );
+
+        echo '<div class="wrap">';
+            wp_editor( '', 'alchemy-temp-editor' );
+        echo '</div>';
     }
 
     public function render_multisite_options_submenu (  ) {
