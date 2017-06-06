@@ -40,8 +40,12 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
         }
 
         public function sanitize_editor_field( $value ) {
-            //todo: use wp_kses_post to sanitize
-            return $value;
+            global $allowedposttags;
+
+            $allowed_html = apply_filters( 'alch_allowed_editor_html_tags', $allowedposttags );
+            $allowed_protocols = apply_filters('alch_allowed_editor_protocols', wp_allowed_protocols());
+
+            return wp_kses( $value, $allowed_html, $allowed_protocols );
         }
 
         public function sanitize_repeater_field( $value ) {

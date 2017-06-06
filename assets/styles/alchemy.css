@@ -60,7 +60,7 @@ html {
     background: #fafafa; }
 .field--editor .wp-editor-tools {
   min-height: 32px; }
-.field--editor .wp-editor-container {
+.field--editor .mce-tinymce {
   clear: both;
   border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); }
@@ -108,6 +108,7 @@ html {
 
 .repeatee {
   margin-bottom: .5em;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   background: #fafafa; }
   .repeatee__toolbar {
     border: 1px solid #ccc;
@@ -156,6 +157,20 @@ html {
     margin-bottom: .5em;
     border: 1px dashed #ccc;
     border-radius: 3px; }
+
+.tinymce--destroyed {
+  position: relative;
+  z-index: 0; }
+  .tinymce--destroyed .field__cover {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px dashed #ccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    z-index: 5;
+    background: #fff; }
 
 .appearance_page_alchemy-options .ui-datepicker-prev,
 .appearance_page_alchemy-options .ui-datepicker-next {

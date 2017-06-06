@@ -1,22 +1,44 @@
 export default function(scope = document) {
-    const $editors = $('.jsAlchemyEditorTextarea', scope);
+    let $editors = $('.jsAlchemyEditorTextarea', scope);
 
     if( $editors ) {
         if( scope.length && scope.length > 0 ) {
             getThingsGoing();
         } else {
-            $(document).on('tinymce-editor-init', getThingsGoing);
+            $(document).on('tinymce-editor-init', () => {
+                getThingsGoing(true);
+            });
         }
 
-        function getThingsGoing() {
+        function getThingsGoing(initial) {
             const initialSettings = tinyMCEPreInit.mceInit['alchemy-temp-editor'];
+
+            if( initial ) {
+                window.tweakSettings = function(id) {
+                    const tweakedSettings = {};
+
+                    $.each(initialSettings, (key, val) => {
+                        let newVal = val;
+
+                        if( 'string' === typeof val ) {
+                            newVal = val.replace('alchemy-temp-editor', id);
+                        }
+
+                        tweakedSettings[key] = newVal;
+                    });
+
+                    return tweakedSettings;
+                };
+
+                $editors = $editors.filter((i, el) => {
+                    return $(el).closest('.repeatee__content').length === 0
+                });
+            }
 
             $editors.each((i, el) => {
                 const $editor = $(el);
-                const settings = $.extend({}, tweakSettings( $editor.attr('id') ), {
+                const settings = $.extend({}, window.tweakSettings( $editor.attr('id') ), {
                     init_instance_callback: editor => {
-                        console.log(editor);
-
                         const $container = $(editor.editorContainer);
 
                         if( $container[0] ) {
@@ -33,26 +55,17 @@ export default function(scope = document) {
                     }
                 });
 
-                if( typeof tinymce !== 'undefined' ) {
+                settings.min_height = 250;
+
+                if( typeof tinymce !== 'undefined' && ! $editor.hasClass('tinymce--init') ) {
                     tinymce.init(settings);
+                    $editor.addClass('tinymce--init');
                 }
             });
 
-            function tweakSettings(id) {
-                const tweakedSettings = {};
-
-                $.each(initialSettings, (key, val) => {
-                    let newVal = val;
-
-                    if( 'string' === typeof val ) {
-                        newVal = val.replace('alchemy-temp-editor', id);
-                    }
-
-                    tweakedSettings[key] = newVal;
-                });
-
-                return tweakedSettings;
-            }
+            $editors.on('mousedown', function (e) {
+                e.preventDefault();
+            });
         }
     }
 }

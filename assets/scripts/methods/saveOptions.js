@@ -65,6 +65,15 @@ export default function() {
                     value.push($(el).data('value'));
                 });
             break;
+            case 'editor' :
+                const $area = $('.jsAlchemyEditorTextarea ', alchemyField);
+
+                if( $area.hasClass('tinymce--init') && typeof( tinymce ) !== 'undefined' ) {
+                    value = tinymce.get($area.attr('id')).getContent()
+                } else {
+                    value = $area.val();
+                }
+            break;
             case 'repeater' :
                 value = [];
 

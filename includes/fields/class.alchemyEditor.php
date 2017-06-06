@@ -14,6 +14,7 @@ if( ! class_exists( 'Alchemy_Editor_Field' ) ) {
                 <div class="alchemy__field field field--editor" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"editor"}\'>
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                     <textarea {{ATTRIBUTES}}>{{VALUE}}</textarea>
+                    <div class="field__cover"></div>
                     <div class="field__description">
                         <p>{{DESCRIPTION}}</p>
                     </div>
@@ -30,10 +31,11 @@ if( ! class_exists( 'Alchemy_Editor_Field' ) ) {
                 'name' => $field[ 'id' ],
                 'cols' => 60,
                 'rows' => 5,
-                'value' => $field[ 'value' ],
                 'class' => 'jsAlchemyEditorTextarea'
             ));
             $field[ 'add-media' ] = '';
+
+            $field[ 'value' ] = wp_kses_stripslashes( $field[ 'value' ] );
 
             return $field;
         }

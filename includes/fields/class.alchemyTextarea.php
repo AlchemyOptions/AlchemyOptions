@@ -30,7 +30,6 @@ if( ! class_exists( 'Alchemy_Textarea_Field' ) ) {
                 'name' => $field[ 'id' ],
                 'cols' => 60,
                 'rows' => 5,
-                'value' => $field[ 'value' ]
             ));
 
             return $field;

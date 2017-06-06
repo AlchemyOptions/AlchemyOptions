@@ -67,8 +67,10 @@ export default function() {
 
             $repeater.on('click', '.jsAlchemyRepeateeToolbar', function(e) {
                 const $toolbar = $(this);
+                const $repeatee = $toolbar.closest( '.repeatee' );
 
-                $toolbar.closest( '.repeatee' ).toggleClass('repeatee--expanded')
+                editor($repeatee);
+                $repeatee.toggleClass('repeatee--expanded')
             });
 
             $repeater.on('click', '.jsAlchemyRepeateeHide', function(e) {
@@ -100,12 +102,56 @@ export default function() {
             $dropIn.sortable({
                 placeholder: "repeatee--placeholder",
                 opacity: 0.8,
+                handle: ".jsAlchemyRepeateeToolbar",
                 start: (event, ui) => {
-                    $dropIn.find('.repeatee--placeholder').height(ui.helper.height() - 2)
+                    $dropIn.find('.repeatee--placeholder').height(ui.helper.height() - 2);
+
+                    saveEditors($repeater);
+                },
+                stop: (event, ui) => {
+                    restoreEditors($repeater);
                 }
             });
 
             $dropIn.disableSelection();
         });
+
+        function saveEditors(repeater) {
+            let $editors = $('.jsAlchemyEditorTextarea', repeater);
+
+            $editors.each((i, el) => {
+                const $editor = $(el);
+
+                if( $editor.hasClass('tinymce--init') && typeof( tinymce ) !== 'undefined' ) {
+                    const $field = $editor.closest('.field--editor');
+                    const selfHeight = $editor.closest('.field--editor').outerHeight();
+                    const editorHeight = $editor.prev('.mce-tinymce').outerHeight();
+
+                    $editor.next('.field__cover').height(editorHeight);
+                    $field.height(selfHeight).addClass('tinymce--destroyed');
+
+                    tinymce.get($editor.attr('id')).destroy();
+                }
+            });
+        }
+
+        function restoreEditors(repeater) {
+            let $editors = $('.jsAlchemyEditorTextarea', repeater);
+
+            $editors.each((i, el) => {
+                const $editor = $(el);
+                const $field = $editor.closest('.field--editor');
+
+                if( $field.hasClass('tinymce--destroyed') && typeof( tinymce ) !== 'undefined' ) {
+                    const settings = window.tweakSettings($editor.attr('id'));
+
+                    settings.min_height = 250;
+                    tinymce.init(settings);
+
+                    $editor.next('.field__cover').removeAttr('style');
+                    $field.removeAttr('style').removeClass('tinymce--destroyed');
+                }
+            });
+        }
     }
 };
