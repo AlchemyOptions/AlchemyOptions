@@ -18,7 +18,7 @@ class Alchemy_Fields_Loader {
             'password', 'textarea', 'select',
             'checkbox', 'radio', 'datalist',
             'colorpicker', 'datepicker', 'button-group',
-            'upload', 'editor', 'image-radio',
+            'upload', 'editor', 'image-radio', 'textblock',
             'repeater'
         );
     }
@@ -27,13 +27,14 @@ class Alchemy_Fields_Loader {
         $fieldsHTML = "";
 
         foreach ( $options as $i => $field ) {
-
             if ( $this->is_valid_field_type( $field[ 'type' ] ) ) {
-                if( ! isset( $field[ 'id' ] ) ) {
-                    return '';
+                if( ! isset( $field[ 'id' ] ) && ! $this->is_ok_without_id( $field[ 'type' ] ) ) {
+                    continue;
                 }
 
-                $options[$i][ 'id' ] = sanitize_key( $field[ 'id' ] );
+                if( ! $this->is_ok_without_id( $field[ 'type' ] ) ) {
+                    $options[$i][ 'id' ] = sanitize_key( $field[ 'id' ] );
+                }
 
                 $fieldInstance = $this->choose_class( $field[ 'type' ] );
 
@@ -90,6 +91,9 @@ class Alchemy_Fields_Loader {
             case 'image-radio' :
                 return new Alchemy_Image_Radio_Field();
             break;
+            case 'textblock' :
+                return new Alchemy_Textblock_Field();
+            break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field();
             break;
@@ -97,6 +101,10 @@ class Alchemy_Fields_Loader {
         }
 
         return false;
+    }
+
+    public function is_ok_without_id( $type ) {
+        return in_array( $type, [ 'textblock' ] );
     }
 
     public function is_valid_field_type ( $type ) {

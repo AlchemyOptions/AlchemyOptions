@@ -8,9 +8,11 @@ export default function() {
         $formFields.each((i, field) => {
             const data = $(field).data('alchemy');
 
-            formData[data.id] = {
-                type: data.type
-            };
+            if( data ) {
+                formData[data.id] = {
+                    type: data.type
+                };
+            }
         });
 
         $form.on('submit', e => {
@@ -40,6 +42,10 @@ export default function() {
 
     function getFieldValue( alchemyField ) {
         const data = alchemyField.data('alchemy');
+
+        if( ! data ) {
+            return;
+        }
 
         let value;
 

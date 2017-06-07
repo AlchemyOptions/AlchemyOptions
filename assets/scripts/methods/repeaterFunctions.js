@@ -4,6 +4,7 @@ import colorpicker from './colorpicker';
 import datepicker from './datepicker';
 import editor from './editor';
 import buttonGroup from './buttonGroup';
+import imageRadios from './imageRadios';
 
 export default function() {
     const $repeaterFields = $('.jsAlchemyRepeaterField');
@@ -48,6 +49,7 @@ export default function() {
                         datepicker($data);
                         editor($data);
                         buttonGroup($data);
+                        imageRadios($data);
                     },
                     'error': err => {
                         console.error('error', err);
@@ -71,8 +73,19 @@ export default function() {
                 const $toolbar = $(this);
                 const $repeatee = $toolbar.closest( '.repeatee' );
 
-                editor($repeatee);
-                $repeatee.toggleClass('repeatee--expanded')
+                if( $repeatee.hasClass('repeatee--expanded') ) {
+                    const $editor = $('.jsAlchemyEditorTextarea', $repeatee);
+
+                    $editor.removeClass('tinymce--init');
+                    $repeatee.removeClass('repeatee--expanded');
+
+                    $('.wp-editor-tools', $repeatee).remove();
+
+                    tinymce.get($editor.attr('id')).remove();
+                } else {
+                    editor($repeatee);
+                    $repeatee.addClass('repeatee--expanded')
+                }
             });
 
             $repeater.on('click', '.jsAlchemyRepeateeHide', function(e) {
@@ -144,7 +157,8 @@ export default function() {
                 const $editor = $(el);
                 const $field = $editor.closest('.field--editor');
 
-                if( $field.hasClass('tinymce--destroyed') && typeof( tinymce ) !== 'undefined' ) {
+                if( $field.hasClass('tinymce--destroyed') && $editor.hasClass('tinymce--init') && typeof( tinymce ) !== 'undefined' ) {
+
                     const settings = window.tweakSettings($editor.attr('id'));
 
                     settings.min_height = 250;
