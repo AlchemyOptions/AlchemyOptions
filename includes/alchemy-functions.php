@@ -35,6 +35,12 @@ if ( ! function_exists( 'alch_get_option' ) ) {
     }
 }
 
+if( ! function_exists( 'alch_delete_value' ) ) {
+    function alch_delete_value( $optionID ) {
+        return update_option( $optionID, '' );
+    }
+}
+
 if( ! function_exists( 'alch_normalize_value' ) ) {
     function alch_normalize_value( $savedValue ) {
         //todo: filter for hidden things, e.g. in the repeater field and exclude those

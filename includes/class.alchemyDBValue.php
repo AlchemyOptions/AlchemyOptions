@@ -49,8 +49,18 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
         }
 
         public function sanitize_repeater_field( $value ) {
-            //todo: wel... sanitize it
-            return $value;
+            return array_map(function( $item ){
+                $item[ 'fields' ] = array_map(function( $field ){
+                    $safeVal = new Alchemy_DB_Value( $field );
+
+                    return array(
+                        'type' => $field[ 'type' ],
+                        'value' => $safeVal->get_safe_value(),
+                    );
+                }, $item[ 'fields' ]);
+
+                return $item;
+            }, $value);
         }
 
         public function get_safe_value() {

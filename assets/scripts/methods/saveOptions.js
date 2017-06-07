@@ -94,7 +94,10 @@ export default function() {
                         if( repeateeData.fieldIDs ) {
 
                             $.each(repeateeData.fieldIDs, (ind, field) => {
-                                valueToStore.fields[field.id] = getFieldValue( $childFields.eq(ind) );
+                                valueToStore.fields[field.id] = {
+                                    'type': field.type,
+                                    'value': getFieldValue( $childFields.eq(ind) )
+                                };
                             });
 
                         }

@@ -3,6 +3,7 @@ import togglePassword from './togglePasswordVisibility';
 import colorpicker from './colorpicker';
 import datepicker from './datepicker';
 import editor from './editor';
+import buttonGroup from './buttonGroup';
 
 export default function() {
     const $repeaterFields = $('.jsAlchemyRepeaterField');
@@ -46,6 +47,7 @@ export default function() {
                         colorpicker($data);
                         datepicker($data);
                         editor($data);
+                        buttonGroup($data);
                     },
                     'error': err => {
                         console.error('error', err);

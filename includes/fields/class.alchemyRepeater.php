@@ -81,34 +81,6 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
         }
 
         public function parse_value( $field ) {
-
-            /*
-             * $field[ 'value' ]
-             *
-             * array(
-             *      array(
-                        'title' => 'Repeater field',
-             *          'type' => 'repeater-fields',
-             *          'isVisible' => 'false',
-             *          'fields' => array(
-             *              'organization' => 'Some text',
-             *              'description' => 'Some description',
-             *              'radio' => 'some value'
-             *          )
-             *      ),
-             *      array(
-                        'title' => 'Repeater field',
-             *          'type' => 'repeater-fields',
-             *          'isVisible' => 'true',
-             *          'fields' => array(
-             *              'organization' => 'Some text',
-             *              'description' => 'Some description',
-             *              'radio' => 'some value'
-             *          )
-             *      ),
-             * )
-             * */
-
             $repeateesHTML = '';
 
             if( is_array( $field[ 'value' ] ) && count( $field[ 'value' ] ) > 0 ) {
@@ -169,10 +141,10 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 );
 
                 if( isset( $data[ 'savedFields' ], $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]] ) ) {
-                    $repeatees[ 0 ][ 'fields' ][ $i ][ 'value' ] = $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]];
+                    $repeatees[ 0 ][ 'fields' ][ $i ][ 'value' ] = $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]]['value'];
 
                     if( 'title' === $repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ] ) {
-                        $repeateeTitle = $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]];
+                        $repeateeTitle = $data[ 'savedFields' ][$repeatees[ 0 ][ 'fields' ][ $i ][ 'id' ]]['value'];
                     }
                 } else {
                     $repeatees[ 0 ][ 'fields' ][ $i ][ 'value' ] = '';
