@@ -59,6 +59,7 @@ export default function() {
             break;
             case 'checkbox':
             case 'radio':
+            case 'image-radio':
                 value = [];
 
                 alchemyField.find(':checked').each((i, el) => {

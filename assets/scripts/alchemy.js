@@ -7,6 +7,7 @@ import datepicker from './methods/datepicker';
 import buttonGroup from './methods/buttonGroup';
 import mediaUploader from './methods/mediaUploader';
 import editor from './methods/editor';
+import imageRadios from './methods/imageRadios';
 
 (function(document, window, $){
     $(() => {
@@ -19,5 +20,6 @@ import editor from './methods/editor';
         buttonGroup();
         mediaUploader();
         editor();
+        imageRadios();
     });
 })(document, window, jQuery);

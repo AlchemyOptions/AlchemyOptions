@@ -15,6 +15,25 @@ html {
     padding-top: 0;
     margin-top: 0;
     margin-bottom: 0; }
+.field__image-label {
+  transition: border-color .3s;
+  display: inline-block;
+  border: 1px solid #e5e5e5;
+  padding: 3px;
+  background: #fafafa;
+  margin-right: .5em;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); }
+  .field__image-label:hover, .field__image-label:focus {
+    border-color: #c4c4c4;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14); }
+  .field__image-label--active, .field__image-label--active:hover, .field__image-label--active:focus {
+    border-color: #0085ba;
+    box-shadow: 0 0 2px #006799; }
+  .field__image-label--disabled, .field__image-label--disabled:hover {
+    opacity: .5;
+    cursor: not-allowed; }
+  .field__image-label img {
+    display: block; }
 .field--repeater .field__label {
   margin-bottom: 0; }
 .field--repeater .repeatee .field__label {
@@ -64,6 +83,8 @@ html {
   clear: both;
   border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); }
+.field--image-radio input {
+  display: none; }
 
 .alchemy__options {
   padding: 3em 0; }
