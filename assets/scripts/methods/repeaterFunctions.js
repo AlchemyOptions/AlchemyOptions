@@ -19,10 +19,8 @@ export default function() {
 
             $repeater.on('click', '.jsAlchemyRepeaterAdd', function() {
                 const $btn = $(this);
-                const $loader = $(this).next('.jsAlchemyRepeaterLoader');
+                const $loader = $btn.next('.jsAlchemyRepeaterLoader');
                 const nonce = $btn.data('nonce');
-                const rID = $btn.data('repeater-id');
-                const repeateeID = $btn.data('repeatee-id');
 
                 $btn.attr('disabled', true);
                 $loader.removeClass('alchemy__repeater-add-spinner--hidden');
@@ -33,7 +31,7 @@ export default function() {
                     'data': {
                         'action': 'alchemy_repeater_item_add',
                         'nonce': [nonce.id, nonce.value],
-                        'repeater': [rID, repeateeID],
+                        'repeater': [$btn.data('repeater-id'), $btn.data('repeatee-id')],
                         'index': clickIndex
                     },
                     'success': data => {
