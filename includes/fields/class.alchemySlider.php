@@ -12,6 +12,7 @@ if( ! class_exists( 'Alchemy_Slider_Field' ) ) {
 
             $this->template = '
                 <div class="alchemy__field field field--{{TYPE}}" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
+                    <span class="field__label">{{TITLE}}</span>
                     <div class="jsAlchemySlider" data-values=\'{{VALUES}}\'></div>
                     <input {{ATTRIBUTES}} />
                     <div class="field__description">
