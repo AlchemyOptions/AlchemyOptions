@@ -22,6 +22,7 @@ class Alchemy_Options {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/alchemy-functions.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/interface.alchemyField.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyDBValue.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyValue.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyField.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyText.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTextarea.php' );
@@ -161,6 +162,10 @@ class Alchemy_Options {
     }
 
     public function render_options_submenu () {
+        $repeater = alch_get_option( 'first-repeater-option' );
+
+        var_dump($repeater);
+
         echo $this->get_options_page( alch_options_id(), __( 'Alchemy options', 'alchemy-options' ) );
 
         echo '<div class="wrap">';
