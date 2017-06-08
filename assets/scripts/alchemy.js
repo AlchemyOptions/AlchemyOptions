@@ -8,6 +8,7 @@ import buttonGroup from './methods/buttonGroup';
 import mediaUploader from './methods/mediaUploader';
 import editor from './methods/editor';
 import imageRadios from './methods/imageRadios';
+import slider from './methods/slider';
 
 (function(document, window, $){
     $(() => {
@@ -21,5 +22,6 @@ import imageRadios from './methods/imageRadios';
         mediaUploader();
         editor();
         imageRadios();
+        slider();
     });
 })(document, window, jQuery);

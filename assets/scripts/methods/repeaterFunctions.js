@@ -5,6 +5,7 @@ import datepicker from './datepicker';
 import editor from './editor';
 import buttonGroup from './buttonGroup';
 import imageRadios from './imageRadios';
+import slider from './slider';
 
 export default function() {
     const $repeaterFields = $('.jsAlchemyRepeaterField');
@@ -50,6 +51,7 @@ export default function() {
                         editor($data);
                         buttonGroup($data);
                         imageRadios($data);
+                        slider($data);
                     },
                     'error': err => {
                         console.error('error', err);

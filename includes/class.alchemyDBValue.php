@@ -24,6 +24,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 case 'button-group' :
                 case 'datepicker' :
                 case 'upload' :
+                case 'slider' :
                     $this->value[ 'value' ] = sanitize_text_field( $this->value[ 'value' ] );
                 break;
                 case 'repeater' :

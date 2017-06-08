@@ -36,6 +36,7 @@ class Alchemy_Options {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyEditor.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyImageRadio.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTextblock.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySlider.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRepeater.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
     }
@@ -50,6 +51,7 @@ class Alchemy_Options {
             'jquery-ui-sortable',
             'jquery-ui-autocomplete',
             'jquery-ui-datepicker',
+            'jquery-ui-slider',
             'iris'
         ), ALCHEMY_OPTIONS_VERSION, true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
@@ -57,7 +59,7 @@ class Alchemy_Options {
             'nonce' => wp_create_nonce( 'alchemy_ajax_nonce' )
         ) );
 
-        wp_register_style( 'alchemy-jquery', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', array(), '1.12.1' );
+        wp_register_style( 'alchemy-jquery', '//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css', array(), '1.12.1' );
         wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/styles/alchemy.css', array( 'alchemy-jquery' ), ALCHEMY_OPTIONS_VERSION );
 
         wp_enqueue_media();
