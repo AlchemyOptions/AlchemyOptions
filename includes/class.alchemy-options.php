@@ -162,13 +162,10 @@ class Alchemy_Options {
     }
 
     public function render_options_submenu () {
-        $repeater = alch_get_option( 'first-repeater-option' );
-
-        var_dump($repeater);
-
         echo $this->get_options_page( alch_options_id(), __( 'Alchemy options', 'alchemy-options' ) );
 
-        echo '<div class="wrap">';
+        //hack to include editor styles. Will be removed when support of the wp_enqueue_editor() is high and there's a way to get the default editor settings for posts
+        echo '<div class="hidden">';
             wp_editor( '', 'alchemy-temp-editor' );
         echo '</div>';
     }
