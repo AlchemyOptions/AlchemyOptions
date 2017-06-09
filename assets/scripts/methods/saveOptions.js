@@ -6,12 +6,26 @@ export default function() {
         const $formFields = $form.find( '.alchemy__fields' ).children('.alchemy__field');
 
         $formFields.each((i, field) => {
-            const data = $(field).data('alchemy');
+            const $field = $(field);
+            const data = $field.data('alchemy');
 
             if( data ) {
-                formData[data.id] = {
-                    type: data.type
-                };
+                if( 'section' === data.type ) {
+                    $field.children( '.alchemy__field' ).each((i, item) => {
+                        const $field = $(item);
+                        const data = $field.data('alchemy');
+
+                        if( data ) {
+                            formData[data.id] = {
+                                type: data.type
+                            };
+                        }
+                    });
+                } else {
+                    formData[data.id] = {
+                        type: data.type
+                    };
+                }
             }
         });
 
@@ -80,6 +94,25 @@ export default function() {
                     value = tinymce.get($area.attr('id')).getContent()
                 } else {
                     value = $area.val();
+                }
+            break;
+            case 'section' :
+                value = [];
+
+                const $childFields = alchemyField.children('.alchemy__field');
+
+                if( $childFields[0] ) {
+                    $childFields.each((i, el) => {
+                        const $el = $(el);
+                        const data = $el.data('alchemy');
+
+                        if( data ) {
+                            value.push({
+                                'type': data.type,
+                                'value': getFieldValue($el)
+                            })
+                        }
+                    });
                 }
             break;
             case 'repeater' :

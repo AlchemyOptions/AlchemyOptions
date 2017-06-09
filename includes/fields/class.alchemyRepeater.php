@@ -102,16 +102,13 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
         }
 
         public function generate_repeatee( $data, $ssr = false ) {
-            $savedOptions = get_option( alch_options_id(), array() );
-            $optionFields = new Alchemy_Fields_Loader();
-
-            $neededRepeater = array_values( array_filter( $savedOptions[ 'options' ], function( $option ) use( $data ) {
-                return $option[ 'type' ] === 'repeater' && $option[ 'id' ] === $data[ 'id' ];
-            } ) )[0];
+            $neededRepeater = $this->find_needed_repeater( $data );
 
             if( ! $neededRepeater ) {
                 return '';
             }
+
+            $optionFields = new Alchemy_Fields_Loader();
 
             $repeateesCount = count( $neededRepeater[ 'repeatees' ] );
 
@@ -205,6 +202,28 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             $repeateesHTML .= '</div>';
 
             return $repeateesHTML;
+        }
+
+        public function find_needed_repeater( $data ) {
+            $savedOptions = get_option( alch_options_id(), array() );
+
+            return $this->filter_repeater( $data, $savedOptions['options'] );
+        }
+
+        public function filter_repeater( $data, $fields ) {
+            $neededRepeater = false;
+
+            foreach( $fields as $field ) {
+                if( ( 'repeater' === $field['type'] || 'nested-repeater' === $field['type'] ) && $field['id'] === $data['id'] ) {
+                    $neededRepeater = $field;
+                } else if( 'section' === $field['type'] ) {
+                    $neededRepeater = $this->filter_repeater( $data, $field['options'] );
+                } else if( 'fields-group' === $field['type'] ) {
+                    $neededRepeater = $this->filter_repeater( $data, $field['fields'] );
+                }
+            }
+
+            return $neededRepeater;
         }
 
         public function generate_repeatee_toolbar( $repeatee, $repeateeID, $repeateesCount, $repeateeVisible, $repeateeTitle ) {

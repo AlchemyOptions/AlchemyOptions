@@ -19,7 +19,7 @@ class Alchemy_Fields_Loader {
             'checkbox', 'radio', 'datalist',
             'colorpicker', 'datepicker', 'button-group',
             'upload', 'editor', 'image-radio',
-            'textblock', 'slider',
+            'textblock', 'slider', 'section',
             'repeater'
         );
     }
@@ -97,6 +97,9 @@ class Alchemy_Fields_Loader {
             break;
             case 'slider' :
                 return new Alchemy_Slider_Field();
+            break;
+            case 'section' :
+                return new Alchemy_Section_Field();
             break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field();
