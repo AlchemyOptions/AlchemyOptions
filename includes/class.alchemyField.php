@@ -9,15 +9,20 @@ if( ! class_exists( 'Alchemy_Field' ) ) {
     class Alchemy_Field implements iAlchemy_Field {
         protected $template = '';
 
-        public function __construct() {
+        protected $networkField = false;
+
+        public function __construct( $networkField = false ) {
             $this->template = '';
+            $this->networkField = $networkField;
         }
 
         public function normalize_field_keys( $field ) {
             $field[ 'description' ] = isset( $field[ 'desc' ] ) ? $field[ 'desc' ] : '';
             unset( $field[ 'desc' ] );
 
-            $savedData = get_option( $field[ 'id' ] );
+            $savedData = $this->networkField
+                ? get_site_option( $field[ 'id' ] )
+                : get_option( $field[ 'id' ] );
 
             if( ! isset( $field[ 'value' ] ) ) {
                 $field[ 'value' ] = is_array( $savedData ) ? $savedData[ 'value' ] : '';

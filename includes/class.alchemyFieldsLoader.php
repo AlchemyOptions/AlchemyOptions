@@ -11,7 +11,9 @@ if( class_exists( 'Alchemy_Fields_Loader' ) ) {
 class Alchemy_Fields_Loader {
     private $valid_field_types;
 
-    public function __construct() {
+    public function __construct( $networkFields = false ) {
+        $this->networkFields = $networkFields;
+
         //repeater should always be the last one since it can render all of the types
         $this->valid_field_types = array(
             'text', 'url', 'email', 'tel',
@@ -57,52 +59,52 @@ class Alchemy_Fields_Loader {
             case 'url' :
             case 'tel' :
             case 'text' :
-                return new Alchemy_Text_Field();
+                return new Alchemy_Text_Field( $this->networkFields );
             break;
             case 'password' :
-                return new Alchemy_Password_Field();
+                return new Alchemy_Password_Field( $this->networkFields );
             break;
             case 'radio' :
-                return new Alchemy_Radio_Field();
+                return new Alchemy_Radio_Field( $this->networkFields );
             break;
             case 'checkbox' :
-                return new Alchemy_Checkbox_Field();
+                return new Alchemy_Checkbox_Field( $this->networkFields );
             break;
             case 'select' :
-                return new Alchemy_Select_Field();
+                return new Alchemy_Select_Field( $this->networkFields );
             break;
             case 'textarea' :
-                return new Alchemy_Textarea_Field();
+                return new Alchemy_Textarea_Field( $this->networkFields );
             break;
             case 'colorpicker' :
-                return new Alchemy_Colorpicker_Field();
+                return new Alchemy_Colorpicker_Field( $this->networkFields );
             break;
             case 'datepicker' :
-                return new Alchemy_Datepicker_Field();
+                return new Alchemy_Datepicker_Field( $this->networkFields );
             break;
             case 'button-group' :
-                return new Alchemy_Button_Group_Field();
+                return new Alchemy_Button_Group_Field( $this->networkFields );
             break;
             case 'upload' :
-                return new Alchemy_Upload_Field();
+                return new Alchemy_Upload_Field( $this->networkFields );
             break;
             case 'editor' :
-                return new Alchemy_Editor_Field();
+                return new Alchemy_Editor_Field( $this->networkFields );
             break;
             case 'image-radio' :
-                return new Alchemy_Image_Radio_Field();
+                return new Alchemy_Image_Radio_Field( $this->networkFields );
             break;
             case 'textblock' :
-                return new Alchemy_Textblock_Field();
+                return new Alchemy_Textblock_Field( $this->networkFields );
             break;
             case 'slider' :
-                return new Alchemy_Slider_Field();
+                return new Alchemy_Slider_Field( $this->networkFields );
             break;
             case 'section' :
-                return new Alchemy_Section_Field();
+                return new Alchemy_Section_Field( $this->networkFields );
             break;
             case 'repeater' :
-                return new Alchemy_Repeater_Field();
+                return new Alchemy_Repeater_Field( $this->networkFields );
             break;
             default : break;
         }

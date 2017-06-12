@@ -7,8 +7,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( 'Alchemy_Button_Group_Field' ) ) {
 
     class Alchemy_Button_Group_Field extends Alchemy_Field {
-        public function __construct() {
-            parent::__construct();
+        public function __construct( $networkField = false ) {
+            parent::__construct( $networkField );
 
             $this->template = '
                 <div class="alchemy__field field field--button-group jsAlchemyButtonGroup" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"button-group"}\'>

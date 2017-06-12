@@ -2,6 +2,7 @@ export default function() {
     const $form = $("#jsAlchemyForm");
 
     if( $form[0] ) {
+        const isNetworkForm = $form.data('is-network');
         const formData = {};
         const $formFields = $form.find( '.alchemy__fields' ).children('.alchemy__field');
 
@@ -36,14 +37,20 @@ export default function() {
                 formData[name]['value'] = getFieldValue($(`#field--${name}`));
             });
 
+            const data = {
+                'action': 'alchemy_save_options',
+                'nonce': alchemyData.nonce,
+                'fields': formData
+            };
+
+            if( isNetworkForm ) {
+                data.network = true;
+            }
+
             $.ajax({
                 'type': 'post',
                 'url': alchemyData.adminURL,
-                'data': {
-                    'action': 'alchemy_save_options',
-                    'nonce': alchemyData.nonce,
-                    'fields': formData
-                },
+                'data': data,
                 'success': data => {
                     console.log('success', data);
                 },

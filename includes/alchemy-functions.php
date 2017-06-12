@@ -26,7 +26,7 @@ if ( ! function_exists( 'alch_get_option' ) ) {
     function alch_get_option( $optionID, $default = "" ) {
         $savedValue = get_option( $optionID );
 
-        if( $savedValue ) {
+        if( $savedValue['value'] ) {
             $valueInst = new Alchemy_Value( $savedValue );
 
             return apply_filters( "alch_value_{$optionID}", $valueInst->get_value() );
@@ -40,8 +40,10 @@ if ( ! function_exists( 'alch_get_network_option' ) ) {
     function alch_get_network_option( $optionID, $default = "" ) {
         $savedValue = get_site_option( $optionID );
 
-        if( $savedValue ) {
-            return alch_normalize_value( $savedValue );
+        if( $savedValue['value'] ) {
+            $valueInst = new Alchemy_Value( $savedValue, true );
+
+            return apply_filters( "alch_network_value_{$optionID}", $valueInst->get_value() );
         }
 
         return $default;

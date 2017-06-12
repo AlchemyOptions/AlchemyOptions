@@ -81,8 +81,6 @@ class Alchemy_Options {
         add_action( 'wp_ajax_alchemy_repeater_item_add', array( $this, 'handle_repeater_item_add' ) );
 //
 //        add_action( 'wp_ajax_alchemy_datalist_search', array( $this, 'handle_datalist_search' ) );
-
-        //todo: add plugin_text_domain()
     }
 
     public function handle_save_options() {
@@ -96,14 +94,23 @@ class Alchemy_Options {
             return;
         }
 
+        $networkSave = isset( $_POST[ 'network' ] );
+
         if( count( $fields ) > 0 ) {
             foreach ( $fields as $id => $payload ) {
                 $value = new Alchemy_DB_Value( $payload );
 
-                update_option( $id, array(
-                    'type' => $payload[ 'type' ],
-                    'value' => $value->get_safe_value(),
-                ) );
+                if( $networkSave ) {
+                    update_site_option( $id, array(
+                        'type' => $payload[ 'type' ],
+                        'value' => $value->get_safe_value(),
+                    ) );
+                } else {
+                    update_option( $id, array(
+                        'type' => $payload[ 'type' ],
+                        'value' => $value->get_safe_value(),
+                    ) );
+                }
             }
         }
     }
@@ -172,10 +179,15 @@ class Alchemy_Options {
     }
 
     public function render_multisite_options_submenu (  ) {
-        echo $this->get_options_page( alch_network_options_id(), __( 'Alchemy multisite options', 'alchemy-options' ) );
+        echo $this->get_options_page( alch_network_options_id(), __( 'Alchemy multisite options', 'alchemy-options' ), true );
+
+        //hack to include editor styles. Will be removed when support of the wp_enqueue_editor() is high and there's a way to get the default editor settings for posts
+        echo '<div class="hidden">';
+        wp_editor( '', 'alchemy-temp-editor' );
+        echo '</div>';
     }
 
-    public function get_options_page( $type, $pageTitle ) {
+    public function get_options_page( $type, $pageTitle, $isNetwork = false ) {
         $savedOptions = get_option( $type, array() );
 
         $submenuHTML = '';
@@ -184,7 +196,7 @@ class Alchemy_Options {
         $submenuHTML .= '<h2>' . $pageTitle . '</h2><br>';
 
         if( count( $savedOptions ) > 0 ) {
-            $submenuHTML .= $this->get_options_page_html( $savedOptions );
+            $submenuHTML .= $this->get_options_page_html( $savedOptions, $isNetwork );
         } else {
             $submenuHTML .= '<p>' . __( 'Looks like there are no options to show', 'alchemy-options' ) . '</p>';
         }
@@ -194,7 +206,7 @@ class Alchemy_Options {
         return $submenuHTML;
     }
 
-    public function get_options_page_html( $options ) {
+    public function get_options_page_html( $options, $isNetwork ) {
         $optionsHTML = "";
 
         if( is_array( $options[ 'tabs' ] ) && count( $options[ 'tabs' ] ) > 0 ) {
@@ -213,7 +225,7 @@ class Alchemy_Options {
         if( is_array( $options[ 'options' ] ) && count( $options[ 'options' ] ) > 0 ) {
             $optionsHTML .= '<div class="alchemy__options">';
 
-            $optionsHTML .= $this->get_options_html( $options[ 'options' ] );
+            $optionsHTML .= $this->get_options_html( $options[ 'options' ], $isNetwork );
 
             $optionsHTML .= '</div>';
         }
@@ -235,7 +247,7 @@ class Alchemy_Options {
         return $tabsHTML;
     }
 
-    public function get_options_html( $options ) {
+    public function get_options_html( $options, $isNetwork ) {
         $optionsHTML = "";
 
         $filteredOptions = array_filter( $options, function( $option ) {
@@ -243,9 +255,9 @@ class Alchemy_Options {
         } );
 
         //todo: various checks when tab info is missing or tab is not supplied
-        $optionFields = new Alchemy_Fields_Loader();
+        $optionFields = new Alchemy_Fields_Loader( $isNetwork );
 
-        $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm">';
+        $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm" data-is-network="' . json_encode( $isNetwork ) . '">';
         $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';
 
         $optionsHTML .= '<div class="alchemy__fields">';

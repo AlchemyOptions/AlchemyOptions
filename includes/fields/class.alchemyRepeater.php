@@ -7,8 +7,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
 
     class Alchemy_Repeater_Field extends Alchemy_Field {
-        public function __construct() {
-            parent::__construct();
+        public function __construct( $networkField = false ) {
+            parent::__construct( $networkField );
 
             $this->template = '
                 <div class="alchemy__field field field--repeater jsAlchemyRepeaterField" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"repeater"}\'>
@@ -108,7 +108,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 return '';
             }
 
-            $optionFields = new Alchemy_Fields_Loader();
+            $optionFields = new Alchemy_Fields_Loader( $this->networkField );
 
             $repeateesCount = count( $neededRepeater[ 'repeatees' ] );
 
@@ -205,7 +205,9 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
         }
 
         public function find_needed_repeater( $data ) {
-            $savedOptions = get_option( alch_options_id(), array() );
+            $savedOptions = $this->networkField
+                ? get_option( alch_network_options_id(), array() )
+                : get_option( alch_options_id(), array() );
 
             return $this->filter_repeater( $data, $savedOptions['options'] );
         }

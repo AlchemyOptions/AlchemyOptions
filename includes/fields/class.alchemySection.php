@@ -7,8 +7,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( 'Alchemy_Section_Field' ) ) {
 
     class Alchemy_Section_Field extends Alchemy_Field {
-        public function __construct() {
-            parent::__construct();
+        public function __construct( $networkField = false ) {
+            parent::__construct( $networkField );
 
             $this->template = '
                 <div class="alchemy__field field field--{{TYPE}}" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}","title":"{{TITLE}}"}\'>
@@ -28,7 +28,7 @@ if( ! class_exists( 'Alchemy_Section_Field' ) ) {
             $fields = isset( $field['options'] ) ? $field['options'] : array();
 
             if( is_array( $fields ) && count( $fields ) > 0 ) {
-                $sectionFields = new Alchemy_Fields_Loader();
+                $sectionFields = new Alchemy_Fields_Loader( $this->networkField );
 
                 $fieldsHTML .= $sectionFields->get_fields_html( $fields );
             }

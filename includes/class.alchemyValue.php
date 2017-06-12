@@ -8,8 +8,9 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
     class Alchemy_Value {
         private $value;
 
-        public function __construct( $rawValue ) {
+        public function __construct( $rawValue, $network = false ) {
             $this->value = $rawValue;
+            $this->isNetworlValue = $network;
 
             $this->filter_value_by_type();
         }
@@ -34,8 +35,21 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
         }
 
         public function modify_upload_value( $value ) {
-            $valueToReturn = $value;
+            if( $this->isNetworlValue ) {
+                switch_to_blog(1);
 
+                $valueToReturn = $this->get_attached_image( $value );
+
+                restore_current_blog();
+            } else {
+                $valueToReturn = $this->get_attached_image( $value );
+            }
+
+            return $valueToReturn;
+        }
+
+        public function get_attached_image( $value ) {
+            $valueToReturn = $value;
             $imageMeta = wp_get_attachment_metadata( $value );
 
             if( is_array( $imageMeta['sizes'] ) ) {
@@ -66,7 +80,7 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
                 foreach ( $item['fields'] as $key => $val ) {
                     //$key can be 'null' in a field with no id
                     if( 'null' !== $key ) {
-                        $valInst = new Alchemy_Value( $val );
+                        $valInst = new Alchemy_Value( $val, $this->isNetworlValue );
 
                         $values[$key] = $valInst->get_value();
                     }
