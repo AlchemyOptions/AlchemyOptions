@@ -29,7 +29,7 @@ if ( ! function_exists( 'alch_get_option' ) ) {
         if( $savedValue ) {
             $valueInst = new Alchemy_Value( $savedValue );
 
-            return $valueInst->get_value();
+            return apply_filters( "alch_value_{$optionID}", $valueInst->get_value() );
         }
 
         return $default;
