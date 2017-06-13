@@ -9,6 +9,7 @@ import mediaUploader from './methods/mediaUploader';
 import editor from './methods/editor';
 import imageRadios from './methods/imageRadios';
 import slider from './methods/slider';
+import postTypeSelect from './methods/postTypeSelect';
 
 (function(document, window, $){
     $(() => {
@@ -23,5 +24,6 @@ import slider from './methods/slider';
         editor();
         imageRadios();
         slider();
+        postTypeSelect();
     });
 })(document, window, jQuery);

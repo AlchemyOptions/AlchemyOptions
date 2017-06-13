@@ -39,6 +39,7 @@ class Alchemy_Options {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTextblock.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySlider.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySection.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyPostTypeSelect.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRepeater.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
     }
@@ -48,12 +49,14 @@ class Alchemy_Options {
             return;
         }
 
+        wp_register_script( 'select2-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/vendor/select2/js/select2.full.min.js', array(), '4.0.3', true );
         wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', array(
             'jquery',
             'jquery-ui-sortable',
             'jquery-ui-autocomplete',
             'jquery-ui-datepicker',
             'jquery-ui-slider',
+            'select2-scripts',
             'iris'
         ), ALCHEMY_OPTIONS_VERSION, true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
@@ -62,7 +65,8 @@ class Alchemy_Options {
         ) );
 
         wp_register_style( 'alchemy-jquery', '//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css', array(), '1.12.1' );
-        wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/styles/alchemy.css', array( 'alchemy-jquery' ), ALCHEMY_OPTIONS_VERSION );
+        wp_register_style( 'select2-style', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/vendor/select2/css/select2.min.css', array(), '4.0.3' );
+        wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/styles/alchemy.css', array( 'alchemy-jquery', 'select2-style' ), ALCHEMY_OPTIONS_VERSION );
 
         wp_enqueue_media();
         wp_enqueue_script( 'alchemy-scripts' );
@@ -79,6 +83,7 @@ class Alchemy_Options {
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
         add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_save_options' ) );
         add_action( 'wp_ajax_alchemy_repeater_item_add', array( $this, 'handle_repeater_item_add' ) );
+        add_action( 'wp_ajax_alchemy_post_type_selection', array( $this, 'handle_post_type_selection' ) );
 //
 //        add_action( 'wp_ajax_alchemy_datalist_search', array( $this, 'handle_datalist_search' ) );
     }
@@ -113,6 +118,33 @@ class Alchemy_Options {
                 }
             }
         }
+    }
+
+    public function handle_post_type_selection() {
+        if ( ! isset( $_GET[ 'nonce' ] ) || ! wp_verify_nonce( $_GET[ 'nonce' ][1], $_GET[ 'nonce' ][0] ) ) {
+            die();
+        }
+
+        $the_query = new WP_Query( array(
+            's' => $_GET['searchedFor'],
+            'post_type' => $_GET['post-type'],
+            'post_status' => 'publish'
+        ) );
+
+        $found_posts = [];
+
+        if ( $the_query->have_posts() ) {
+            $found_posts = $the_query->get_posts();
+        }
+
+        $result = array_map(function( $post ) {
+            return array(
+                'text' => $post->post_title,
+                'id' => $post->ID
+            );
+        }, $found_posts);
+
+        wp_send_json_success( $result );
     }
 
     public function handle_datalist_search() {

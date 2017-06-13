@@ -151,4 +151,10 @@
             display: none;
         }
     }
+
+    &--post-type-select {
+        select {
+            width: 100%;
+        }
+    }
 }

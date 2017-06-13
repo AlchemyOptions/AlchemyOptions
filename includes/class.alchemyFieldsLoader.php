@@ -22,6 +22,7 @@ class Alchemy_Fields_Loader {
             'colorpicker', 'datepicker', 'button-group',
             'upload', 'editor', 'image-radio',
             'textblock', 'slider', 'section',
+            'post-type-select',
             'repeater'
         );
     }
@@ -102,6 +103,9 @@ class Alchemy_Fields_Loader {
             break;
             case 'section' :
                 return new Alchemy_Section_Field( $this->networkFields );
+            break;
+            case 'post-type-select' :
+                return new Alchemy_Post_Type_Select_Field( $this->networkFields );
             break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field( $this->networkFields );
