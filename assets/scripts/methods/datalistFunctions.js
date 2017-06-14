@@ -1,43 +1,15 @@
-export default function (scope = document) {
-    const $datalists = $('.jsAlchemyDatalist', scope);
+export default function( scope = document ) {
+    const $selectBoxes = $('.jsAlchemyDatalistBlock', scope);
 
-    if( $datalists[0] ) {
-        $datalists.each((i, el) => {
-            const $datalist = $(el);
-            const cache = {};
-            const source = $datalist.hasClass( 'jsAlchemyDatalistInplace' )
-                ? $datalist.data('source')
-                : ( req, res ) => {
-                    const term = req.term;
+    if( $selectBoxes[0] ) {
+        $selectBoxes.each((i, el) => {
+            const $el = $(el);
+            const $select = $('.jsAlchemyDatalistSelect', $el);
 
-                    if ( term in cache ) {
-                        res( cache[ term ] );
-                        return;
-                    }
+            $select.select2();
 
-                    $.ajax({
-                        'type': 'get',
-                        'url': alchemyData.adminURL,
-                        'data': {
-                            'action': 'alchemy_save_options',
-                            'nonce': alchemyData.nonce,
-                            'fields': formData
-                        },
-                        'success': data => {
-                            console.log('success', data);
-
-                            cache[ term ] = data;
-                            res( data );
-                        },
-                        'error': err => {
-                            console.error('error', err);
-                        }
-                    });
-                };
-
-            $datalist.find('.jsAlchemyDatalistInput').autocomplete({
-                minLength: 2,
-                source
+            $el.on('click', '.jsAlchemyDatalistClear', () => {
+                $select.val("").change();
             });
         });
     }

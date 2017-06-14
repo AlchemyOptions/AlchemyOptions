@@ -170,6 +170,11 @@ export default function() {
                     'ids': typeof taxSelectVal === 'string' ? [taxSelectVal]: taxSelectVal
                 };
             break;
+            case 'datalist' :
+                const datalistSelectVal = alchemyField.find('select').val();
+
+                value = typeof datalistSelectVal === 'string' ? [datalistSelectVal]: datalistSelectVal;
+            break;
             default : break;
         }
 
