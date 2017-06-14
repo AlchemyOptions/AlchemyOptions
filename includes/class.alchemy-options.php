@@ -49,7 +49,7 @@ class Alchemy_Options {
             return;
         }
 
-        wp_register_script( 'select2-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/vendor/select2/js/select2.full.min.js', array(), '4.0.3', true );
+        wp_register_script( 'select2-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/vendor/select2/js/select2.min.js', array(), '4.0.3', true );
         wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', array(
             'jquery',
             'jquery-ui-sortable',

@@ -24,6 +24,9 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
                 case 'image-radio' :
                     $this->value['value'] = $this->value['value'][0];
                 break;
+                case 'post-type-select' :
+                    $this->value['value'] = $this->modify_post_type_select_value( $this->value['value'] );
+                break;
                 case 'upload' :
                     $this->value['value'] = $this->modify_upload_value( $this->value['value'] );
                 break;
@@ -32,6 +35,14 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
                 break;
                 default : break;
             }
+        }
+
+        public function modify_post_type_select_value( $value ) {
+            if( $value['ids'] ) {
+                return $value['ids'];
+            }
+
+            return [];
         }
 
         public function modify_upload_value( $value ) {

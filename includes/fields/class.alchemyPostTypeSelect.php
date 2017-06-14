@@ -13,7 +13,8 @@ if( ! class_exists( 'Alchemy_Post_Type_Select_Field' ) ) {
             $this->template = '
                 <div class="alchemy__field field field--post-type-select jsAlchemyPostTypeSelectBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"post-type-select","post-type":"{{POST-TYPE}}"}\'>
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <select class="jsAlchemyPostTypeSelect"{{MULTIPLE}} data-nonce=\'{{NONCE}}\'></select>
+                    <select class="jsAlchemyPostTypeSelect"{{MULTIPLE}} data-nonce=\'{{NONCE}}\'>{{OPTIONS}}</select>
+                    {{CLEAR}}
                     <div class="field__description">
                         <p>{{DESCRIPTION}}</p>
                     </div>
@@ -31,9 +32,38 @@ if( ! class_exists( 'Alchemy_Post_Type_Select_Field' ) ) {
 
             $field['post-type'] = ( isset( $field['post-type'] ) && post_type_exists( $field['post-type'] ) ) ? $field['post-type'] : 'post';
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
-
+            $field['clear'] = $field['multiple'] ? '' : '<button type="button" class="button button-secondary jsAlchemyPostTypeSelectClear"><span class="dashicons dashicons-trash"></span></button>';
+            $field['options'] = $this->get_options_html( $field['value'] );
 
             return $field;
+        }
+
+        public function get_options_html( $value ) {
+            if( ! $value['ids'] ) {
+                return '';
+            }
+
+            $optionsHTML = '';
+
+            if( is_array( $value['ids'] ) && count( $value['ids'] ) > 0 ) {
+                $the_query = new WP_Query( array(
+                    'post_type' => $value['type'],
+                    'post_status' => 'publish',
+                    'post__in' => $value['ids']
+                ) );
+
+                $found_posts = [];
+
+                if ( $the_query->have_posts() ) {
+                    $found_posts = $the_query->get_posts();
+                }
+
+                $optionsHTML .= join('',  array_map(function( $post ) {
+                    return sprintf( '<option selected="selected" value="%1$s">%2$s</option>', $post->ID, $post->post_title );
+                }, $found_posts) );
+            }
+
+            return $optionsHTML;
         }
 
         public function is_multiple( $value ) {

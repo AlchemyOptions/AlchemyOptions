@@ -154,6 +154,14 @@ export default function() {
                     });
                 }
             break;
+            case 'post-type-select' :
+                const selectVal = alchemyField.find('select').val();
+
+                value = {
+                    'type': data['post-type'],
+                    'ids': typeof selectVal === 'string' ? [selectVal]: selectVal
+                };
+            break;
             default : break;
         }
 

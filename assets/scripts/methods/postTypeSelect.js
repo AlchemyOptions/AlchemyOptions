@@ -27,20 +27,14 @@ export default function( scope = document ) {
                             results: data.data,
                         };
                     },
-                    cache: true
+                    cache: false
                 },
                 minimumInputLength: 2
             });
 
-            $select.on('select2:select', function (evt) {
-                console.log('select');
-                console.log(evt);
+            $el.on('click', '.jsAlchemyPostTypeSelectClear', function(){
+                $select.val("").change();
             });
-
-            $select.on('select2:unselect', function (evt) {
-                console.log('unselect');
-                console.log(evt);
-            })
         });
     }
 }

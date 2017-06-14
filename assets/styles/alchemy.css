@@ -86,7 +86,7 @@ html {
 .field--image-radio input {
   display: none; }
 .field--post-type-select select {
-  width: 100%; }
+  width: 80%; }
 
 .alchemy__options {
   padding: 3em 0; }

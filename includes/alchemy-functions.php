@@ -29,6 +29,15 @@ if ( ! function_exists( 'alch_get_option' ) ) {
         if( $savedValue['value'] ) {
             $valueInst = new Alchemy_Value( $savedValue );
 
+            switch ( $savedValue['type'] ) {
+                case 'post-type-select' :
+                    if( count( $valueInst->get_value() ) === 0 ) {
+                        return $default;
+                    }
+                break;
+                default : break;
+            }
+
             return apply_filters( "alch_value_{$optionID}", $valueInst->get_value() );
         }
 
