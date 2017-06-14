@@ -152,7 +152,8 @@
         }
     }
 
-    &--post-type-select {
+    &--post-type-select,
+    &--taxonomy-select {
         select {
             width: 80%;
         }

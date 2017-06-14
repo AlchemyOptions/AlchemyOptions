@@ -85,7 +85,7 @@ html {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); }
 .field--image-radio input {
   display: none; }
-.field--post-type-select select {
+.field--post-type-select select, .field--taxonomy-select select {
   width: 80%; }
 
 .alchemy__options {

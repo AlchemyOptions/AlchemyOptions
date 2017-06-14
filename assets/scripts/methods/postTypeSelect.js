@@ -32,7 +32,7 @@ export default function( scope = document ) {
                 minimumInputLength: 2
             });
 
-            $el.on('click', '.jsAlchemyPostTypeSelectClear', function(){
+            $el.on('click', '.jsAlchemyPostTypeSelectClear', () => {
                 $select.val("").change();
             });
         });

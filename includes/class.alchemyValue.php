@@ -25,7 +25,8 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
                     $this->value['value'] = $this->value['value'][0];
                 break;
                 case 'post-type-select' :
-                    $this->value['value'] = $this->modify_post_type_select_value( $this->value['value'] );
+                case 'taxonomy-select' :
+                    $this->value['value'] = $this->modify_bespoke_select_value( $this->value['value'] );
                 break;
                 case 'upload' :
                     $this->value['value'] = $this->modify_upload_value( $this->value['value'] );
@@ -37,7 +38,7 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
             }
         }
 
-        public function modify_post_type_select_value( $value ) {
+        public function modify_bespoke_select_value( $value ) {
             if( $value['ids'] ) {
                 return $value['ids'];
             }

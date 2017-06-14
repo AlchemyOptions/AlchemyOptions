@@ -162,6 +162,14 @@ export default function() {
                     'ids': typeof selectVal === 'string' ? [selectVal]: selectVal
                 };
             break;
+            case 'taxonomy-select' :
+                const taxSelectVal = alchemyField.find('select').val();
+
+                value = {
+                    'taxonomy': data.taxonomy,
+                    'ids': typeof taxSelectVal === 'string' ? [taxSelectVal]: taxSelectVal
+                };
+            break;
             default : break;
         }
 

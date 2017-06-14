@@ -29,8 +29,10 @@ if ( ! function_exists( 'alch_get_option' ) ) {
         if( $savedValue['value'] ) {
             $valueInst = new Alchemy_Value( $savedValue );
 
+            //todo: check other fields so that they return the default value correctly
             switch ( $savedValue['type'] ) {
                 case 'post-type-select' :
+                case 'taxonomy-select' :
                     if( count( $valueInst->get_value() ) === 0 ) {
                         return $default;
                     }

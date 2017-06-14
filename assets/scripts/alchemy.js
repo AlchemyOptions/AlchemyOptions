@@ -10,6 +10,7 @@ import editor from './methods/editor';
 import imageRadios from './methods/imageRadios';
 import slider from './methods/slider';
 import postTypeSelect from './methods/postTypeSelect';
+import taxonomySelect from './methods/taxonomySelect';
 
 (function(document, window, $){
     $(() => {
@@ -25,5 +26,6 @@ import postTypeSelect from './methods/postTypeSelect';
         imageRadios();
         slider();
         postTypeSelect();
+        taxonomySelect();
     });
 })(document, window, jQuery);

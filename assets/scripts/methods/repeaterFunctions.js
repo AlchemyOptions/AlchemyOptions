@@ -6,6 +6,8 @@ import editor from './editor';
 import buttonGroup from './buttonGroup';
 import imageRadios from './imageRadios';
 import slider from './slider';
+import postTypeSelect from './postTypeSelect';
+import taxonomySelect from './taxonomySelect';
 
 export default function() {
     const $repeaterFields = $('.jsAlchemyRepeaterField');
@@ -50,6 +52,8 @@ export default function() {
                         buttonGroup($data);
                         imageRadios($data);
                         slider($data);
+                        postTypeSelect($data);
+                        taxonomySelect($data);
                     },
                     'error': err => {
                         console.error('error', err);
