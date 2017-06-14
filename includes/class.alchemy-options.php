@@ -52,15 +52,7 @@ class Alchemy_Options {
         }
 
         wp_register_script( 'select2-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/vendor/select2/js/select2.min.js', array(), '4.0.3', true );
-        wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', array(
-            'jquery',
-            'jquery-ui-sortable',
-            'jquery-ui-autocomplete',
-            'jquery-ui-datepicker',
-            'jquery-ui-slider',
-            'select2-scripts',
-            'iris'
-        ), ALCHEMY_OPTIONS_VERSION, true );
+        wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', $this->get_scripts_deps(), ALCHEMY_OPTIONS_VERSION, true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
             'adminURL' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'alchemy_ajax_nonce' )
@@ -74,6 +66,61 @@ class Alchemy_Options {
         wp_enqueue_script( 'alchemy-scripts' );
 
         wp_enqueue_style( 'alchemy-styles' );
+    }
+
+    public function get_scripts_deps() {
+        $type = is_network_admin() ? alch_network_options_id() : alch_options_id();
+        $deps = array(
+            'jquery'
+        );
+
+        $savedOptions = get_option( $type, array() );
+
+        if( isset( $savedOptions['options'] ) && is_array( $savedOptions['options'] ) && count( $savedOptions['options'] ) > 0 ) {
+            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $savedOptions['options'] ) ) );
+
+            if( in_array( 'colorpicker', $types ) ) {
+                $deps[] = 'iris';
+            }
+
+            if( in_array( 'slider', $types ) ) {
+                $deps[] = 'jquery-ui-slider';
+            }
+
+            if( in_array( 'datepicker', $types ) ) {
+                $deps[] = 'jquery-ui-datepicker';
+            }
+
+            if( in_array( 'repeater', $types ) ) {
+                $deps[] = 'jquery-ui-sortable';
+            }
+
+            if( in_array( 'datalist', $types ) || in_array( 'post-type-select', $types ) || in_array( 'taxonomy-select', $types ) ) {
+                $deps[] = 'select2-scripts';
+            }
+        }
+
+        return $deps;
+    }
+
+    public function walk_the_fields( $fields ) {
+        $types = [];
+
+        foreach ( $fields as $field ) {
+            $types[] = $field['type'];
+
+            if( 'repeater' === $field['type'] ) {
+                foreach( $field['repeatees'] as $repeatee ) {
+                    $types[] = $this->walk_the_fields( $repeatee['fields'] );
+                }
+            }
+
+            if( 'section' === $field['type'] ) {
+                $types[] = $this->walk_the_fields( $field['options'] );
+            }
+        }
+
+        return $types;
     }
 
     public function hook_up() {

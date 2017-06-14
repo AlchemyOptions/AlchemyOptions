@@ -47,6 +47,26 @@ if ( ! function_exists( 'alch_get_option' ) ) {
     }
 }
 
+if( ! function_exists( 'alchemy_array_flatten' ) ) {
+    function alchemy_array_flatten($array = null) {
+        $result = array();
+
+        if (!is_array($array)) {
+            $array = func_get_args();
+        }
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, alchemy_array_flatten($value));
+            } else {
+                $result = array_merge($result, array($key => $value));
+            }
+        }
+
+        return $result;
+    }
+}
+
 if ( ! function_exists( 'alch_get_network_option' ) ) {
     function alch_get_network_option( $optionID, $default = "" ) {
         $savedValue = get_site_option( $optionID );
