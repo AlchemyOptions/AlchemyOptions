@@ -9,6 +9,7 @@ import slider from './slider';
 import postTypeSelect from './postTypeSelect';
 import taxonomySelect from './taxonomySelect';
 import datalistFunctions from './datalistFunctions';
+import conditions from './conditions';
 
 export default function() {
     const $repeaterFields = $('.jsAlchemyRepeaterField');
@@ -56,6 +57,7 @@ export default function() {
                         postTypeSelect($data);
                         taxonomySelect($data);
                         datalistFunctions($data);
+                        conditions($data);
                     },
                     'error': err => {
                         console.error('error', err);

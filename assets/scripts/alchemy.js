@@ -11,6 +11,7 @@ import imageRadios from './methods/imageRadios';
 import slider from './methods/slider';
 import postTypeSelect from './methods/postTypeSelect';
 import taxonomySelect from './methods/taxonomySelect';
+import conditions from './methods/conditions';
 
 (function(document, window, $){
     $(() => {
@@ -27,5 +28,6 @@ import taxonomySelect from './methods/taxonomySelect';
         slider();
         postTypeSelect();
         taxonomySelect();
+        conditions();
     });
 })(document, window, jQuery);

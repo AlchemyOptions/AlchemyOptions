@@ -11,7 +11,7 @@ if( ! class_exists( 'Alchemy_Text_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--{{TYPE}}" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
+                <div class="alchemy__field field field--{{TYPE}}{{HIDDEN}}" id="field--{{ID}}"{{VISIBLE}} data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                     <input {{ATTRIBUTES}} />
                     <div class="field__description">
@@ -31,6 +31,9 @@ if( ! class_exists( 'Alchemy_Text_Field' ) ) {
             ), $passedAttrs );
 
             $field[ 'attributes' ] = $this->concat_attributes( $mergedAttrs );
+
+            $field['visible'] = sprintf( ' data-condition=\'%1$s\'', esc_attr( $field['visible'] ) );
+            $field['hidden'] = isset( $field['visible'] ) ? ' jsAlchemyConditionallyHidden' : '' ;
 
             return $field;
         }
