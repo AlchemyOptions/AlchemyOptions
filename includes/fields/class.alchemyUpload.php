@@ -28,10 +28,11 @@ if( ! class_exists( 'Alchemy_Upload_Field' ) ) {
             $savedUpload = '';
 
             if( $value ) {
-                $uploadDir = wp_get_upload_dir();
-                $imageData = wp_get_attachment_metadata( $value );
+                $imageData = wp_get_attachment_image_src( $value, 'thumbnail' );
 
-                $savedUpload .= sprintf( '<img src="%s" alt="" />', trailingslashit( $uploadDir[ 'baseurl' ] ) . $imageData[ 'file' ] );
+                if( $imageData ) {
+                    $savedUpload .= sprintf( '<img src="%s" alt="" />', $imageData[0] );
+                }
             }
 
             return $savedUpload;
