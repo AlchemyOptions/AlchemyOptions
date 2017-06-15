@@ -81,13 +81,16 @@ export default function() {
 
                 if( $repeatee.hasClass('repeatee--expanded') ) {
                     const $editor = $('.jsAlchemyEditorTextarea', $repeatee);
+                    const tmcEditor = tinymce.get($editor.attr('id'));
 
                     $editor.removeClass('tinymce--init');
                     $repeatee.removeClass('repeatee--expanded');
 
                     $('.wp-editor-tools', $repeatee).remove();
 
-                    tinymce.get($editor.attr('id')).remove();
+                    if( tmcEditor ) {
+                        tmcEditor.remove();
+                    }
                 } else {
                     editor($repeatee);
                     $repeatee.addClass('repeatee--expanded')

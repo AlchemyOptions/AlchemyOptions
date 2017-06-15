@@ -218,6 +218,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             foreach( $fields as $field ) {
                 if( ( 'repeater' === $field['type'] || 'nested-repeater' === $field['type'] ) && $field['id'] === $data['id'] ) {
                     $neededRepeater = $field;
+                    break;
                 } else if( 'section' === $field['type'] ) {
                     $neededRepeater = $this->filter_repeater( $data, $field['options'] );
                 } else if( 'fields-group' === $field['type'] ) {
