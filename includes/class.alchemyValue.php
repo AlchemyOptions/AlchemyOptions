@@ -28,6 +28,9 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
                 case 'taxonomy-select' :
                     $this->value['value'] = $this->modify_bespoke_select_value( $this->value['value'] );
                 break;
+                case 'field-group' :
+                    $this->value['value'] = $this->modify_field_group_value( $this->value['value'] );
+                break;
                 case 'upload' :
                     $this->value['value'] = $this->modify_upload_value( $this->value['value'] );
                 break;
@@ -78,6 +81,16 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
             }
 
             return $valueToReturn;
+        }
+
+        public function modify_field_group_value( $value ) {
+            $modVal = [];
+
+            foreach ( $value as $id => $val ) {
+                $modVal[$id] = $val['value'];
+            }
+
+            return $modVal;
         }
 
         public function modify_repeater_value( $value ) {

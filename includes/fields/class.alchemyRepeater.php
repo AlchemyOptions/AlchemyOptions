@@ -24,8 +24,6 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                     {{ADD}}
                 </div>
             ';
-
-            include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
         }
 
         public function normalize_field_keys( $field ) {
@@ -221,8 +219,6 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                     break;
                 } else if( 'section' === $field['type'] ) {
                     $neededRepeater = $this->filter_repeater( $data, $field['options'] );
-                } else if( 'fields-group' === $field['type'] ) {
-                    $neededRepeater = $this->filter_repeater( $data, $field['fields'] );
                 }
             }
 

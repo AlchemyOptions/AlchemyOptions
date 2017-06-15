@@ -32,8 +32,8 @@ if( ! class_exists( 'Alchemy_Text_Field' ) ) {
 
             $field[ 'attributes' ] = $this->concat_attributes( $mergedAttrs );
 
-            $field['visible'] = sprintf( ' data-condition=\'%1$s\'', esc_attr( $field['visible'] ) );
-            $field['hidden'] = isset( $field['visible'] ) ? ' jsAlchemyConditionallyHidden' : '' ;
+            $field['visible'] = isset( $field['visible'] ) ? sprintf( ' data-condition=\'%1$s\'', esc_attr( $field['visible'] ) ) : '';
+            $field['hidden'] = '' !== $field['visible'] ? ' jsAlchemyConditionallyHidden' : '' ;
 
             return $field;
         }

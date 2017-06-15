@@ -23,7 +23,7 @@ class Alchemy_Fields_Loader {
             'upload', 'editor', 'image-radio',
             'textblock', 'slider', 'section',
             'post-type-select', 'taxonomy-select',
-            'datalist',
+            'datalist', 'field-group',
             'repeater'
         );
     }
@@ -113,6 +113,9 @@ class Alchemy_Fields_Loader {
             break;
             case 'datalist' :
                 return new Alchemy_Datalist_Field( $this->networkFields );
+            break;
+            case 'field-group' :
+                return new Alchemy_Field_Group_Field( $this->networkFields );
             break;
             case 'repeater' :
                 return new Alchemy_Repeater_Field( $this->networkFields );

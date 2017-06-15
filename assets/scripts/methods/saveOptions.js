@@ -175,6 +175,29 @@ export default function() {
 
                 value = typeof datalistSelectVal === 'string' ? [datalistSelectVal]: datalistSelectVal;
             break;
+            case 'field-group' :
+                value = {};
+
+                const $groupFields = alchemyField.find('.jsAlchemyFiledGroupWrapper');
+
+                if( $groupFields[0] ) {
+                    $groupFields.each((i, el) => {
+                        const $group = $(el);
+                        const groupData = $group.data('fields');
+                        const $childFields = $group.children('.alchemy__field');
+
+                        if( groupData ) {
+                            $.each(groupData, (ind, field) => {
+                                value[field.id] = {
+                                    'type': field.type,
+                                    'value': getFieldValue( $childFields.eq(ind) )
+                                };
+                            });
+
+                        }
+                    });
+                }
+            break;
             default : break;
         }
 

@@ -27,6 +27,9 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 case 'slider' :
                     $this->value[ 'value' ] = sanitize_text_field( $this->value[ 'value' ] );
                 break;
+                case 'field-group' :
+                    $this->value[ 'value' ] = $this->sanitize_field_group_field( $this->value[ 'value' ] );
+                break;
                 case 'repeater' :
                     $this->value[ 'value' ] = $this->sanitize_repeater_field( $this->value[ 'value' ] );
                 break;
@@ -38,6 +41,21 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 break;
                 default : break;
             }
+        }
+
+        public function sanitize_field_group_field( $value ) {
+            $valToReturn = array();
+
+            foreach( $value as $fieldID => $field ){
+                $safeVal = new Alchemy_DB_Value( $field );
+
+                $valToReturn[$fieldID] = array(
+                    'type' => $field[ 'type' ],
+                    'value' => $safeVal->get_safe_value(),
+                );
+            }
+
+            return $valToReturn;
         }
 
         public function sanitize_editor_field( $value ) {
