@@ -111,8 +111,10 @@ class Alchemy_Options {
             $types[] = $field['type'];
 
             if( 'repeater' === $field['type'] ) {
-                foreach( $field['repeatees'] as $repeatee ) {
-                    $types[] = $this->walk_the_fields( $repeatee['fields'] );
+                if( $field['repeatees'] ) {
+                    foreach( $field['repeatees'] as $repeatee ) {
+                        $types[] = $this->walk_the_fields( $repeatee['fields'] );
+                    }
                 }
             }
 
@@ -134,8 +136,6 @@ class Alchemy_Options {
         add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_save_options' ) );
         add_action( 'wp_ajax_alchemy_repeater_item_add', array( $this, 'handle_repeater_item_add' ) );
         add_action( 'wp_ajax_alchemy_post_type_selection', array( $this, 'handle_post_type_selection' ) );
-//
-//        add_action( 'wp_ajax_alchemy_datalist_search', array( $this, 'handle_datalist_search' ) );
     }
 
     public function handle_save_options() {
@@ -214,15 +214,15 @@ class Alchemy_Options {
             die();
         }
 
-        $rID = $_GET[ 'repeater' ][0];
-        $repeateeID = $_GET[ 'repeater' ][1];
+        $rID = $_GET[ 'repeater' ]['id'];
+        $repeaterData = $_GET[ 'repeater' ]['repeater'];
         $index = $_GET[ 'index' ];
 
         $repeater = new Alchemy_Repeater_Field();
 
         $repeaterHTML = $repeater->generate_repeatee( array(
             'id' => $rID,
-            'repeatee_id' => $repeateeID,
+            'repeater' => $repeaterData,
             'index' => $index
         ) );
 

@@ -32,6 +32,13 @@ class Alchemy_Fields_Loader {
         $fieldsHTML = "";
 
         foreach ( $options as $i => $field ) {
+            $repeaterCheck = explode( ':', $field['type'] );
+
+            if( 2 === count( $repeaterCheck ) && 'repeater' === $repeaterCheck[0] ) {
+                $field['type'] = 'repeater';
+                $field['_repeater-type'] = $repeaterCheck[1];
+            }
+
             if ( $this->is_valid_field_type( $field[ 'type' ] ) ) {
                 if( ! isset( $field[ 'id' ] ) && ! $this->is_ok_without_id( $field[ 'type' ] ) ) {
                     continue;

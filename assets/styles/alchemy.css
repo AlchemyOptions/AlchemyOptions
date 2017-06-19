@@ -156,25 +156,25 @@ html {
   .repeatee__btn {
     transition: opacity .3s;
     opacity: 0; }
-  .repeatee:hover .repeatee__btn {
-    opacity: 1; }
-  .repeatee:hover .repeatee__toolbar {
+  .repeatee:hover > .repeatee__toolbar {
     border-color: #c4c4c4; }
-  .repeatee--expanded .repeatee__toolbar {
+    .repeatee:hover > .repeatee__toolbar .repeatee__btn {
+      opacity: 1; }
+  .repeatee--expanded > .repeatee__toolbar {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-color: #c4c4c4;
     background: #e5e5e5; }
-  .repeatee--expanded .repeatee__content {
+    .repeatee--expanded > .repeatee__toolbar .repeatee__btn {
+      opacity: 1; }
+  .repeatee--expanded > .repeatee__content {
     display: block;
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
     border-color: #c4c4c4; }
-  .repeatee--expanded .repeatee__btn {
-    opacity: 1; }
   .repeatee--hidden {
     opacity: .7; }
-    .repeatee--hidden .jsAlchemyRepeateeHide {
+    .repeatee--hidden > .repeatee__toolbar .jsAlchemyRepeateeHide {
       opacity: 1; }
   .repeatee--placeholder {
     margin-bottom: .5em;

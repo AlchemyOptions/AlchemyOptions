@@ -11,17 +11,19 @@ import taxonomySelect from './taxonomySelect';
 import datalistFunctions from './datalistFunctions';
 import conditions from './conditions';
 
-export default function() {
-    const $repeaterFields = $('.jsAlchemyRepeaterField');
+function getThingsGoing(scope = document) {
+    const $repeaterFields = $('.jsAlchemyRepeaterField', scope);
 
     if( $repeaterFields[0] ) {
         $repeaterFields.each((i, el) => {
             const $repeater = $(el);
-            const $dropIn = $('.jsAlchemyRepeaterSortable', $repeater);
+            const $dropIn = $repeater.children('fieldset').children('.jsAlchemyRepeaterSortable');
 
             let clickIndex = $dropIn.children().length;
 
-            $repeater.on('click', '.jsAlchemyRepeaterAdd', function() {
+            $repeater.on('click', '.jsAlchemyRepeaterAdd', function(e) {
+                e.stopPropagation();
+
                 const $btn = $(this);
                 const $loader = $btn.next('.jsAlchemyRepeaterLoader');
                 const nonce = $btn.data('nonce');
@@ -35,7 +37,7 @@ export default function() {
                     'data': {
                         'action': 'alchemy_repeater_item_add',
                         'nonce': [nonce.id, nonce.value],
-                        'repeater': [$btn.data('repeater-id'), $btn.data('repeatee-id')],
+                        'repeater': $btn.data('repeater-data'),
                         'index': clickIndex
                     },
                     'success': data => {
@@ -58,6 +60,7 @@ export default function() {
                         taxonomySelect($data);
                         datalistFunctions($data);
                         conditions($data);
+                        getThingsGoing($data);
                     },
                     'error': err => {
                         console.error('error', err);
@@ -78,6 +81,8 @@ export default function() {
             });
 
             $repeater.on('click', '.jsAlchemyRepeateeToolbar', function(e) {
+                e.stopPropagation();
+
                 const $toolbar = $(this);
                 const $repeatee = $toolbar.closest( '.repeatee' );
 
@@ -181,4 +186,6 @@ export default function() {
             });
         }
     }
-};
+}
+
+export default getThingsGoing;

@@ -43,41 +43,43 @@
     }
 
     &:hover {
-        .repeatee__btn {
-            opacity: 1;
-        }
-
-        .repeatee__toolbar {
+        > .repeatee__toolbar {
             border-color: #c4c4c4;
+
+            .repeatee__btn {
+                opacity: 1;
+            }
         }
     }
 
     &--expanded {
-        .repeatee__toolbar {
+        > .repeatee__toolbar {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             border-color: #c4c4c4;
 
             background: #e5e5e5;
+
+            .repeatee__btn {
+                opacity: 1;
+            }
         }
 
-        .repeatee__content {
+        > .repeatee__content {
             display: block;
             border-bottom-left-radius: 2px;
             border-bottom-right-radius: 2px;
             border-color: #c4c4c4;
-        }
-
-        .repeatee__btn {
-            opacity: 1;
         }
     }
 
     &--hidden {
         opacity: .7;
 
-        .jsAlchemyRepeateeHide {
-            opacity: 1;
+        > .repeatee__toolbar {
+            .jsAlchemyRepeateeHide {
+                opacity: 1;
+            }
         }
     }
 
