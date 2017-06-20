@@ -252,10 +252,6 @@ class Alchemy_Options {
     }
 
     public function render_options_submenu () {
-
-
-        var_dump( alch_get_option('temp-repeater', 'some default value')[1] );
-
         echo $this->get_options_page( alch_options_id(), __( 'Alchemy options', 'alchemy-options' ) );
 
         //hack to include editor assets. Will be removed when support of the wp_enqueue_editor() is high and there's a way to get the default editor settings for posts
