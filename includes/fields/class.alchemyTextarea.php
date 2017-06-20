@@ -11,11 +11,13 @@ if( ! class_exists( 'Alchemy_Textarea_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--textarea" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"textarea"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <textarea {{ATTRIBUTES}}>{{VALUE}}</textarea>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
+                <div class="alchemy__field alchemy__clearfix field field--textarea" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"textarea"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <textarea {{ATTRIBUTES}}>{{VALUE}}</textarea>
                     </div>
                 </div>
             ';

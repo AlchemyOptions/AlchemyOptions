@@ -13,10 +13,8 @@ if( ! class_exists( 'Alchemy_Field_Group_Field' ) ) {
             $this->template = '
                 <div class="alchemy__field field field--{{TYPE}}{{HIDDEN}}" id="field--{{ID}}"{{VISIBLE}} data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
                     <fieldset>
-                       <legend class="field__label">{{TITLE}}</legend>
-                        <div class="field__description">
-                            <p>{{DESCRIPTION}}</p>
-                        </div>
+                        {{TITLE}}
+                        {{DESCRIPTION}}
                         {{FIELDS}}
                     </fieldset>
                 </div>
@@ -26,6 +24,7 @@ if( ! class_exists( 'Alchemy_Field_Group_Field' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
+            $field['title'] = '' !== $field['title'] ? sprintf( '<legend class="field__label">%s</legend>', $field['title'] ) : '' ;
             $field['visible'] = isset( $field['visible'] ) ? sprintf( ' data-condition=\'%1$s\'', esc_attr( $field['visible'] ) ) : '';
             $field['hidden'] = '' !== $field['visible'] ? ' jsAlchemyConditionallyHidden' : '' ;
             $field['fields'] = $this->get_group_fields( $field );

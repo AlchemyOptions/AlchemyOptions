@@ -1,14 +1,16 @@
 .field {
     &__label {
         display: block;
-        margin-bottom: .8em;
 
-        font-size: 16px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #23282d;
     }
 
     &__description {
-        padding-top: .5em;
+        padding-top: .4em;
 
+        color: #666;
         font-style: italic;
         font-size: 14px;
 
@@ -49,6 +51,44 @@
 
         img {
             display: block;
+        }
+    }
+
+    &__side {
+        float: left;
+        padding-top: 20px;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    &__content {
+        padding-top: 13px;
+        padding-left: 220px;
+
+        input[type=text],
+        input[type=search],
+        input[type=tel],
+        input[type=url],
+        input[type=password],
+        input[type=email],
+        input[type=number],
+        textarea,
+        select {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 6px;
+            max-width: 45em;
+
+            font-size: 15px;
+        }
+
+        select {
+            max-width: 80%;
+            padding: 2px;
+            line-height: 28px;
+            height: 28px;
+
+            font-size: 14px;
         }
     }
 
@@ -137,6 +177,7 @@
     &--editor {
         .wp-editor-tools {
             min-height: 32px;
+            clear: both;
         }
 
         .mce-tinymce {

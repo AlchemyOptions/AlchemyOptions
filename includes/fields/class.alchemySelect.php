@@ -11,11 +11,13 @@ if( ! class_exists( 'Alchemy_Select_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--select" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"select"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <select {{ATTRIBUTES}}>{{OPTIONS}}</select>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
+                <div class="alchemy__field alchemy__clearfix field field--select" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"select"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <select {{ATTRIBUTES}}>{{OPTIONS}}</select>
                     </div>
                 </div>
             ';

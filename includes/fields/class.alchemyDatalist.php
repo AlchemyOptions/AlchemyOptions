@@ -15,9 +15,7 @@ if( ! class_exists( 'Alchemy_Datalist_Field' ) ) {
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                     <select class="jsAlchemyDatalistSelect"{{MULTIPLE}}>{{OPTIONS}}</select>
                     {{CLEAR}}
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

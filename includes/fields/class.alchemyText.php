@@ -11,12 +11,14 @@ if( ! class_exists( 'Alchemy_Text_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--{{TYPE}}{{HIDDEN}}" id="field--{{ID}}"{{VISIBLE}} data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <input {{ATTRIBUTES}} />
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
+                <div class="alchemy__field alchemy__clearfix field field--{{TYPE}}{{HIDDEN}}" id="field--{{ID}}"{{VISIBLE}} data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
                     </div>
+                    <div class="field__content">
+                        <input {{ATTRIBUTES}} />
+                    </div> 
                 </div>
             ';
         }

@@ -14,9 +14,7 @@ if( ! class_exists( 'Alchemy_Datepicker_Field' ) ) {
                 <div class="alchemy__field field field--datepicker" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"datepicker"}\'>
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                     <input {{ATTRIBUTES}} /><span class="dashicons dashicons-calendar-alt"></span>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

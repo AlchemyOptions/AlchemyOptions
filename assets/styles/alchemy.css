@@ -5,10 +5,12 @@ html {
 
 .field__label {
   display: block;
-  margin-bottom: .8em;
-  font-size: 16px; }
+  font-size: 14px;
+  font-weight: 600;
+  color: #23282d; }
 .field__description {
-  padding-top: .5em;
+  padding-top: .4em;
+  color: #666;
   font-style: italic;
   font-size: 14px; }
   .field__description p {
@@ -34,6 +36,34 @@ html {
     cursor: not-allowed; }
   .field__image-label img {
     display: block; }
+.field__side {
+  float: left;
+  padding-top: 20px;
+  width: 100%;
+  max-width: 200px; }
+.field__content {
+  padding-top: 13px;
+  padding-left: 220px; }
+  .field__content input[type=text],
+  .field__content input[type=search],
+  .field__content input[type=tel],
+  .field__content input[type=url],
+  .field__content input[type=password],
+  .field__content input[type=email],
+  .field__content input[type=number],
+  .field__content textarea,
+  .field__content select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 6px;
+    max-width: 45em;
+    font-size: 15px; }
+  .field__content select {
+    max-width: 80%;
+    padding: 2px;
+    line-height: 28px;
+    height: 28px;
+    font-size: 14px; }
 .field--repeater .field__label {
   margin-bottom: 0; }
 .field--repeater .repeatee .field__label {
@@ -78,7 +108,8 @@ html {
     height: auto;
     background: #fafafa; }
 .field--editor .wp-editor-tools {
-  min-height: 32px; }
+  min-height: 32px;
+  clear: both; }
 .field--editor .mce-tinymce {
   clear: both;
   border: 1px solid #e5e5e5;

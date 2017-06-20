@@ -15,9 +15,7 @@ if( ! class_exists( 'Alchemy_Button_Group_Field' ) ) {
                     <input class="jsAlchemyButtonGroupInput" type="hidden" id="{{ID}}" value="{{VALUE}}" />
                     <h2 class="field__label">{{TITLE}}</h2>
                     <div class="button-group">{{CHOICES}}</div>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

@@ -15,9 +15,7 @@ if( ! class_exists( 'Alchemy_Post_Type_Select_Field' ) ) {
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                     <select class="jsAlchemyPostTypeSelect"{{MULTIPLE}} data-nonce=\'{{NONCE}}\'>{{OPTIONS}}</select>
                     {{CLEAR}}
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

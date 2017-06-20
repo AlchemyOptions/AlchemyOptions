@@ -14,9 +14,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 <div class="alchemy__field field field--repeater jsAlchemyRepeaterField" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"repeater"}\'>
                     <fieldset>
                         <legend class="field__label">{{TITLE}}</legend>
-                        <div class="field__description">
-                            <p>{{DESCRIPTION}}</p>
-                        </div>
+                        {{DESCRIPTION}}
                         <div class="jsAlchemyRepeaterSortable">
                             {{REPEATEES}}
                         </div>

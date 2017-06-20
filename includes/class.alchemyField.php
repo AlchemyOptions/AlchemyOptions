@@ -17,7 +17,7 @@ if( ! class_exists( 'Alchemy_Field' ) ) {
         }
 
         public function normalize_field_keys( $field ) {
-            $field[ 'description' ] = isset( $field[ 'desc' ] ) ? $field[ 'desc' ] : '';
+            $field[ 'description' ] = isset( $field[ 'desc' ] ) ? sprintf( '<div class="field__description"><p>%s</p></div>', $field[ 'desc' ] ) : '';
             $field[ 'title' ] = isset( $field[ 'title' ] ) ? $field[ 'title' ] : '';
 
             unset( $field[ 'desc' ] );

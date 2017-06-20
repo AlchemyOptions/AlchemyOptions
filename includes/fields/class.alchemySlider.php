@@ -15,9 +15,7 @@ if( ! class_exists( 'Alchemy_Slider_Field' ) ) {
                     <span class="field__label">{{TITLE}}</span>
                     <div class="jsAlchemySlider" data-values=\'{{VALUES}}\'></div>
                     <input {{ATTRIBUTES}} />
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

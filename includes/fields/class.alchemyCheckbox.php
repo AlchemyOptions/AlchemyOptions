@@ -16,9 +16,7 @@ if( ! class_exists( 'Alchemy_Checkbox_Field' ) ) {
                         <legend class="field__label">{{TITLE}}</legend>
                         {{CHOICES}}
                     </fieldset>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

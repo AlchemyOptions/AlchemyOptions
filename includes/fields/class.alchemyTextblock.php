@@ -13,9 +13,7 @@ if( ! class_exists( 'Alchemy_Textblock_Field' ) ) {
             $this->template = '
                 <div class="alchemy__field field field--textblock">
                     <h3 class="field__label">{{TITLE}}</h3>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

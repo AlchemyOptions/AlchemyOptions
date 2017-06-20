@@ -14,9 +14,7 @@ if( ! class_exists( 'Alchemy_Password_Field' ) ) {
                 <div class="alchemy__field field field--password" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"password"}\'>
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                     <input {{ATTRIBUTES}} /><button type="button" title="{{TOGGLE-TITLE}}" class="button button-primary jsAlchemyTogglePassword"><span class="dashicons dashicons-lock"></span></button>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                 </div>
             ';
         }

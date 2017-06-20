@@ -13,9 +13,7 @@ if( ! class_exists( 'Alchemy_Upload_Field' ) ) {
             $this->template = '
                 <div class="alchemy__field field field--{{TYPE}} jsAlchemyUploader" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
                     <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <div class="field__description">
-                        <p>{{DESCRIPTION}}</p>
-                    </div>
+                    {{DESCRIPTION}}
                     <input {{ATTRIBUTES}} />
                     <button type="button" class="button button-primary jsAlchemyUploadTrigger" data-strings=\'{"title":"{{ADD-BUTTON-TITLE}}","text":"{{ADD-BUTTON-TEXT}}"}\'><span class="dashicons dashicons-admin-media"></span></button>
                     <button type="button" class="button button-secondary jsAlchemyUploadRemove"><span class="dashicons dashicons-trash"></span></button>
