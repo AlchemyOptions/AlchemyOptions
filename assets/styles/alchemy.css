@@ -172,6 +172,8 @@ html {
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
     border-color: #c4c4c4; }
+  .repeatee--expanded .repeatee .repeatee__toolbar {
+    background: #f5f5f5; }
   .repeatee--hidden {
     opacity: .7; }
     .repeatee--hidden > .repeatee__toolbar .jsAlchemyRepeateeHide {

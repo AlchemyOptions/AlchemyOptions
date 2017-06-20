@@ -125,7 +125,7 @@ export default function() {
             case 'repeater' :
                 value = [];
 
-                const fields = alchemyField.find('.repeatee');
+                const fields = alchemyField.children('fieldset').children('.jsAlchemyRepeaterSortable').children('.repeatee');
 
                 if( fields[0] ) {
                     fields.each((i, el) => {
@@ -134,20 +134,16 @@ export default function() {
                         const $childFields = $repeatee.children('.repeatee__content').children('.alchemy__field');
                         const valueToStore = {
                             isVisible: $repeatee.children('.jsAlchemyRepeateeVisible').val(),
-                            type: repeateeData.repeatee_id,
-                            title: repeateeData.repeatee_title,
                             fields: {}
                         };
 
                         if( repeateeData.fieldIDs ) {
-
                             $.each(repeateeData.fieldIDs, (ind, field) => {
                                 valueToStore.fields[field.id] = {
                                     'type': field.type,
                                     'value': getFieldValue( $childFields.eq(ind) )
                                 };
                             });
-
                         }
 
                         value.push(valueToStore);

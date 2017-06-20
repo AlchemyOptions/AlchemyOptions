@@ -105,9 +105,21 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
                 foreach ( $item['fields'] as $key => $val ) {
                     //$key can be 'null' in a field with no id
                     if( 'null' !== $key ) {
-                        $valInst = new Alchemy_Value( $val, $this->isNetworlValue );
+                        $repeaterCheck = explode( ':', $val['type'] );
 
-                        $values[$key] = $valInst->get_value();
+                        if( 2 === count( $repeaterCheck ) && 'repeater' === $repeaterCheck[0] ) {
+                            $item['fields'][$key]['type'] = 'repeater';
+
+                            if( ! $item['fields'][$key]['value'] ) {
+                                $item['fields'][$key]['value'] = [];
+                            }
+
+                            $values[$key] = $this->modify_repeater_value( $item['fields'][$key]['value'] );
+                        } else {
+                            $valInst = new Alchemy_Value( $val, $this->isNetworlValue );
+
+                            $values[$key] = $valInst->get_value();
+                        }
                     }
                 }
 

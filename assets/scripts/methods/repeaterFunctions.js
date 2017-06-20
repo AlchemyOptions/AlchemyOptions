@@ -107,7 +107,7 @@ function getThingsGoing(scope = document) {
             $repeater.on('click', '.jsAlchemyRepeateeHide', function(e) {
                 const $toolbar = $(this);
                 const $parent = $toolbar.closest( '.repeatee' );
-                const $visibilityInput = $parent.find('.jsAlchemyRepeateeVisible');
+                const $visibilityInput = $parent.children('.jsAlchemyRepeateeVisible');
 
                 $toolbar.find('span').toggleClass('dashicons-hidden');
                 $parent.removeAttr('style').toggleClass('repeatee--hidden');

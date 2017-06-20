@@ -90,8 +90,11 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 foreach ( $field[ 'value' ] as $i => $repeatee ) {
 
                     $repeateesHTML .= $this->generate_repeatee(array(
-                        'id' => $field[ 'id' ],
-                        'repeatee_id' => $repeatee[ 'type' ],
+                        'id' => $field['id'],
+                        'repeater' => array(
+                            'simple' => 'true',
+                            'type' => $field['_repeater-type']
+                        ),
                         'index' => $i,
                         'isVisible' => $repeatee[ 'isVisible' ],
                         'timer' => array(),
@@ -112,6 +115,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
             }
 
             $optionFields = new Alchemy_Fields_Loader( $this->networkField );
+            $repeateeTitle = '';
 
             $repeateesHTML ="";
             $repeateeID = sprintf(
@@ -121,28 +125,50 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 $data['index']
             );
 
-            $data['fields'] = array_map( function( $field ) use( $data, $repeateeID ) {
-                $field['id'] = sprintf(
+            $fieldIDs = array(
+                array(
+                    'id' => 'title',
+                    'type' => 'text',
+                )
+            );
+
+            $data['fields'] = array(
+                array(
+                    'title' => __( 'Title', 'alchemy-options' ),
+                    'id' => 'title',
+                    'type' => 'text',
+                    'attributes' => array(
+                        'class' => 'jsAlchemyRepeateeTitle'
+                    )
+                )
+            );
+
+            foreach( $neededRepeater['fields'] as $field ) {
+                $fieldIDs[] = array(
+                    'id' => $field['id'],
+                    'type' => $field['type']
+                );
+
+                $data['fields'][] = $field;
+            }
+
+            $values = isset( $data['savedFields'] ) ? array_values( $data['savedFields'] ) : [];
+
+            foreach( $data['fields'] as $id => $field ) {
+                if( 'title' == $data['fields'][$id]['id'] && isset( $values[$id] ) ) {
+                    $repeateeTitle = $values[$id]['value'];
+                }
+
+                $data['fields'][$id]['id'] = sprintf(
                     '%s_%s',
                     $repeateeID,
                     $field['id']
                 );
 
-                return $field;
-            }, $neededRepeater['fields'] );
-
-            array_unshift( $data[ 'fields' ], array(
-                'title' => __( 'Title', 'alchemy-options' ),
-                'id' => sprintf(
-                    '%s_%s',
-                    $repeateeID,
-                    'title'
-                ),
-                'type' => 'text',
-                'attributes' => array(
-                    'class' => 'jsAlchemyRepeateeTitle'
-                )
-            ) );
+                if( isset( $values[$id] ) ) {
+                    $data['fields'][$id]['value'] = $values[$id]['value'];
+                }
+            }
 
             $repeateeClass = 'repeatee jsAlchemyRepeatee';
 
@@ -161,14 +187,14 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 '<div class="%3$s" data-alchemy=\'%2$s\' id="%1$s">',
                 $repeateeID,
                 json_encode( array(
-                    'index' => $data[ 'index' ]
+                    'fieldIDs' => $fieldIDs
                 ) ),
                 $repeateeClass
             );
 
             $repeateesHTML .= '<input type="hidden" class="jsAlchemyRepeateeVisible" name="' . $repeateeID . '_visible" value="' . $repeateeVisible . '" />';
 
-            $repeateesHTML .= $this->generate_repeatee_toolbar( $repeateeID, $repeateeVisible, '' );
+            $repeateesHTML .= $this->generate_repeatee_toolbar( $repeateeID, $repeateeVisible, $repeateeTitle );
 
             $repeateesHTML .= sprintf(
                 '<div class="repeatee__content">%1$s</div>',
