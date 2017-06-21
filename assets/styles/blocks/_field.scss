@@ -59,11 +59,21 @@
         padding-top: 20px;
         width: 100%;
         max-width: 200px;
+
+        .repeatee & {
+            padding-top: 0;
+            float: none;
+        }
     }
 
     &__content {
         padding-top: 13px;
         padding-left: 220px;
+
+        .repeatee & {
+            padding-top: 0;
+            padding-left: 0;
+        }
 
         input[type=text],
         input[type=search],
@@ -145,6 +155,10 @@
         .field__content {
             padding-top: 14px;
 
+            .repeatee & {
+                padding-top: 0;
+            }
+
             input {
                 width: 100%;
                 max-width: 200px;
@@ -187,6 +201,10 @@
     &--upload {
         .field__content {
             padding-top: 16px;
+
+            .repeatee & {
+                padding-top: 0;
+            }
         }
 
         .field__results {
@@ -212,6 +230,10 @@
 
         .field__content {
             padding-top: 13px;
+
+            .repeatee & {
+                padding-top: 0;
+            }
         }
     }
 
@@ -232,6 +254,10 @@
 
         .field__content {
             padding-top: 17px;
+
+            .repeatee & {
+                padding-top: 0;
+            }
         }
     }
 
@@ -252,6 +278,10 @@
     &--select {
         .field__content {
             padding-top: 15px;
+
+            .repeatee & {
+                padding-top: 0;
+            }
         }
     }
 
@@ -260,6 +290,10 @@
         .field__content {
             padding-left: 222px;
             padding-top: 20px;
+
+            .repeatee & {
+                padding-top: 0;
+            }
         }
 
         label {
@@ -277,6 +311,10 @@
 
         .field__content {
             padding-top: 25px;
+
+            .repeatee & {
+                padding-top: 0;
+            }
 
             .jsAlchemySliderInput {
                 width: auto;
@@ -298,6 +336,10 @@
     &--password {
         .field__content {
             padding-top: 14px;
+
+            .repeatee & {
+                padding-top: 0;
+            }
 
             input {
                 width: 100%;

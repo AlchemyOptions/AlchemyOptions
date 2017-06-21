@@ -125,7 +125,7 @@ export default function() {
             case 'repeater' :
                 value = [];
 
-                const fields = alchemyField.children('fieldset').children('.jsAlchemyRepeaterSortable').children('.repeatee');
+                const fields = alchemyField.children('fieldset').children('.field__content').children('.jsAlchemyRepeaterSortable').children('.repeatee');
 
                 if( fields[0] ) {
                     fields.each((i, el) => {

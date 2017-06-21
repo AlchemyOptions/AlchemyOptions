@@ -17,7 +17,7 @@ function getThingsGoing(scope = document) {
     if( $repeaterFields[0] ) {
         $repeaterFields.each((i, el) => {
             const $repeater = $(el);
-            const $dropIn = $repeater.children('fieldset').children('.jsAlchemyRepeaterSortable');
+            const $dropIn = $repeater.children('fieldset').children('.field__content').children('.jsAlchemyRepeaterSortable');
 
             let clickIndex = $dropIn.children().length;
 
@@ -157,8 +157,9 @@ function getThingsGoing(scope = document) {
                     const $field = $editor.closest('.field--editor');
                     const selfHeight = $editor.closest('.field--editor').outerHeight();
                     const editorHeight = $editor.prev('.mce-tinymce').outerHeight();
+                    const editorWidth = $editor.prev('.mce-tinymce').width();
 
-                    $editor.next('.field__cover').height(editorHeight);
+                    $editor.next('.field__cover').height(editorHeight).width(editorWidth);
                     $field.height(selfHeight).addClass('tinymce--destroyed');
 
                     tinymce.get($editor.attr('id')).destroy();

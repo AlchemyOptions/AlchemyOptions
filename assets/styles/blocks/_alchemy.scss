@@ -13,13 +13,16 @@
     }
 
     &__field {
+        .repeatee & + & {
+            margin-top: 3em;
+        }
+
         & + & {
             margin-top: 2em;
         }
     }
 
     &__clearfix {
-        &:before,
         &:after {
             display: table;
             content: " ";
