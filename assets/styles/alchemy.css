@@ -196,6 +196,9 @@ html {
 .alchemy__options {
   padding: 3em 0;
   max-width: 80em; }
+.alchemy__version {
+  color: #b3b3b3;
+  font-size: 13px; }
 .alchemy__fields {
   margin: 2em 0;
   padding: 3em 0;
