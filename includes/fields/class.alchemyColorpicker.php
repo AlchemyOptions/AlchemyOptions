@@ -11,10 +11,14 @@ if( ! class_exists( 'Alchemy_Colorpicker_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--colorpicker alchemy__colorpicker jsAlchemyColorpicker" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"colorpicker"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <div class="alchemy__colorpicker-toolbar"><span class="alchemy__colorpicker-sample jsAlchemyColorpickerSample" style="background-color: {{VALUE}}"></span><input {{ATTRIBUTES}} /><button type="button" class="button button-secondary jsAlchemyColorpickerClear"><span class="dashicons dashicons-trash"></span></button></div>
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--colorpicker alchemy__colorpicker jsAlchemyColorpicker" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"colorpicker"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <div class="alchemy__colorpicker-toolbar"><span class="alchemy__colorpicker-sample jsAlchemyColorpickerSample" style="background-color: {{VALUE}}"></span><input {{ATTRIBUTES}} /><button type="button" class="button button-secondary jsAlchemyColorpickerClear"><span class="dashicons dashicons-trash"></span></button></div>
+                    </div>
                 </div>
             ';
         }

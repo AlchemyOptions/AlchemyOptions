@@ -85,6 +85,8 @@ html {
     top: -1px; }
   .field--colorpicker ~ .alchemy__field {
     z-index: 4; }
+  .field--colorpicker .field__content input {
+    padding: 4px 5px 3px; }
 .field--datepicker input {
   position: relative;
   z-index: 10; }

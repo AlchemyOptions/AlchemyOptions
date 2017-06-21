@@ -133,6 +133,12 @@
         ~ .alchemy__field {
             z-index: 4;
         }
+
+        .field__content {
+            input {
+                padding: 4px 5px 3px;
+            }
+        }
     }
 
     &--datepicker {
