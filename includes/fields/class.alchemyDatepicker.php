@@ -11,10 +11,14 @@ if( ! class_exists( 'Alchemy_Datepicker_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--datepicker" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"datepicker"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <input {{ATTRIBUTES}} /><span class="dashicons dashicons-calendar-alt"></span>
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--datepicker" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"datepicker"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <input {{ATTRIBUTES}} /><span class="dashicons dashicons-calendar-alt"></span>
+                    </div>
                 </div>
             ';
         }

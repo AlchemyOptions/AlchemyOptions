@@ -87,12 +87,19 @@ html {
     z-index: 4; }
   .field--colorpicker .field__content input {
     padding: 4px 5px 3px; }
-.field--datepicker input {
-  position: relative;
-  z-index: 10; }
+.field--datepicker .field__content {
+  padding-top: 14px; }
+  .field--datepicker .field__content input {
+    width: 100%;
+    max-width: 200px;
+    padding: 4px 6px 4px;
+    margin-top: 0;
+    margin-right: 4px;
+    position: relative;
+    z-index: 10; }
 .field--datepicker .dashicons {
   pointer-events: none;
-  margin-left: -25px;
+  margin-left: -29px;
   margin-top: -2px;
   position: relative;
   z-index: 11; }
