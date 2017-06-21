@@ -77,18 +77,24 @@
             box-sizing: border-box;
             width: 100%;
             padding: 6px;
-            max-width: 45em;
 
             font-size: 15px;
         }
 
         select {
-            max-width: 80%;
             padding: 2px;
             line-height: 28px;
             height: 28px;
 
             font-size: 14px;
+        }
+
+        .wp-media-buttons {
+            float: none;
+        }
+
+        .wp-editor-container {
+            clear: none;
         }
     }
 
@@ -152,8 +158,13 @@
         }
 
         .field__label {
+            margin: 0;
             color: inherit;
-            font-weight: normal;
+            font-weight: 600;
+        }
+
+        .field__content {
+            padding-top: 1.5em;
         }
     }
 
@@ -177,13 +188,20 @@
     &--editor {
         .wp-editor-tools {
             min-height: 32px;
-            clear: both;
+
+            &:after,
+            &:before {
+                clear: none;
+            }
         }
 
         .mce-tinymce {
-            clear: both;
             border: 1px solid #e5e5e5;
             box-shadow: 0 1px 1px rgba(0,0,0,.04);
+        }
+
+        .field__content {
+            padding-top: 17px;
         }
     }
 
@@ -198,6 +216,27 @@
     &--taxonomy-select {
         select {
             width: 80%;
+        }
+    }
+
+    &--select {
+        .field__content {
+            padding-top: 15px;
+        }
+    }
+
+    &--checkbox,
+    &--radio {
+        .field__content {
+            padding-left: 222px;
+            padding-top: 20px;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: .3em;
+
+            font-size: 14px;
         }
     }
 }

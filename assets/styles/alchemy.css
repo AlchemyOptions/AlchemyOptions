@@ -56,14 +56,16 @@ html {
     box-sizing: border-box;
     width: 100%;
     padding: 6px;
-    max-width: 45em;
     font-size: 15px; }
   .field__content select {
-    max-width: 80%;
     padding: 2px;
     line-height: 28px;
     height: 28px;
     font-size: 14px; }
+  .field__content .wp-media-buttons {
+    float: none; }
+  .field__content .wp-editor-container {
+    clear: none; }
 .field--repeater .field__label {
   margin-bottom: 0; }
 .field--repeater .repeatee .field__label {
@@ -95,8 +97,11 @@ html {
 .field--button-group .button-group {
   will-change: transform; }
 .field--button-group .field__label {
+  margin: 0;
   color: inherit;
-  font-weight: normal; }
+  font-weight: 600; }
+.field--button-group .field__content {
+  padding-top: 1.5em; }
 .field--upload .field__results {
   padding-top: .5em; }
   .field--upload .field__results img {
@@ -108,21 +113,34 @@ html {
     height: auto;
     background: #fafafa; }
 .field--editor .wp-editor-tools {
-  min-height: 32px;
-  clear: both; }
+  min-height: 32px; }
+  .field--editor .wp-editor-tools:after, .field--editor .wp-editor-tools:before {
+    clear: none; }
 .field--editor .mce-tinymce {
-  clear: both;
   border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); }
+.field--editor .field__content {
+  padding-top: 17px; }
 .field--image-radio input {
   display: none; }
 .field--post-type-select select, .field--datalist select, .field--taxonomy-select select {
   width: 80%; }
+.field--select .field__content {
+  padding-top: 15px; }
+.field--checkbox .field__content, .field--radio .field__content {
+  padding-left: 222px;
+  padding-top: 20px; }
+.field--checkbox label, .field--radio label {
+  display: inline-block;
+  margin-bottom: .3em;
+  font-size: 14px; }
 
 .alchemy__options {
-  padding: 3em 0; }
+  padding: 3em 0;
+  max-width: 80em; }
 .alchemy__fields {
   margin: 2em 0;
+  padding: 3em 0;
   border: 1px dashed transparent;
   border-top-color: #ccc;
   border-bottom-color: #ccc; }

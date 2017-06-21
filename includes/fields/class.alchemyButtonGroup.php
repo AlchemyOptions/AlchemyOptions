@@ -11,16 +11,20 @@ if( ! class_exists( 'Alchemy_Button_Group_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--button-group jsAlchemyButtonGroup" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"button-group"}\'>
-                    <input class="jsAlchemyButtonGroupInput" type="hidden" id="{{ID}}" value="{{VALUE}}" />
-                    <h2 class="field__label">{{TITLE}}</h2>
-                    <div class="button-group">{{CHOICES}}</div>
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--button-group jsAlchemyButtonGroup" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"button-group"}\'>
+                    <div class="field__side">
+                        <input class="jsAlchemyButtonGroupInput" type="hidden" id="{{ID}}" value="{{VALUE}}" />
+                        <h2 class="field__label">{{TITLE}}</h2>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <div class="button-group">{{CHOICES}}</div>
+                    </div>
                 </div>
             ';
         }
 
-        public function alch_get_btn_group_choices( $id, $choices ) {
+        public function alch_get_btn_group_choices( $choices ) {
             $choicesHTML = "";
 
             if( is_array( $choices ) && count( $choices ) > 0 ) {
@@ -60,7 +64,7 @@ if( ! class_exists( 'Alchemy_Button_Group_Field' ) ) {
                 }
             }
 
-            $field[ 'choices' ] = $this->alch_get_btn_group_choices( $field[ 'id' ], $field[ 'choices' ] );
+            $field[ 'choices' ] = $this->alch_get_btn_group_choices( $field[ 'choices' ] );
 
             return $field;
         }

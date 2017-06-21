@@ -11,12 +11,16 @@ if( ! class_exists( 'Alchemy_Radio_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--radio" id="field--{{NAME}}" data-alchemy=\'{"id":"{{NAME}}","type":"radio"}\'>
+                <div class="alchemy__field alchemy__clearfix field field--radio" id="field--{{NAME}}" data-alchemy=\'{"id":"{{NAME}}","type":"radio"}\'>
                     <fieldset>
-                        <legend class="field__label">{{TITLE}}</legend>
-                        {{CHOICES}}
+                        <div class="field__side">
+                            <legend class="field__label">{{TITLE}}</legend>
+                            {{DESCRIPTION}}
+                        </div>
+                        <div class="field__content">
+                            {{CHOICES}}
+                        </div>
                     </fieldset>
-                    {{DESCRIPTION}}
                 </div>
             ';
         }
