@@ -185,6 +185,10 @@
     }
 
     &--upload {
+        .field__content {
+            padding-top: 16px;
+        }
+
         .field__results {
             padding-top: .5em;
 

@@ -111,6 +111,8 @@ html {
   font-weight: 600; }
 .field--button-group .field__content {
   padding-top: 1.5em; }
+.field--upload .field__content {
+  padding-top: 16px; }
 .field--upload .field__results {
   padding-top: .5em; }
   .field--upload .field__results img {

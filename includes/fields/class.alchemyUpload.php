@@ -11,13 +11,17 @@ if( ! class_exists( 'Alchemy_Upload_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--{{TYPE}} jsAlchemyUploader" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    {{DESCRIPTION}}
-                    <input {{ATTRIBUTES}} />
-                    <button type="button" class="button button-primary jsAlchemyUploadTrigger" data-strings=\'{"title":"{{ADD-BUTTON-TITLE}}","text":"{{ADD-BUTTON-TEXT}}"}\'><span class="dashicons dashicons-admin-media"></span></button>
-                    <button type="button" class="button button-secondary jsAlchemyUploadRemove"><span class="dashicons dashicons-trash"></span></button>
-                    <div class="field__results jsAlchemyUploaderResults">{{IMAGE}}</div>
+                <div class="alchemy__field alchemy__clearfix field field--{{TYPE}} jsAlchemyUploader" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <input {{ATTRIBUTES}} />
+                        <button type="button" class="button button-primary jsAlchemyUploadTrigger" data-strings=\'{"title":"{{ADD-BUTTON-TITLE}}","text":"{{ADD-BUTTON-TEXT}}"}\'><span class="dashicons dashicons-admin-media"></span></button>
+                        <button type="button" class="button button-secondary jsAlchemyUploadRemove"><span class="dashicons dashicons-trash"></span></button>
+                        <div class="field__results jsAlchemyUploaderResults">{{IMAGE}}</div>
+                    </div>
                 </div>
             ';
         }
