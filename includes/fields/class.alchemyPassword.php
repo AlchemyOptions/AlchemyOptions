@@ -11,10 +11,14 @@ if( ! class_exists( 'Alchemy_Password_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--password" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"password"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <input {{ATTRIBUTES}} /><button type="button" title="{{TOGGLE-TITLE}}" class="button button-primary jsAlchemyTogglePassword"><span class="dashicons dashicons-lock"></span></button>
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--password" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"password"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <input {{ATTRIBUTES}} /><button type="button" title="{{TOGGLE-TITLE}}" class="button button-primary jsAlchemyTogglePassword"><span class="dashicons dashicons-lock"></span></button>
+                    </div>
                 </div>
             ';
         }

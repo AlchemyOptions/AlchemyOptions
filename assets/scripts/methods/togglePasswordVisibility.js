@@ -4,7 +4,7 @@ export default function(scope = document) {
     if( $passwordToggles[0] ) {
         $passwordToggles.each((i, toggle) => {
             const $toggle = $(toggle);
-            const $target = $toggle.parents('.field').find('input');
+            const $target = $toggle.prev('input');
             const $icon = $toggle.find('span');
 
             $toggle.on('click', function(){
