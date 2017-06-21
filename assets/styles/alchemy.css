@@ -149,6 +149,19 @@ html {
   display: inline-block;
   margin-bottom: .3em;
   font-size: 14px; }
+.field--slider .field__label {
+  margin: 0; }
+.field--slider .field__content {
+  padding-top: 25px; }
+  .field--slider .field__content .jsAlchemySliderInput {
+    width: auto; }
+.field--slider .ui-slider {
+  margin-bottom: 2em; }
+  .field--slider .ui-slider .ui-slider-handle {
+    width: 1.2em;
+    height: 1.8em;
+    top: -0.6em;
+    margin-left: -0.6em; }
 .field--password .field__content {
   padding-top: 14px; }
   .field--password .field__content input {

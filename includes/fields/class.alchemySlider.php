@@ -11,11 +11,15 @@ if( ! class_exists( 'Alchemy_Slider_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--{{TYPE}}" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
-                    <span class="field__label">{{TITLE}}</span>
-                    <div class="jsAlchemySlider" data-values=\'{{VALUES}}\'></div>
-                    <input {{ATTRIBUTES}} />
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--{{TYPE}}" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"{{TYPE}}"}\'>
+                    <div class="field__side">
+                        <h3 class="field__label">{{TITLE}}</h3>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <div class="jsAlchemySlider" data-values=\'{{VALUES}}\'></div>
+                        <input {{ATTRIBUTES}} />
+                    </div>
                 </div>
             ';
         }
@@ -23,17 +27,17 @@ if( ! class_exists( 'Alchemy_Slider_Field' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
-            $passedAttrs = isset( $field[ 'attributes' ] ) ? $field[ 'attributes' ] : array();
+            $passedAttrs = isset( $field['attributes'] ) ? $field['attributes'] : array();
             $mergedAttrs = array_merge( array(
                 'type' => 'number',
-                'id' => $field[ 'id' ],
-                'value' => $field[ 'value' ],
+                'id' => $field['id'],
+                'value' => $field['value'],
                 'readonly' => true,
                 'class' => 'jsAlchemySliderInput'
             ), $passedAttrs );
 
-            $field[ 'attributes' ] = $this->concat_attributes( $mergedAttrs );
-            $field[ 'values' ] = json_encode( $field[ 'values' ] );
+            $field['attributes'] = $this->concat_attributes( $mergedAttrs );
+            $field['values'] = json_encode( $field['values'] );
 
             return $field;
         }

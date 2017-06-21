@@ -270,6 +270,31 @@
         }
     }
 
+    &--slider {
+        .field__label {
+            margin: 0;
+        }
+
+        .field__content {
+            padding-top: 25px;
+
+            .jsAlchemySliderInput {
+                width: auto;
+            }
+        }
+
+        .ui-slider {
+            margin-bottom: 2em;
+
+            .ui-slider-handle {
+                width: 1.2em;
+                height: 1.8em;
+                top: -0.6em;
+                margin-left: -0.6em;
+            }
+        }
+    }
+
     &--password {
         .field__content {
             padding-top: 14px;
