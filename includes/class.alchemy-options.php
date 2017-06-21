@@ -275,7 +275,7 @@ class Alchemy_Options {
         $submenuHTML = '';
 
         $submenuHTML .= '<div class="wrap alchemy">';
-        $submenuHTML .= '<h2>' . $pageTitle . ' <small class="alchemy__version">(v.' . ALCHEMY_OPTIONS_VERSION . ')</small></h2><br>';
+        $submenuHTML .= '<h2>' . $pageTitle . ' <small class="alchemy__version">(v. ' . ALCHEMY_OPTIONS_VERSION . ')</small></h2><br>';
 
         if( count( $savedOptions ) > 0 ) {
             $submenuHTML .= $this->get_options_page_html( $savedOptions, $isNetwork );

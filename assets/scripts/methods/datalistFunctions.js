@@ -4,7 +4,7 @@ export default function( scope = document ) {
     if( $selectBoxes[0] ) {
         $selectBoxes.each((i, el) => {
             const $el = $(el);
-            const $select = $('.jsAlchemyDatalistSelect', $el);
+            const $select = $el.children('.field__content').children('.jsAlchemyDatalistSelect');
 
             $select.select2();
 

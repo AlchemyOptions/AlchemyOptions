@@ -11,11 +11,15 @@ if( ! class_exists( 'Alchemy_Datalist_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--datalist jsAlchemyDatalistBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"datalist"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <select class="jsAlchemyDatalistSelect"{{MULTIPLE}}>{{OPTIONS}}</select>
-                    {{CLEAR}}
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--datalist jsAlchemyDatalistBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"datalist"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content">
+                        <select class="jsAlchemyDatalistSelect"{{MULTIPLE}}>{{OPTIONS}}</select>
+                        {{CLEAR}}
+                    </div>
                 </div>
             ';
         }
