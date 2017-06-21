@@ -205,6 +205,16 @@
         }
     }
 
+    &--textblock {
+        .field__label {
+            margin: 0;
+        }
+
+        .field__content {
+            padding-top: 13px;
+        }
+    }
+
     &--editor {
         .wp-editor-tools {
             min-height: 32px;

@@ -123,6 +123,10 @@ html {
     max-width: 100%;
     height: auto;
     background: #fafafa; }
+.field--textblock .field__label {
+  margin: 0; }
+.field--textblock .field__content {
+  padding-top: 13px; }
 .field--editor .wp-editor-tools {
   min-height: 32px; }
   .field--editor .wp-editor-tools:after, .field--editor .wp-editor-tools:before {

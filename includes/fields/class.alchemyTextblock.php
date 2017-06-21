@@ -11,9 +11,13 @@ if( ! class_exists( 'Alchemy_Textblock_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--textblock">
-                    <h3 class="field__label">{{TITLE}}</h3>
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--textblock">
+                    <div class="field__side">
+                        <h3 class="field__label">{{TITLE}}</h3>
+                    </div>
+                    <div class="field__content">
+                        {{DESCRIPTION}}
+                    </div>
                 </div>
             ';
         }
