@@ -17,7 +17,7 @@ if( ! class_exists( 'Alchemy_Password_Field' ) ) {
                         {{DESCRIPTION}}
                     </div>
                     <div class="field__content">
-                        <input {{ATTRIBUTES}} /><button type="button" title="{{TOGGLE-TITLE}}" class="button button-primary jsAlchemyTogglePassword"><span class="dashicons dashicons-lock"></span></button>
+                        <input {{ATTRIBUTES}} /><button type="button"{{TOGGLE-TITLE}} class="button button-primary jsAlchemyTogglePassword"><span class="dashicons dashicons-lock"></span></button>
                     </div>
                 </div>
             ';
@@ -26,7 +26,7 @@ if( ! class_exists( 'Alchemy_Password_Field' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
-            $field[ 'toggle-title' ] = $field[ 'toggle-title-text' ];
+            $field[ 'toggle-title' ] = isset( $field[ 'toggle-title-text' ] ) ? sprintf( ' title="%s"', $field[ 'toggle-title-text' ] ) : '';
             unset( $field[ 'toggle-title-text' ] );
 
             $field[ 'attributes' ] = $this->concat_attributes(array(
