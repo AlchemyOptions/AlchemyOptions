@@ -11,11 +11,15 @@ if( ! class_exists( 'Alchemy_Taxonomy_Select_Field' ) ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field field field--taxonomy-select jsAlchemyTaxonomySelectBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"taxonomy-select","taxonomy":"{{TAXONOMY}}"}\'>
-                    <label class="field__label" for="{{ID}}">{{TITLE}}</label>
-                    <select class="jsAlchemyTaxonomySelect"{{MULTIPLE}}>{{OPTIONS}}</select>
-                    {{CLEAR}}
-                    {{DESCRIPTION}}
+                <div class="alchemy__field alchemy__clearfix field field--taxonomy-select jsAlchemyTaxonomySelectBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"taxonomy-select","taxonomy":"{{TAXONOMY}}"}\'>
+                    <div class="field__side">
+                        <label class="field__label" for="{{ID}}">{{TITLE}}</label>
+                        {{DESCRIPTION}}
+                    </div>
+                    <div class="field__content"{{PADDED}}>
+                        <select style="width: 100%;" class="jsAlchemyTaxonomySelect"{{MULTIPLE}}>{{OPTIONS}}</select>
+                        {{CLEAR}}
+                    </div>
                 </div>
             ';
         }
@@ -27,6 +31,7 @@ if( ! class_exists( 'Alchemy_Taxonomy_Select_Field' ) ) {
             $field['clear'] = $field['multiple'] ? '' : '<button type="button" class="button button-secondary jsAlchemyTaxonomySelectClear"><span class="dashicons dashicons-trash"></span></button>';
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
             $field['options'] = $this->get_options_html( $field );
+            $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
 
             return $field;
         }

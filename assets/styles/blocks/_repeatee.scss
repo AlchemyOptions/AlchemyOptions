@@ -22,6 +22,10 @@
 
         line-height: 1.5;
         vertical-align: middle;
+
+        @media all and (max-width: 782px) {
+            line-height: 2.2;
+        }
     }
 
     &__content {

@@ -16,8 +16,8 @@ if( ! class_exists( 'Alchemy_Datalist_Field' ) ) {
                         <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                         {{DESCRIPTION}}
                     </div>
-                    <div class="field__content">
-                        <select class="jsAlchemyDatalistSelect"{{MULTIPLE}}>{{OPTIONS}}</select>
+                    <div class="field__content"{{PADDED}}>
+                        <select style="width: 100%;" class="jsAlchemyDatalistSelect"{{MULTIPLE}}>{{OPTIONS}}</select>
                         {{CLEAR}}
                     </div>
                 </div>
@@ -30,6 +30,7 @@ if( ! class_exists( 'Alchemy_Datalist_Field' ) ) {
             $field['clear'] = $field['multiple'] ? '' : '<button type="button" class="button button-secondary jsAlchemyDatalistClear"><span class="dashicons dashicons-trash"></span></button>';
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
             $field['options'] = $this->get_options_html( $field );
+            $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
 
             return $field;
         }

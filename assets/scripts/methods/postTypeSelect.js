@@ -5,7 +5,7 @@ export default function( scope = document ) {
         $selectBoxes.each((i, el) => {
             const $el = $(el);
             const fieldData = $el.data('alchemy');
-            const $select = $('.jsAlchemyPostTypeSelect', $el);
+            const $select = $el.children('.field__content').children('.jsAlchemyPostTypeSelect');
             const nonce = $select.data('nonce');
 
             $select.select2({
