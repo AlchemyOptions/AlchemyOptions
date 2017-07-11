@@ -21,7 +21,7 @@ class Alchemy_Fields_Loader {
             'checkbox', 'radio', 'datalist',
             'colorpicker', 'datepicker', 'button-group',
             'upload', 'editor', 'image-radio',
-            'textblock', 'slider', 'section',
+            'textblock', 'slider', 'sections',
             'post-type-select', 'taxonomy-select',
             'datalist', 'field-group',
             'repeater'
@@ -109,8 +109,8 @@ class Alchemy_Fields_Loader {
             case 'slider' :
                 return new Alchemy_Slider_Field( $this->networkFields );
             break;
-            case 'section' :
-                return new Alchemy_Section_Field( $this->networkFields );
+            case 'sections' :
+                return new Alchemy_Sections_Field( $this->networkFields );
             break;
             case 'post-type-select' :
                 return new Alchemy_Post_Type_Select_Field( $this->networkFields );
@@ -134,7 +134,7 @@ class Alchemy_Fields_Loader {
     }
 
     public function is_ok_without_id( $type ) {
-        return in_array( $type, [ 'textblock' ] );
+        return in_array( $type, [ 'textblock', 'sections' ] );
     }
 
     public function is_valid_field_type ( $type ) {

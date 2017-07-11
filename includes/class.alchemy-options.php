@@ -38,7 +38,7 @@ class Alchemy_Options {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyImageRadio.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTextblock.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySlider.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySection.php' );
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySections.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyPostTypeSelect.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTaxonomySelect.php' );
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyDatalist.php' );
@@ -118,8 +118,14 @@ class Alchemy_Options {
                 }
             }
 
-            if( 'section' === $field['type'] ) {
-                $types[] = $this->walk_the_fields( $field['options'] );
+            if( 'sections' === $field['type'] ) {
+                foreach( $field['sections'] as $section ) {
+                    $types[] = $this->walk_the_fields( $section['options'] );
+                }
+            }
+
+            if( 'field-group' === $field['type'] ) {
+                $types[] = $this->walk_the_fields( $field['fields'] );
             }
         }
 
