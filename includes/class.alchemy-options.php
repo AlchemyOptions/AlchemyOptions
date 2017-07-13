@@ -296,8 +296,11 @@ class Alchemy_Options {
 
     public function get_options_page_html( $options, $isNetwork ) {
         $optionsHTML = "";
+        $hasTabs = false;
 
         if( is_array( $options[ 'tabs' ] ) && count( $options[ 'tabs' ] ) > 0 ) {
+            $hasTabs = true;
+
             reset( $options[ 'tabs' ] );
             $this->active_tab = key( $options[ 'tabs' ] );
 
@@ -313,7 +316,7 @@ class Alchemy_Options {
         if( is_array( $options[ 'options' ] ) && count( $options[ 'options' ] ) > 0 ) {
             $optionsHTML .= '<div class="alchemy__options">';
 
-            $optionsHTML .= $this->get_options_html( $options[ 'options' ], $isNetwork );
+            $optionsHTML .= $this->get_options_html( $options[ 'options' ], $hasTabs, $isNetwork );
 
             $optionsHTML .= '</div>';
         }
@@ -335,14 +338,15 @@ class Alchemy_Options {
         return $tabsHTML;
     }
 
-    public function get_options_html( $options, $isNetwork ) {
+    public function get_options_html( $options, $hasTabs, $isNetwork ) {
         $optionsHTML = "";
 
-        $filteredOptions = array_filter( $options, function( $option ) {
-            return $option[ 'tab' ] === $this->active_tab;
-        } );
+        $filteredOptions = $hasTabs
+            ? array_filter( $options, function( $option ) {
+                return !isset( $option[ 'tab' ] ) || $option[ 'tab' ] === $this->active_tab;
+            } )
+            : $options;
 
-        //todo: various checks when tab info is missing or tab is not supplied
         $optionFields = new Alchemy_Fields_Loader( $isNetwork );
 
         $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm" data-is-network="' . json_encode( $isNetwork ) . '">';
