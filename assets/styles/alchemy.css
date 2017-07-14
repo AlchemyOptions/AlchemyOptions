@@ -81,6 +81,8 @@ html {
     float: none; }
   .field__content .wp-editor-container {
     clear: none; }
+.field__tab--hidden {
+  display: none; }
 .field--repeater .field__label {
   margin-bottom: 0; }
 .field--repeater .repeatee .field__label {
@@ -273,6 +275,36 @@ html {
     @media all and (max-width: 782px) {
       .field--password .field__content input {
         padding: 5px 6px 8px; } }
+.field--sections .field__tabs-nav {
+  float: left;
+  width: 100%;
+  max-width: 200px;
+  position: relative;
+  z-index: 1; }
+.field--sections .field__tabs {
+  padding-left: 200px;
+  position: relative;
+  z-index: 0; }
+.field--sections .field__tab-btn {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  background: #f5f5f5;
+  padding: 15px;
+  border: 1px solid #ddd;
+  text-align: left; }
+  .field--sections .field__tab-btn + .field__tab-btn {
+    margin-top: -1px; }
+  .field--sections .field__tab-btn--active {
+    border-right-color: #fbfbfb;
+    background: #fbfbfb; }
+    .field--sections .field__tab-btn--active + .field__tab-btn {
+      box-shadow: inset 0 1px 1px #ccc; }
+.field--sections .field__tab {
+  padding: 0 20px 20px;
+  margin-left: -1px;
+  border: 1px solid #ddd;
+  background: #fbfbfb; }
 
 .alchemy__options {
   padding: 3em 0;
