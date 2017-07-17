@@ -11,8 +11,8 @@ export default function() {
             const data = $field.data('alchemy');
 
             if( data ) {
-                if( 'section' === data.type ) {
-                    $field.children( '.alchemy__field' ).each((i, item) => {
+                if( 'sections' === data.type ) {
+                    $field.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field').each((i, item) => {
                         const $field = $(item);
                         const data = $field.data('alchemy');
 
@@ -103,10 +103,10 @@ export default function() {
                     value = $area.val();
                 }
             break;
-            case 'section' :
+            case 'sections' :
                 value = [];
 
-                const $childFields = alchemyField.children('.alchemy__field');
+                const $childFields = alchemyField.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field');
 
                 if( $childFields[0] ) {
                     $childFields.each((i, el) => {

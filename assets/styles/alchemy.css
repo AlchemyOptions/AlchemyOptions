@@ -41,7 +41,7 @@ html {
   padding-top: 20px;
   width: 100%;
   max-width: 200px; }
-  .repeatee .field__side {
+  .field--sections .field__side, .repeatee .field__side {
     padding-top: 0;
     float: none; }
   @media all and (max-width: 1024px) {
@@ -54,6 +54,8 @@ html {
   padding-left: 220px; }
   .repeatee .field__content {
     padding-top: 0;
+    padding-left: 0; }
+  .field--sections .field__content {
     padding-left: 0; }
   @media all and (max-width: 1024px) {
     .field__content {
@@ -301,7 +303,7 @@ html {
     .field--sections .field__tab-btn--active + .field__tab-btn {
       box-shadow: inset 0 1px 1px #ccc; }
 .field--sections .field__tab {
-  padding: 0 20px 20px;
+  padding: 20px;
   margin-left: -1px;
   border: 1px solid #ddd;
   background: #fbfbfb; }
@@ -318,8 +320,8 @@ html {
   border: 1px dashed transparent;
   border-top-color: #ccc;
   border-bottom-color: #ccc; }
-.repeatee .alchemy__field + .alchemy__field {
-  margin-top: 3em; }
+.field--sections .alchemy__field + .alchemy__field, .repeatee .alchemy__field + .alchemy__field {
+  margin-top: 4em; }
 .alchemy__field + .alchemy__field {
   margin-top: 2em; }
 @media all and (max-width: 1024px) {

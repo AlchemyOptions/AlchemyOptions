@@ -60,6 +60,7 @@
         width: 100%;
         max-width: 200px;
 
+        .field--sections &,
         .repeatee & {
             padding-top: 0;
             float: none;
@@ -78,6 +79,10 @@
 
         .repeatee & {
             padding-top: 0;
+            padding-left: 0;
+        }
+
+        .field--sections & {
             padding-left: 0;
         }
 
@@ -516,7 +521,7 @@
         }
 
         .field__tab {
-            padding: 0 20px 20px;
+            padding: 20px;
             margin-left: -1px;
             border: 1px solid #ddd;
             background: #fbfbfb;

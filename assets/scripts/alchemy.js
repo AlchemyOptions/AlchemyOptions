@@ -16,9 +16,7 @@ import sections from './methods/sections';
 
 (function(document, window, $){
     $(() => {
-        console.log(1);
         sections();
-        console.log(4);
         repeaterFunctions();
         saveOptions();
         togglePassword();
