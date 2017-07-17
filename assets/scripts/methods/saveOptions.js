@@ -174,7 +174,7 @@ export default function() {
             case 'field-group' :
                 value = {};
 
-                const $groupFields = alchemyField.find('.jsAlchemyFiledGroupWrapper');
+                const $groupFields = alchemyField.children('fieldset').children('.jsAlchemyFiledGroupWrapper');
 
                 if( $groupFields[0] ) {
                     $groupFields.each((i, el) => {

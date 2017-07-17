@@ -44,7 +44,10 @@ if( ! class_exists( 'Alchemy_Field_Group_Field' ) ) {
                 }, $field['fields'] );
 
                 $field['fields'] = array_map( function( $fld ) use( $field ) {
-                    $fld['value'] = $field['value'][$fld['id']]['value'];
+                    if( isset( $field['value'] ) && isset( $field['value'][$fld['id']]['value'] ) ) {
+                        $fld['value'] = $field['value'][$fld['id']]['value'];
+                    }
+
                     $fld['id'] = $field['id'] . '_field-group_' . $fld['id'];
 
                     return $fld;
