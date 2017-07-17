@@ -10,6 +10,7 @@ import postTypeSelect from './postTypeSelect';
 import taxonomySelect from './taxonomySelect';
 import datalistFunctions from './datalistFunctions';
 import conditions from './conditions';
+import sections from './sections';
 
 function getThingsGoing(scope = document) {
     const $repeaterFields = $('.jsAlchemyRepeaterField', scope);
@@ -48,6 +49,7 @@ function getThingsGoing(scope = document) {
                         $dropIn.append($data);
                         $dropIn.sortable( "refresh" );
 
+                        sections($data);
                         mediaUploader($data);
                         togglePassword($data);
                         colorpicker($data);
