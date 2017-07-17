@@ -33,6 +33,7 @@ if ( ! function_exists( 'alch_get_option' ) ) {
             switch ( $savedValue['type'] ) {
                 case 'post-type-select' :
                 case 'taxonomy-select' :
+                case 'field-group':
                     if( count( $valueInst->get_value() ) === 0 ) {
                         return $default;
                     }

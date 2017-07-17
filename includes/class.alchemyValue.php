@@ -87,7 +87,9 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
             $modVal = [];
 
             foreach ( $value as $id => $val ) {
-                $modVal[$id] = $val['value'];
+                if( '' !== $val['value'] && ! is_null( $val['value'] ) ) {
+                    $modVal[$id] = $val['value'];
+                }
             }
 
             return $modVal;
