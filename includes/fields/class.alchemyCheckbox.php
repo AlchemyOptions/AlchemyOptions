@@ -47,6 +47,7 @@ if( ! class_exists( 'Alchemy_Checkbox_Field' ) ) {
             $field = parent::normalize_field_keys( $field );
 
             $field[ 'name' ] = $field[ 'id' ];
+            $field[ 'choices' ] = isset( $field[ 'choices' ] ) ? $field[ 'choices' ] : array();
 
             if( ! $this->array_has_string_keys( $field[ 'choices' ] ) && 'array' !== gettype( $field[ 'choices' ][0] ) ) {
                 $field[ 'choices' ] = array_map( function( $item ){
