@@ -228,7 +228,7 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
 
             $toolbarHTML .= sprintf(
                 '<div class="%1$s" title="%2$s">',
-                'repeatee__toolbar alchemy__clearfix jsAlchemyRepeateeToolbar',
+                'repeatee__toolbar alchemy__clearfix--right jsAlchemyRepeateeToolbar',
                 __( 'Click to edit, drag to reorder', 'alchemy-options' )
             );
 

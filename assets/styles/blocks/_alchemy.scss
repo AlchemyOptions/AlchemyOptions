@@ -1,9 +1,4 @@
 .alchemy {
-    overflow: hidden;
-
-    position: relative;
-    z-index: 0;
-
     &__modal {
         width: 100%;
         padding-left: 160px;
@@ -88,6 +83,14 @@
             display: table;
             content: " ";
             clear: both;
+        }
+    }
+
+    &__clearfix--right {
+        &:after {
+            display: table;
+            content: " ";
+            clear: right;
         }
     }
 

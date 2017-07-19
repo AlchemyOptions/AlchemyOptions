@@ -34,6 +34,7 @@ if ( ! function_exists( 'alch_get_option' ) ) {
                 case 'post-type-select' :
                 case 'taxonomy-select' :
                 case 'field-group':
+                case 'repeater':
                     if( count( $valueInst->get_value() ) === 0 ) {
                         return $default;
                     }
