@@ -308,60 +308,95 @@ html {
   border: 1px solid #ddd;
   background: #fbfbfb; }
 
-.alchemy__options {
-  padding: 3em 0;
-  max-width: 80em; }
-.alchemy__version {
-  color: #b3b3b3;
-  font-size: 13px; }
-.alchemy__fields {
-  margin: 2em 0;
-  padding: 3em 0;
-  border: 1px dashed transparent;
-  border-top-color: #ccc;
-  border-bottom-color: #ccc; }
-.field--sections .alchemy__field + .alchemy__field, .repeatee .alchemy__field + .alchemy__field {
-  margin-top: 4em; }
-.alchemy__field + .alchemy__field {
-  margin-top: 2em; }
-@media all and (max-width: 1024px) {
-  .alchemy__field + .alchemy__field {
-    margin-top: 4em; } }
-.alchemy__clearfix:after {
-  display: table;
-  content: " ";
-  clear: both; }
-.alchemy__repeater-add.button, .alchemy__repeater-add-spinner {
-  margin-top: 1em;
-  vertical-align: middle; }
-.alchemy__repeater-add-spinner {
-  transition: opacity .3s;
-  opacity: 1;
-  margin-left: .5em; }
-  .alchemy__repeater-add-spinner--hidden {
-    opacity: 0; }
-.alchemy__colorpicker-toolbar {
+.alchemy {
+  overflow: hidden;
   position: relative;
   z-index: 0; }
-.alchemy__colorpicker-sample {
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  width: 40px;
-  height: 26px;
-  box-shadow: 0 1px 0 #ccc;
-  vertical-align: top; }
-  @media all and (max-width: 782px) {
-    .alchemy__colorpicker-sample {
-      margin-top: 1px;
-      height: 32px; } }
-.alchemy__colorpicker .iris-picker {
-  position: absolute;
-  left: 0;
-  top: 30px;
-  z-index: 1; }
-.alchemy .dashicons, .alchemy .dashicons-before:before {
-  vertical-align: text-top; }
+  .alchemy__modal {
+    width: 100%;
+    padding-left: 160px;
+    box-sizing: border-box;
+    will-change: transform;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    z-index: 5;
+    text-align: center; }
+    .alchemy__modal p {
+      display: inline-block;
+      margin-bottom: 0;
+      border-radius: 3px;
+      padding: .5em 1em .7em;
+      pointer-events: none;
+      animation-duration: .5s;
+      opacity: 0;
+      background: #fff; }
+    .alchemy__modal--success {
+      border: 1px solid #009935;
+      color: #00792a; }
+    .alchemy__modal--error {
+      border: 1px solid #ab1615;
+      color: #ab1615; }
+    .alchemy__modal .fadeOutUp {
+      animation-name: fadeOutUp; }
+    .alchemy__modal .fadeInDown {
+      animation-name: fadeInDown; }
+  .alchemy__options {
+    padding: 3em 0;
+    max-width: 80em; }
+  .alchemy__version {
+    color: #b3b3b3;
+    font-size: 13px; }
+  .alchemy__fields {
+    margin: 2em 0;
+    padding: 3em 0;
+    border: 1px dashed transparent;
+    border-top-color: #ccc;
+    border-bottom-color: #ccc; }
+  .field--sections .alchemy__field + .alchemy__field, .repeatee .alchemy__field + .alchemy__field {
+    margin-top: 4em; }
+  .alchemy__field + .alchemy__field {
+    margin-top: 2em; }
+  @media all and (max-width: 1024px) {
+    .alchemy__field + .alchemy__field {
+      margin-top: 4em; } }
+  .alchemy__clearfix:after {
+    display: table;
+    content: " ";
+    clear: both; }
+  .alchemy__repeater-add.button, .alchemy__repeater-add-spinner {
+    margin-top: 1em;
+    vertical-align: middle; }
+  .alchemy__repeater-add-spinner, .alchemy__spinner {
+    transition: opacity .3s;
+    opacity: 1;
+    margin-left: .5em; }
+    .alchemy__repeater-add-spinner--hidden, .alchemy__spinner--hidden {
+      opacity: 0; }
+  .alchemy__spinner {
+    margin-top: .3em; }
+  .alchemy__colorpicker-toolbar {
+    position: relative;
+    z-index: 0; }
+  .alchemy__colorpicker-sample {
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 40px;
+    height: 26px;
+    box-shadow: 0 1px 0 #ccc;
+    vertical-align: top; }
+    @media all and (max-width: 782px) {
+      .alchemy__colorpicker-sample {
+        margin-top: 1px;
+        height: 32px; } }
+  .alchemy__colorpicker .iris-picker {
+    position: absolute;
+    left: 0;
+    top: 30px;
+    z-index: 1; }
+  .alchemy .dashicons, .alchemy .dashicons-before:before {
+    vertical-align: text-top; }
 
 .repeatee {
   margin-bottom: .5em;
@@ -433,6 +468,20 @@ html {
     z-index: 5;
     background: #fff; }
 
+@keyframes fadeOutUp {
+  from {
+    opacity: 1; }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+    display: none; } }
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0); }
+  to {
+    opacity: 1;
+    transform: none; } }
 .appearance_page_alchemy-options .ui-datepicker-prev,
 .appearance_page_alchemy-options .ui-datepicker-next {
   transition: none; }

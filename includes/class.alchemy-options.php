@@ -158,20 +158,26 @@ class Alchemy_Options {
         $networkSave = isset( $_POST[ 'network' ] );
 
         if( count( $fields ) > 0 ) {
-            foreach ( $fields as $id => $payload ) {
-                $value = new Alchemy_DB_Value( $payload );
+            try {
+                foreach ( $fields as $id => $payload ) {
+                    $value = new Alchemy_DB_Value( $payload );
 
-                if( $networkSave ) {
-                    update_site_option( $id, array(
-                        'type' => $payload[ 'type' ],
-                        'value' => $value->get_safe_value(),
-                    ) );
-                } else {
-                    update_option( $id, array(
-                        'type' => $payload[ 'type' ],
-                        'value' => $value->get_safe_value(),
-                    ) );
+                    if( $networkSave ) {
+                        update_site_option( $id, array(
+                            'type' => $payload[ 'type' ],
+                            'value' => $value->get_safe_value(),
+                        ) );
+                    } else {
+                        update_option( $id, array(
+                            'type' => $payload[ 'type' ],
+                            'value' => $value->get_safe_value(),
+                        ) );
+                    }
+
+                    wp_send_json_success( __( 'Options saved', 'alchemy-options' ) );
                 }
+            } catch( Exception $err ) {
+                wp_send_json_error( $err->getMessage() );
             }
         }
     }
@@ -318,6 +324,11 @@ class Alchemy_Options {
 
             $optionsHTML .= $this->get_options_html( $options[ 'options' ], $hasTabs, $isNetwork );
 
+            $optionsHTML .= sprintf(
+                '<div class="alchemy__modal jsAlchemyModal"><p class="alchemy__modal--success">%s <span class="dashicons dashicons-info"></span></p><p class="alchemy__modal--error">%s <span class="dashicons dashicons-warning"></span></p></div>',
+                __( 'Options saved', 'alchemy-options' ),
+                __( 'Error. Options not saved', 'alchemy-options' )
+            );
             $optionsHTML .= '</div>';
         }
 
@@ -350,13 +361,13 @@ class Alchemy_Options {
         $optionFields = new Alchemy_Fields_Loader( $isNetwork );
 
         $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm" data-is-network="' . json_encode( $isNetwork ) . '">';
-        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';
+        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><img src="' . get_site_url() . '/wp-includes/images/spinner-2x.gif' . '" class="alchemy__spinner alchemy__spinner--hidden jsAlchemyLoader" width="20" height="20" />';
 
         $optionsHTML .= '<div class="alchemy__fields">';
         $optionsHTML .= $optionFields->get_fields_html( $filteredOptions );
         $optionsHTML .= '</div>';
 
-        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><span class="spinner"></span>';
+        $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><img src="' . get_site_url() . '/wp-includes/images/spinner-2x.gif' . '" class="alchemy__spinner alchemy__spinner--hidden jsAlchemyLoader" width="20" height="20" />';
         $optionsHTML .= '</form>';
 
         return $optionsHTML;

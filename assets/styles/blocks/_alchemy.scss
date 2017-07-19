@@ -1,4 +1,53 @@
 .alchemy {
+    overflow: hidden;
+
+    position: relative;
+    z-index: 0;
+
+    &__modal {
+        width: 100%;
+        padding-left: 160px;
+        box-sizing: border-box;
+        will-change: transform;
+
+        position: fixed;
+        top: 40px;
+        left: 0;
+        z-index: 5;
+
+        text-align: center;
+
+        p {
+            display: inline-block;
+            margin-bottom: 0;
+            border-radius: 3px;
+            padding: .5em 1em .7em;
+            pointer-events: none;
+            animation-duration: .5s;
+            opacity: 0;
+
+            background: #fff;
+        }
+
+        &--success {
+            border: 1px solid #009935;
+            color: #00792a;
+        }
+
+        &--error {
+            border: 1px solid #ab1615;
+            color: #ab1615;
+        }
+
+        .fadeOutUp {
+            animation-name: fadeOutUp;
+        }
+
+        .fadeInDown {
+            animation-name: fadeInDown;
+        }
+    }
+
     &__options {
         padding: 3em 0;
         max-width: 80em;
@@ -48,7 +97,8 @@
         vertical-align: middle;
     }
 
-    &__repeater-add-spinner {
+    &__repeater-add-spinner,
+    &__spinner {
         transition: opacity .3s;
         opacity: 1;
         margin-left: .5em;
@@ -56,6 +106,10 @@
         &--hidden {
             opacity: 0;
         }
+    }
+
+    &__spinner {
+        margin-top: .3em;
     }
 
     &__colorpicker {
