@@ -2,6 +2,7 @@
 /**
  * Plugin Name: Alchemy options
  * Description: Just another Options plugin inspired by the wonderful Option Tree and Archetype.
+ * Version: 0.0.1
  * Author: Alex Bondarev
  * Author URI: http://alexbondarev.com
  * Text Domain: alchemy-options
