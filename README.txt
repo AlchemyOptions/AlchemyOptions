@@ -9,7 +9,7 @@ License URI: https://opensource.org/licenses/MIT
 Alchemy Options is an options plugin for Wordpress, simple but powerful. Inspired by OptionTree and Archetype.
 
 == Description ==
-Alchemy Options is an options plugin for Wordpress, simple but powerful. Inspired by OptionTree and Archetype.
+Full documentation is available here - https://docs.alchemy-options.com/
 
 Features:
 
