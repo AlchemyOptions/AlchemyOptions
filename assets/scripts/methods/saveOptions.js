@@ -18,8 +18,7 @@ export default function() {
             if( data ) {
                 if( 'sections' === data.type ) {
                     $field.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field').each((i, item) => {
-                        const $field = $(item);
-                        const data = $field.data('alchemy');
+                        const data = $(item).data('alchemy');
 
                         if( data ) {
                             formData[data.id] = {
@@ -133,6 +132,8 @@ export default function() {
                 value = [];
 
                 const $childFields = alchemyField.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field');
+
+                console.log($childFields);
 
                 if( $childFields[0] ) {
                     $childFields.each((i, el) => {

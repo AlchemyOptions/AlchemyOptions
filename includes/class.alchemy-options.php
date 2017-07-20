@@ -175,9 +175,9 @@ class Alchemy_Options {
                             'value' => $value->get_safe_value(),
                         ) );
                     }
-
-                    wp_send_json_success( __( 'Options saved', 'alchemy-options' ) );
                 }
+
+                wp_send_json_success( __( 'Options saved', 'alchemy-options' ) );
             } catch( Exception $err ) {
                 wp_send_json_error( $err->getMessage() );
             }

@@ -56,6 +56,12 @@ if( ! class_exists( 'Alchemy_Field_Group_Field' ) ) {
                 $fieldsHTML .= '<div class="field__wrapper jsAlchemyFiledGroupWrapper" data-fields=\'' . json_encode( $repeateesFieldsData ) . '\'>';
 
                 $optionFields = new Alchemy_Fields_Loader( $this->networkField );
+
+                //Sections field is top-level only
+                $field['fields'] = array_filter($field['fields'], function( $field ) {
+                    return $field['type'] !== 'sections';
+                });
+
                 $fieldsHTML .= $optionFields->get_fields_html( $field['fields'] );
 
                 $fieldsHTML .= '</div>';

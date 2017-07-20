@@ -145,6 +145,11 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 )
             );
 
+            //Sections field is top-level only
+            $neededRepeater['fields'] = array_filter($neededRepeater['fields'], function( $field ) {
+                return $field['type'] !== 'sections';
+            });
+
             foreach( $neededRepeater['fields'] as $field ) {
                 $fieldIDs[] = array(
                     'id' => $field['id'],
