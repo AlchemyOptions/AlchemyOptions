@@ -16,12 +16,6 @@ if ( ! function_exists('alch_network_options_id') ) {
     }
 }
 
-if ( ! function_exists( 'alch_max_repeater_nesting_level' ) ) {
-    function alch_max_repeater_nesting_level() {
-        return apply_filters( 'alch_max_repeater_nesting_level', 3 );
-    }
-}
-
 if ( ! function_exists( 'alch_get_option' ) ) {
     function alch_get_option( $optionID, $default = "" ) {
         $savedValue = get_option( $optionID );
