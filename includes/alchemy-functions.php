@@ -12,7 +12,7 @@ if ( ! function_exists( 'alch_options_id' ) ) {
 
 if ( ! function_exists('alch_network_options_id') ) {
     function alch_network_options_id() {
-        return apply_filters( 'alch_multisite_options_id', 'alchemy_multisite_options' );
+        return apply_filters( 'alch_network_options_id', 'alchemy_network_options' );
     }
 }
 
