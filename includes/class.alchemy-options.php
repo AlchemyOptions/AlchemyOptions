@@ -246,11 +246,11 @@ class Alchemy_Options {
     public function create_network_options_page() {
         add_submenu_page(
             'themes.php',
-            __( 'Alchemy Multisite Options', 'alchemy-options' ),
-            __( 'Alchemy Multisite Options', 'alchemy-options' ),
+            __( 'Alchemy Network Options', 'alchemy-options' ),
+            __( 'Alchemy Network Options', 'alchemy-options' ),
             'manage_options',
             'alchemy-options',
-            array( $this, 'render_multisite_options_submenu' )
+            array( $this, 'render_network_options_submenu' )
         );
     }
 
@@ -266,7 +266,7 @@ class Alchemy_Options {
     }
 
     public function render_options_submenu () {
-        echo $this->get_options_page( alch_options_id(), __( 'Alchemy options', 'alchemy-options' ) );
+        echo $this->get_options_page( alch_options_id(), __( 'Alchemy Options', 'alchemy-options' ) );
 
         //hack to include editor assets. Will be removed when support of the wp_enqueue_editor() is high and there's a way to get the default editor settings for posts
         echo '<div class="hidden">';
@@ -274,8 +274,8 @@ class Alchemy_Options {
         echo '</div>';
     }
 
-    public function render_multisite_options_submenu (  ) {
-        echo $this->get_options_page( alch_network_options_id(), __( 'Alchemy multisite options', 'alchemy-options' ), true );
+    public function render_network_options_submenu (  ) {
+        echo $this->get_options_page( alch_network_options_id(), __( 'Alchemy Network Options', 'alchemy-options' ), true );
 
         //hack to include editor assets. Will be removed when support of the wp_enqueue_editor() is high and there's a way to get the default editor settings for posts
         echo '<div class="hidden">';
