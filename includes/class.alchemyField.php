@@ -22,6 +22,12 @@ if( ! class_exists( 'Alchemy_Field' ) ) {
 
             unset( $field[ 'desc' ] );
 
+            if( ! isset( $field[ 'id' ] ) ) {
+                //can be a sections or a textblock field
+
+                return $field;
+            }
+
             $savedData = $this->networkField
                 ? get_site_option( $field[ 'id' ] )
                 : get_option( $field[ 'id' ] );
