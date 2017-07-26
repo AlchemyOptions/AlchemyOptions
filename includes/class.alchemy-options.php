@@ -158,8 +158,6 @@ class Alchemy_Options {
         $networkSave = isset( $_POST[ 'network' ] );
 
         if( count( $fields ) > 0 ) {
-            $fields = apply_filters( 'alch_before_options_update', $fields );
-
             try {
                 foreach ( $fields as $id => $payload ) {
                     $value = new Alchemy_DB_Value( $payload );
