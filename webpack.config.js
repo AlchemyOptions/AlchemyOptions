@@ -2,10 +2,14 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: './assets/scripts/alchemy.js',
+    entry: {
+        'alchemy': './alchemy.js',
+        'alchemy-client': './alchemy-client.js'
+    },
+    context: path.resolve(__dirname, './assets/scripts'),
     output: {
         path: path.resolve(__dirname, './assets/scripts'),
-        filename: 'alchemy.min.js'
+        filename: '[name].min.js'
     },
     module: {
         rules: [
@@ -28,9 +32,6 @@ module.exports = {
             compress: {
                 warnings: false
             }
-        }),
-        new webpack.SourceMapDevToolPlugin({
-            filename: 'alchemy.js.map'
         }),
         new webpack.ProvidePlugin({
             $: 'jQuery',

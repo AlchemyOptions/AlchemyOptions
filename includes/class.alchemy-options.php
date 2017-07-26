@@ -69,6 +69,10 @@ class Alchemy_Options {
         wp_enqueue_style( 'alchemy-styles' );
     }
 
+    public function register_client_assets() {
+        wp_register_script( 'alchemy-client-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy-client.min.js', array(), ALCHEMY_OPTIONS_VERSION, true );
+    }
+
     public function get_scripts_deps() {
         $type = is_network_admin() ? alch_network_options_id() : alch_options_id();
         $deps = array(
@@ -139,6 +143,7 @@ class Alchemy_Options {
 
         add_action( 'admin_menu', array( $this, 'create_options_submenu_page' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_client_assets' ) );
         add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_save_options' ) );
         add_action( 'wp_ajax_alchemy_repeater_item_add', array( $this, 'handle_repeater_item_add' ) );
         add_action( 'wp_ajax_alchemy_post_type_selection', array( $this, 'handle_post_type_selection' ) );
