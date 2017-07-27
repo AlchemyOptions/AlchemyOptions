@@ -42,7 +42,7 @@ if( ! class_exists( 'Alchemy_Post_Type_Select_Field' ) ) {
         }
 
         public function get_options_html( $value ) {
-            if( ! $value['ids'] ) {
+            if( ! isset( $value['ids'] ) || ! $value['ids'] ) {
                 return '';
             }
 
