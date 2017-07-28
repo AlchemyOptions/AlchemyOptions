@@ -1,6 +1,6 @@
 import q from 'kew';
 
-export default (id, defaultValue, network) => {
+export default (id, network) => {
     const alchemyClientData = window.alchemyOptionsClientData;
 
     if (!alchemyClientData) {
@@ -15,7 +15,6 @@ export default (id, defaultValue, network) => {
         type: 'getValueById',
         nonce: alchemyClientData.nonce,
         id,
-        defaultValue,
         network
     };
 

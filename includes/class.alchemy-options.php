@@ -200,11 +200,10 @@ class Alchemy_Options {
         }
 
         $isNetworkCall = isset( $_GET['network'] ) && $_GET['network'] === 'true';
-        $defaultValue = isset( $_GET['defaultValue'] ) ? $_GET['defaultValue'] : '';
 
         $savedVal = $isNetworkCall
-	        ? alch_get_network_option( $_GET['id'], $defaultValue )
-	        : alch_get_option( $_GET['id'], $defaultValue );
+	        ? alch_get_network_option( $_GET['id'] )
+	        : alch_get_option( $_GET['id'] );
 
         wp_send_json_success( $savedVal );
     }
