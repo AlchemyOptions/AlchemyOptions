@@ -14,8 +14,8 @@ import taxonomySelect from './methods/taxonomySelect';
 import conditions from './methods/conditions';
 import sections from './methods/sections';
 
-(function(document, window, $){
-    $(() => {
+(function (document, window, $) {
+    $(function () {
         sections();
         repeaterFunctions();
         saveOptions();

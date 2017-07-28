@@ -71,6 +71,11 @@ class Alchemy_Options {
 
     public function register_client_assets() {
         wp_register_script( 'alchemy-client-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy-client.min.js', array(), ALCHEMY_OPTIONS_VERSION, true );
+
+        wp_localize_script( 'alchemy-client-scripts', 'alchemyOptionsClientData', array(
+            'adminURL' => admin_url( 'admin-ajax.php' ),
+            'nonce' => wp_create_nonce( 'alchemy_client_ajax_nonce' )
+        ) );
     }
 
     public function get_scripts_deps() {
@@ -147,6 +152,8 @@ class Alchemy_Options {
         add_action( 'wp_ajax_alchemy_save_options', array( $this, 'handle_save_options' ) );
         add_action( 'wp_ajax_alchemy_repeater_item_add', array( $this, 'handle_repeater_item_add' ) );
         add_action( 'wp_ajax_alchemy_post_type_selection', array( $this, 'handle_post_type_selection' ) );
+        add_action( 'wp_ajax_alchemy_options_client_request', array( $this, 'handle_client_requests' ) );
+        add_action( 'wp_ajax_nopriv_alchemy_options_client_request', array( $this, 'handle_client_requests' ) );
     }
 
     public function handle_save_options() {
@@ -185,6 +192,21 @@ class Alchemy_Options {
                 wp_send_json_error( $err->getMessage() );
             }
         }
+    }
+
+    public function handle_client_requests() {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'alchemy_client_ajax_nonce' ) ) {
+	        wp_send_json_error( __( 'Nonce check failed', 'alchemy-options' ) );
+        }
+
+        $isNetworkCall = isset( $_GET['network'] ) && $_GET['network'] === 'true';
+        $defaultValue = isset( $_GET['defaultValue'] ) ? $_GET['defaultValue'] : '';
+
+        $savedVal = $isNetworkCall
+	        ? alch_get_network_option( $_GET['id'], $defaultValue )
+	        : alch_get_option( $_GET['id'], $defaultValue );
+
+        wp_send_json_success( $savedVal );
     }
 
     public function handle_post_type_selection() {
