@@ -36,7 +36,7 @@ function getThingsGoing(scope = document) {
                     'type': 'get',
                     'url': alchemyData.adminURL,
                     'data': {
-                        'action': 'alchemy_repeater_item_add',
+                        'action': 'alchemy_options_repeater_item_add',
                         'nonce': [nonce.id, nonce.value],
                         'repeater': $btn.data('repeater-data'),
                         'index': clickIndex

@@ -17,7 +17,7 @@ export default function( scope = document ) {
                     data: params => {
                         return {
                             'searchedFor': params.term,
-                            'action': 'alchemy_post_type_selection',
+                            'action': 'alchemy_options_post_type_selection',
                             'nonce': [nonce.id, nonce.value],
                             'post-type': fieldData['post-type']
                         };

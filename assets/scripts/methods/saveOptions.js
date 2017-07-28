@@ -45,7 +45,7 @@ export default function() {
             });
 
             const data = {
-                'action': 'alchemy_save_options',
+                'action': 'alchemy_options_save_options',
                 'nonce': alchemyData.nonce,
                 'fields': formData
             };
