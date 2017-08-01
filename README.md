@@ -1,17 +1,8 @@
-=== Alchemy Options ===
-Contributors: skip405
-Tags: options,options plugin,options framework
-Requires at least: 4.7
-Tested up to: 4.8
-License: MIT
-License URI: https://opensource.org/licenses/MIT
+# Alchemy Options
 
 Alchemy Options is an options plugin for Wordpress, simple but powerful. Inspired by [OptionTree](https://wordpress.org/plugins/option-tree/) and [Archetype](https://our.umbraco.org/projects/backoffice-extensions/archetype/).
 
-== Description ==
-Full documentation is available here - https://docs.alchemy-options.com/
-
-= Features: =
+## Features
 
 * Multiple [WYSIWYG editors](https://docs.alchemy-options.com/fields/editor.html) (including dynamic creation in a [Repeater](https://docs.alchemy-options.com/fields/repeater.html) field)
 * Multisite compatible with network options stored on the Network admin page
@@ -21,7 +12,7 @@ Full documentation is available here - https://docs.alchemy-options.com/
 * [Client-side helpers](https://docs.alchemy-options.com/javascript/)
 * Translation ready
 
-= Current [field types](https://docs.alchemy-options.com/fields/): =
+## Current [field types](https://docs.alchemy-options.com/fields/)
 
 * [Text](https://docs.alchemy-options.com/fields/text.html)
 * [Password](https://docs.alchemy-options.com/fields/password.html)
@@ -46,10 +37,10 @@ Full documentation is available here - https://docs.alchemy-options.com/
 * [Taxonomy select (single and multiple)](https://docs.alchemy-options.com/fields/taxonomy-select.html)
 * [Field group](https://docs.alchemy-options.com/fields/field-group.html)
 
-== Contribution ==
+## Contribution
 
 If you feel like this plugin could be extended, or you think you've found a bug (most likely) please [create an issue on GitHub](https://github.com/AlchemyOptions/AlchemyOptions).
 
-== Ready to go? ==
+## Ready to go?
 
 Please proceed to the [installation instructions](https://docs.alchemy-options.com/Installation.html) or take a look at [configuration object examples](https://docs.alchemy-options.com/Samples.html) to get you rolling.
