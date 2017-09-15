@@ -16,6 +16,8 @@ function getThingsGoing(scope = document) {
     const $repeaterFields = $('.jsAlchemyRepeaterField', scope);
 
     if( $repeaterFields[0] ) {
+        const isNetworkForm = $("#jsAlchemyForm").data('is-network');
+
         $repeaterFields.each((i, el) => {
             const $repeater = $(el);
             const $dropIn = $repeater.children('fieldset').children('.field__content').children('.jsAlchemyRepeaterSortable');
@@ -39,7 +41,8 @@ function getThingsGoing(scope = document) {
                         'action': 'alchemy_options_repeater_item_add',
                         'nonce': [nonce.id, nonce.value],
                         'repeater': $btn.data('repeater-data'),
-                        'index': clickIndex
+                        'index': clickIndex,
+                        'network': isNetworkForm
                     },
                     'success': data => {
                         console.log('success');

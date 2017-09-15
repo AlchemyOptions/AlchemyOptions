@@ -255,8 +255,9 @@ class Alchemy_Options {
         $rID = $_GET[ 'repeater' ]['id'];
         $repeaterData = $_GET[ 'repeater' ]['repeater'];
         $index = $_GET[ 'index' ];
+        $networkSave = isset( $_GET['network'] );
 
-        $repeater = new Alchemy_Repeater_Field();
+        $repeater = new Alchemy_Repeater_Field( $networkSave );
 
         $repeaterHTML = $repeater->generate_repeatee( array(
             'id' => $rID,
