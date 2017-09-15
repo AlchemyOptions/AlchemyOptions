@@ -159,21 +159,21 @@ if( ! class_exists( 'Alchemy_Repeater_Field' ) ) {
                 $data['fields'][] = $field;
             }
 
-            $values = isset( $data['savedFields'] ) ? array_values( $data['savedFields'] ) : [];
+            $values = isset( $data['savedFields'] ) ? $data['savedFields'] : [];
 
-            foreach( $data['fields'] as $id => $field ) {
-                if( 'title' == $data['fields'][$id]['id'] && isset( $values[$id] ) ) {
-                    $repeateeTitle = $values[$id]['value'];
+            foreach ( $data['fields'] as $id => $field ) {
+                if ( 'title' == $data['fields'][ $id ]['id'] && isset( $values[ $field['id'] ] ) ) {
+                    $repeateeTitle = $values[ $field['id'] ]['value'];
                 }
 
-                $data['fields'][$id]['id'] = sprintf(
+                $data['fields'][ $id ]['id'] = sprintf(
                     '%s_%s',
                     $repeateeID,
                     $field['id']
                 );
 
-                if( isset( $values[$id] ) ) {
-                    $data['fields'][$id]['value'] = $values[$id]['value'];
+                if ( isset( $values[ $field['id'] ] ) ) {
+                    $data['fields'][ $id ]['value'] = $values[ $field['id'] ]['value'];
                 }
             }
 
