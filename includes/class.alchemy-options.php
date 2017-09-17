@@ -171,25 +171,29 @@ class Alchemy_Options {
 
         if( count( $fields ) > 0 ) {
             try {
-                foreach ( $fields as $id => $payload ) {
-                    $value = new Alchemy_DB_Value( $payload );
-
-                    if( $networkSave ) {
-                        update_site_option( $id, array(
-                            'type' => $payload[ 'type' ],
-                            'value' => $value->get_safe_value(),
-                        ) );
-                    } else {
-                        update_option( $id, array(
-                            'type' => $payload[ 'type' ],
-                            'value' => $value->get_safe_value(),
-                        ) );
-                    }
-                }
+                $this->save_options( $fields, $networkSave );
 
                 wp_send_json_success( __( 'Options saved', 'alchemy-options' ) );
             } catch( Exception $err ) {
                 wp_send_json_error( $err->getMessage() );
+            }
+        }
+    }
+
+    public function save_options( $fields, $networkSave ) {
+        foreach ( $fields as $id => $payload ) {
+            $value = new Alchemy_DB_Value( $payload );
+
+            if( $networkSave ) {
+                update_site_option( $id, array(
+                    'type' => $payload[ 'type' ],
+                    'value' => $value->get_safe_value(),
+                ) );
+            } else {
+                update_option( $id, array(
+                    'type' => $payload[ 'type' ],
+                    'value' => $value->get_safe_value(),
+                ) );
             }
         }
     }

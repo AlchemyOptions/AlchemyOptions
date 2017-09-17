@@ -17,4 +17,11 @@ class SampleTest extends WP_UnitTestCase {
 		// Replace this with some actual testing code.
 		$this->assertTrue( true );
 	}
+
+    /**
+     * Checks that the main class is loaded.
+     */
+    function test_plugin_is_active() {
+        $this->assertTrue( class_exists( 'Alchemy_Options' ) );
+    }
 }
