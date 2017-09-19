@@ -5,6 +5,7 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 }
 
 if( ! class_exists( 'Alchemy_DB_Value' ) ) {
+
     class Alchemy_DB_Value {
         private $value;
 
@@ -15,7 +16,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
         }
 
         public function sanitize_value_by_type() {
-            switch ( $this->value[ 'type' ] ) {
+            switch ( $this->value['type'] ) {
                 case 'url' :
                 case 'text' :
                 case 'password' :
@@ -25,22 +26,35 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 case 'datepicker' :
                 case 'upload' :
                 case 'slider' :
-                    $this->value[ 'value' ] = sanitize_text_field( $this->value[ 'value' ] );
+                    $this->value['value'] = sanitize_text_field( $this->value['value'] );
+                break;
+                case 'textarea' :
+                    $this->value['value'] = $this->sanitize_textarea_field( $this->value['value'] );
                 break;
                 case 'field-group' :
-                    $this->value[ 'value' ] = $this->sanitize_field_group_field( $this->value[ 'value' ] );
+                    $this->value['value'] = $this->sanitize_field_group_field( $this->value['value'] );
                 break;
                 case 'repeater' :
-                    $this->value[ 'value' ] = $this->sanitize_repeater_field( $this->value[ 'value' ] );
+                    $this->value['value'] = $this->sanitize_repeater_field( $this->value['value'] );
                 break;
                 case 'editor' :
-                    $this->value[ 'value' ] = $this->sanitize_editor_field( $this->value[ 'value' ] );
+                    $this->value['value'] = $this->sanitize_editor_field( $this->value['value'] );
                 break;
                 case 'email' :
-                    $this->value[ 'value' ] = sanitize_email( $this->value[ 'value' ] );
+                    $this->value['value'] = sanitize_email( $this->value['value'] );
                 break;
                 default : break;
             }
+        }
+
+        public function sanitize_textarea_field( $value ) {
+            $allow_html = apply_filters( 'alch_allow_html_in_textarea', false );
+
+            if ( ! $allow_html ) {
+                return sanitize_textarea_field( $value );
+            }
+
+            return wp_kses_stripslashes( $value );
         }
 
         public function sanitize_field_group_field( $value ) {
@@ -50,7 +64,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
                 $safeVal = new Alchemy_DB_Value( $field );
 
                 $valToReturn[$fieldID] = array(
-                    'type' => $field[ 'type' ],
+                    'type' => $field['type'],
                     'value' => $safeVal->get_safe_value(),
                 );
             }
@@ -69,21 +83,21 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
 
         public function sanitize_repeater_field( $value ) {
             return array_map(function( $item ){
-                $item[ 'fields' ] = array_map(function( $field ){
+                $item['fields'] = array_map(function( $field ){
                     $safeVal = new Alchemy_DB_Value( $field );
 
                     return array(
-                        'type' => $field[ 'type' ],
+                        'type' => $field['type'],
                         'value' => $safeVal->get_safe_value(),
                     );
-                }, $item[ 'fields' ]);
+                }, $item['fields']);
 
                 return $item;
             }, $value);
         }
 
         public function get_safe_value() {
-            return $this->value[ 'value' ];
+            return $this->value['value'];
         }
     }
 }
