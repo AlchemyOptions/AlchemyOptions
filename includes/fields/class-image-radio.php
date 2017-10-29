@@ -1,17 +1,27 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes\Fields
+ *
+ */
+
+namespace Alchemy_Options\Includes\Fields;
+
+use Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Radio_Field' ) ) {
+if( ! class_exists( __NAMESPACE__ . '\Image_Radio' ) ) {
 
-    class Alchemy_Radio_Field extends Alchemy_Field {
+    class Image_Radio extends Includes\Field {
         public function __construct( $networkField = false ) {
             parent::__construct( $networkField );
 
             $this->template = '
-                <div class="alchemy__field alchemy__clearfix field field--radio" id="field--{{NAME}}" data-alchemy=\'{"id":"{{NAME}}","type":"radio"}\'>
+                <div class="alchemy__field alchemy__clearfix field field--image-radio jsAlchemyImageRadios" id="field--{{NAME}}" data-alchemy=\'{"id":"{{NAME}}","type":"image-radio"}\'>
                     <fieldset>
                         <div class="field__side">
                             <legend class="field__label">{{TITLE}}</legend>
@@ -25,7 +35,7 @@ if( ! class_exists( 'Alchemy_Radio_Field' ) ) {
             ';
         }
 
-        public function alch_get_radio_choices( $id, $choices ) {
+        public function alch_get_image_radio_choices( $id, $choices ) {
             $choicesHTML = "";
 
             if( is_array( $choices ) && count( $choices ) > 0 ) {
@@ -33,9 +43,15 @@ if( ! class_exists( 'Alchemy_Radio_Field' ) ) {
                     $fieldID = esc_attr( $id . '_' . $this->make_label( $choice[ 'value' ] ) );
 
                     $choicesHTML .= sprintf (
-                        '<label%1$s><input%2$s data-value=\'' . esc_attr( $choice[ 'value' ] ) . '\' ' . $this->is_disabled( $choice[ 'disabled' ] ) . ' ' . $this->is_checked( $choice[ 'checked' ] ) . '/> ' . $choice[ 'label' ] . '</label><br>',
+                        '<input%2$s data-value=\'%3$s\' %4$s %5$s/><label%1$s class="field__image-label %7$s %8$s jsAlchemyImageRadioLabel">%6$s</label>',
                         $this->concat_attributes( array( 'for' => $fieldID ) ),
-                        $this->concat_attributes( array( 'id' => $fieldID, 'name' => $id, 'type' => 'radio' ) )
+                        $this->concat_attributes( array( 'id' => $fieldID, 'name' => $id, 'type' => 'radio' ) ),
+                        esc_attr( $choice[ 'value' ] ),
+                        $this->is_disabled( $choice[ 'disabled' ] ),
+                        $this->is_checked( $choice[ 'checked' ] ),
+                        sprintf( '<img src="%1$s" />', $choice[ 'image' ] ),
+                        $this->is_label_disabled( $choice[ 'disabled' ] ),
+                        $this->is_label_active( $choice[ 'checked' ] )
                     );
                 }
             }
@@ -47,13 +63,6 @@ if( ! class_exists( 'Alchemy_Radio_Field' ) ) {
             $field = parent::normalize_field_keys( $field );
 
             $field[ 'name' ] = $field[ 'id' ];
-            $field[ 'choices' ] = isset( $field[ 'choices' ] ) ? $field[ 'choices' ] : array();
-
-            if( ! $this->array_has_string_keys( $field[ 'choices' ] ) && 'array' !== gettype( $field[ 'choices' ][0] ) ) {
-                $field[ 'choices' ] = array_map( function( $item ){
-                    return array( 'value' => $item, 'label' => $item );
-                }, $field[ 'choices' ] );
-            }
 
             foreach( $field[ 'choices' ] as $i => $choice ) {
                 $field[ 'choices' ][ $i ][ 'disabled' ] = isset( $choice[ 'disabled' ] ) ? $choice[ 'disabled' ] : false;
@@ -66,9 +75,17 @@ if( ! class_exists( 'Alchemy_Radio_Field' ) ) {
                 }
             }
 
-            $field[ 'choices' ] = $this->alch_get_radio_choices( $field[ 'id' ], $field[ 'choices' ] );
+            $field[ 'choices' ] = $this->alch_get_image_radio_choices( $field[ 'id' ], $field[ 'choices' ] );
 
             return $field;
+        }
+
+        public function is_label_active( $value ) {
+            return $value ? 'field__image-label--active' : '';
+        }
+
+        public function is_label_disabled( $value ) {
+            return $value ? 'field__image-label--disabled' : '';
         }
 
         public function is_checked( $value ) {

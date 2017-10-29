@@ -1,12 +1,22 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes\Fields
+ *
+ */
+
+namespace Alchemy_Options\Includes\Fields;
+
+use Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Password_Field' ) ) {
+if( ! class_exists( __NAMESPACE__ . '\Password' ) ) {
 
-    class Alchemy_Password_Field extends Alchemy_Field {
+    class Password extends Includes\Field {
         public function __construct( $networkField = false ) {
             parent::__construct( $networkField );
 

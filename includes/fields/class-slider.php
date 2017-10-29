@@ -1,12 +1,22 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes\Fields
+ *
+ */
+
+namespace Alchemy_Options\Includes\Fields;
+
+use Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Slider_Field' ) ) {
+if( ! class_exists( __NAMESPACE__ . '\Slider' ) ) {
 
-    class Alchemy_Slider_Field extends Alchemy_Field {
+    class Slider extends Includes\Field {
         public function __construct( $networkField = false ) {
             parent::__construct( $networkField );
 

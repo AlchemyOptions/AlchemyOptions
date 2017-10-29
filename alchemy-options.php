@@ -1,5 +1,8 @@
 <?php
 /**
+ * @package Alchemy_Options
+ *
+ * @wordpress-plugin
  * Plugin Name: Alchemy options
  * Description: Just another Options plugin inspired by the wonderful Option Tree and Archetype.
  * Version: 0.0.1
@@ -9,6 +12,10 @@
  *
  */
 
+namespace Alchemy_Options;
+
+use Alchemy_Options\Includes;
+
 if( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -17,12 +24,12 @@ define( 'ALCHEMY_OPTIONS_VERSION', '0.0.1' );
 define( 'ALCHEMY_OPTIONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ALCHEMY_OPTIONS_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
 
-require_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemy-options.php' );
+include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'autoload.php' );
 
 function alch_run_plugin() {
-    $alch_options = new Alchemy_Options();
+    $alch_options = new Includes\Options();
 
     $alch_options->activate();
 }
 
-add_action( 'plugins_loaded', 'alch_run_plugin' );
+add_action( 'plugins_loaded', __NAMESPACE__ . '\alch_run_plugin' );

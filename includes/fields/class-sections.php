@@ -1,12 +1,22 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes\Fields
+ *
+ */
+
+namespace Alchemy_Options\Includes\Fields;
+
+use Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Sections_Field' ) ) {
+if( ! class_exists(  __NAMESPACE__ . '\Sections' ) ) {
 
-    class Alchemy_Sections_Field extends Alchemy_Field {
+    class Sections extends Includes\Field {
         public function __construct( $networkField = false ) {
             parent::__construct( $networkField );
 
@@ -55,7 +65,7 @@ if( ! class_exists( 'Alchemy_Sections_Field' ) ) {
                                 $tabClass
                         );
 
-                        $sectionFields = new Alchemy_Fields_Loader( $this->networkField );
+                        $sectionFields = new Includes\Fields_Loader( $this->networkField );
 
                         $tabsHTML .= $sectionFields->get_fields_html( $section['options'] );
                         $tabsHTML .= '</div>';

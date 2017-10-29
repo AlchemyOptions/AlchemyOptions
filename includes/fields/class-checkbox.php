@@ -1,12 +1,22 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes\Fields
+ *
+ */
+
+namespace Alchemy_Options\Includes\Fields;
+
+use Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Checkbox_Field' ) ) {
+if( ! class_exists( __NAMESPACE__ . '\Checkbox' ) ) {
 
-    class Alchemy_Checkbox_Field extends Alchemy_Field {
+    class Checkbox extends Includes\Field {
         public function __construct( $networkField = false ) {
             parent::__construct( $networkField );
 

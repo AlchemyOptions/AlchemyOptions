@@ -1,50 +1,33 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes
+ *
+ */
+
+namespace Alchemy_Options\Includes;
+
+use Alchemy_Options\Includes\Fields;
+use WP_Query;
+use Exception;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( class_exists( 'Alchemy_Options' ) ) {
+if( class_exists( __NAMESPACE__ . '\Options' ) ) {
     return;
 }
 
-class Alchemy_Options {
+class Options {
     private $active_tab;
 
     public function activate() {
-        $this->includes();
+        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/alchemy-functions.php' );
 
         /* all of the hooks go here */
         $this->hook_up();
-    }
-
-    public function includes() {
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/alchemy-functions.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/interface.alchemyField.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyDBValue.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyValue.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyField.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyText.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTextarea.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyPassword.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRadio.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyCheckbox.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySelect.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyColorpicker.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyDatepicker.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyButtonGroup.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyUpload.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyEditor.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyImageRadio.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTextblock.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySlider.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemySections.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyPostTypeSelect.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyTaxonomySelect.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyDatalist.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyFieldGroup.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/fields/class.alchemyRepeater.php' );
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class.alchemyFieldsLoader.php' );
     }
 
     public function enqueue_assets() {
@@ -182,7 +165,7 @@ class Alchemy_Options {
 
     public function save_options( $fields, $networkSave ) {
         foreach ( $fields as $id => $payload ) {
-            $value = new Alchemy_DB_Value( $payload );
+            $value = new Database_Value( $payload );
 
             if( $networkSave ) {
                 update_site_option( $id, array(
@@ -261,7 +244,7 @@ class Alchemy_Options {
         $index = $_GET[ 'index' ];
         $networkSave = isset( $_GET['network'] ) && $_GET['network'] !== 'false';
 
-        $repeater = new Alchemy_Repeater_Field( $networkSave );
+        $repeater = new Fields\Repeater( $networkSave );
 
         $repeaterHTML = $repeater->generate_repeatee( array(
             'id' => $rID,
@@ -389,7 +372,7 @@ class Alchemy_Options {
             } )
             : $options;
 
-        $optionFields = new Alchemy_Fields_Loader( $isNetwork );
+        $optionFields = new Fields_Loader( $isNetwork );
 
         $optionsHTML .= '<form action="?page=alchemy-options&action=save-alchemy-options" id="jsAlchemyForm" data-is-network="' . json_encode( $isNetwork ) . '">';
         $optionsHTML .= '<button type="submit" class="alchemy__btn alchemy__btn--submit button button-primary">' . __( 'Save options', 'alchemy-options' ) . '</button><img src="' . get_site_url() . '/wp-includes/images/spinner-2x.gif' . '" class="alchemy__spinner alchemy__spinner--hidden jsAlchemyLoader" width="20" height="20" />';

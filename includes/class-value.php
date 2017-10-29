@@ -1,11 +1,19 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes
+ *
+ */
+
+namespace Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Value' ) ) {
-    class Alchemy_Value {
+if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
+    class Value {
         private $value;
 
         public function __construct( $rawValue, $network = false ) {
@@ -118,7 +126,7 @@ if( ! class_exists( 'Alchemy_Value' ) ) {
 
                             $values[$key] = $this->modify_repeater_value( $item['fields'][$key]['value'] );
                         } else {
-                            $valInst = new Alchemy_Value( $val, $this->isNetworlValue );
+                            $valInst = new self( $val, $this->isNetworlValue );
 
                             $values[$key] = $valInst->get_value();
                         }

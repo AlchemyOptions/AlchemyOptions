@@ -1,4 +1,7 @@
 <?php
+
+use Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
@@ -21,7 +24,7 @@ if ( ! function_exists( 'alch_get_option' ) ) {
         $savedValue = get_option( $optionID );
 
         if( $savedValue['value'] ) {
-            $valueInst = new Alchemy_Value( $savedValue );
+            $valueInst = new Includes\Value( $savedValue );
 
             //todo: check other fields so that they return the default value correctly
             switch ( $savedValue['type'] ) {
@@ -68,7 +71,7 @@ if ( ! function_exists( 'alch_get_network_option' ) ) {
         $savedValue = get_site_option( $optionID );
 
         if( $savedValue['value'] ) {
-            $valueInst = new Alchemy_Value( $savedValue, true );
+            $valueInst = new Includes\Value( $savedValue, true );
 
             return apply_filters( "alch_network_value_{$optionID}", $valueInst->get_value() );
         }

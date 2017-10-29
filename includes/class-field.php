@@ -1,12 +1,20 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes
+ *
+ */
+
+namespace Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Field' ) ) {
+if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
 
-    class Alchemy_Field implements iAlchemy_Field {
+    class Field implements Field_Interface {
         protected $template = '';
 
         protected $networkField = false;

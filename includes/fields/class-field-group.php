@@ -1,12 +1,22 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes\Fields
+ *
+ */
+
+namespace Alchemy_Options\Includes\Fields;
+
+use Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_Field_Group_Field' ) ) {
+if( ! class_exists( __NAMESPACE__ . '\Field_Group' ) ) {
 
-    class Alchemy_Field_Group_Field extends Alchemy_Field {
+    class Field_Group extends Includes\Field {
         public function __construct( $networkField = false ) {
             parent::__construct( $networkField );
 
@@ -55,7 +65,7 @@ if( ! class_exists( 'Alchemy_Field_Group_Field' ) ) {
 
                 $fieldsHTML .= '<div class="field__wrapper jsAlchemyFiledGroupWrapper" data-fields=\'' . json_encode( $repeateesFieldsData ) . '\'>';
 
-                $optionFields = new Alchemy_Fields_Loader( $this->networkField );
+                $optionFields = new Includes\Fields_Loader( $this->networkField );
 
                 //Sections field is top-level only
                 $field['fields'] = array_filter($field['fields'], function( $field ) {

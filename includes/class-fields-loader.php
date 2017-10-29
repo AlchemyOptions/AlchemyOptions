@@ -1,14 +1,24 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes
+ *
+ */
+
+namespace Alchemy_Options\Includes;
+
+use Alchemy_Options\Includes\Fields;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( class_exists( 'Alchemy_Fields_Loader' ) ) {
+if( class_exists( __NAMESPACE__ . '\Fields_Loader' ) ) {
     return;
 }
 
-class Alchemy_Fields_Loader {
+class Fields_Loader {
     private $valid_field_types;
 
     public function __construct( $networkFields = false ) {
@@ -68,64 +78,64 @@ class Alchemy_Fields_Loader {
             case 'url' :
             case 'tel' :
             case 'text' :
-                return new Alchemy_Text_Field( $this->networkFields );
+                return new Fields\Text( $this->networkFields );
             break;
             case 'password' :
-                return new Alchemy_Password_Field( $this->networkFields );
+                return new Fields\Password( $this->networkFields );
             break;
             case 'radio' :
-                return new Alchemy_Radio_Field( $this->networkFields );
+                return new Fields\Radio( $this->networkFields );
             break;
             case 'checkbox' :
-                return new Alchemy_Checkbox_Field( $this->networkFields );
+                return new Fields\Checkbox( $this->networkFields );
             break;
             case 'select' :
-                return new Alchemy_Select_Field( $this->networkFields );
+                return new Fields\Select( $this->networkFields );
             break;
             case 'textarea' :
-                return new Alchemy_Textarea_Field( $this->networkFields );
+                return new Fields\Textarea( $this->networkFields );
             break;
             case 'colorpicker' :
-                return new Alchemy_Colorpicker_Field( $this->networkFields );
+                return new Fields\Colorpicker( $this->networkFields );
             break;
             case 'datepicker' :
-                return new Alchemy_Datepicker_Field( $this->networkFields );
+                return new Fields\Datepicker( $this->networkFields );
             break;
             case 'button-group' :
-                return new Alchemy_Button_Group_Field( $this->networkFields );
+                return new Fields\Button_Group( $this->networkFields );
             break;
             case 'upload' :
-                return new Alchemy_Upload_Field( $this->networkFields );
+                return new Fields\Upload( $this->networkFields );
             break;
             case 'editor' :
-                return new Alchemy_Editor_Field( $this->networkFields );
+                return new Fields\Editor( $this->networkFields );
             break;
             case 'image-radio' :
-                return new Alchemy_Image_Radio_Field( $this->networkFields );
+                return new Fields\Image_Radio( $this->networkFields );
             break;
             case 'textblock' :
-                return new Alchemy_Textblock_Field( $this->networkFields );
+                return new Fields\Textblock( $this->networkFields );
             break;
             case 'slider' :
-                return new Alchemy_Slider_Field( $this->networkFields );
+                return new Fields\Slider( $this->networkFields );
             break;
             case 'sections' :
-                return new Alchemy_Sections_Field( $this->networkFields );
+                return new Fields\Sections( $this->networkFields );
             break;
             case 'post-type-select' :
-                return new Alchemy_Post_Type_Select_Field( $this->networkFields );
+                return new Fields\Post_Type_Select( $this->networkFields );
             break;
             case 'taxonomy-select' :
-                return new Alchemy_Taxonomy_Select_Field( $this->networkFields );
+                return new Fields\Taxonomy_Select( $this->networkFields );
             break;
             case 'datalist' :
-                return new Alchemy_Datalist_Field( $this->networkFields );
+                return new Fields\Datalist( $this->networkFields );
             break;
             case 'field-group' :
-                return new Alchemy_Field_Group_Field( $this->networkFields );
+                return new Fields\Field_Group( $this->networkFields );
             break;
             case 'repeater' :
-                return new Alchemy_Repeater_Field( $this->networkFields );
+                return new Fields\Repeater( $this->networkFields );
             break;
             default : break;
         }

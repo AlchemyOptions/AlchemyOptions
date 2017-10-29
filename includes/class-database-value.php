@@ -1,12 +1,20 @@
 <?php
+
+/**
+ * @package Alchemy_Options\Includes
+ *
+ */
+
+namespace Alchemy_Options\Includes;
+
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
 }
 
-if( ! class_exists( 'Alchemy_DB_Value' ) ) {
+if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
 
-    class Alchemy_DB_Value {
+    class Database_Value {
         private $value;
 
         public function __construct( $rawValue ) {
@@ -61,7 +69,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
             $valToReturn = array();
 
             foreach( $value as $fieldID => $field ){
-                $safeVal = new Alchemy_DB_Value( $field );
+                $safeVal = new self( $field );
 
                 $valToReturn[$fieldID] = array(
                     'type' => $field['type'],
@@ -84,7 +92,7 @@ if( ! class_exists( 'Alchemy_DB_Value' ) ) {
         public function sanitize_repeater_field( $value ) {
             return array_map(function( $item ){
                 $item['fields'] = array_map(function( $field ){
-                    $safeVal = new Alchemy_DB_Value( $field );
+                    $safeVal = new self( $field );
 
                     return array(
                         'type' => $field['type'],
