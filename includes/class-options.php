@@ -21,6 +21,7 @@ if( class_exists( __NAMESPACE__ . '\Options' ) ) {
 
 class Options {
     private $active_tab;
+    private $parentPage = 'themes.php';
 
     public function activate() {
         include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/alchemy-functions.php' );
@@ -129,6 +130,7 @@ class Options {
         }
 
         add_action( 'admin_menu', array( $this, 'create_options_submenu_page' ) );
+        add_action( 'admin_bar_menu', array( $this, 'update_adminbar' ), 999 );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'register_client_assets' ) );
         add_action( 'wp_ajax_alchemy_options_save_options', array( $this, 'handle_save_options' ) );
@@ -136,6 +138,19 @@ class Options {
         add_action( 'wp_ajax_alchemy_options_post_type_selection', array( $this, 'handle_post_type_selection' ) );
         add_action( 'wp_ajax_alchemy_options_client_request', array( $this, 'handle_client_requests' ) );
         add_action( 'wp_ajax_nopriv_alchemy_options_client_request', array( $this, 'handle_client_requests' ) );
+    }
+
+    public function update_adminbar( $wp_adminbar ) {
+        if( ! current_user_can( 'edit_theme_options' ) || ! is_admin_bar_showing() ) {
+            return;
+        }
+
+        $wp_adminbar->add_node( array(
+            'id' => 'alchemy-options',
+            'title' => __( 'Alchemy Options', 'alchemy-options' ),
+            'parent' => 'site-name',
+            'href' => admin_url( $this->parentPage . '?page=alchemy-options' ),
+        ));
     }
 
     public function handle_save_options() {
@@ -256,7 +271,7 @@ class Options {
 
     public function create_network_options_page() {
         add_submenu_page(
-            'themes.php',
+            $this->parentPage,
             __( 'Alchemy Network Options', 'alchemy-options' ),
             __( 'Alchemy Network Options', 'alchemy-options' ),
             'manage_options',
@@ -267,7 +282,7 @@ class Options {
 
     public function create_options_submenu_page() {
         add_submenu_page(
-            'themes.php',
+            $this->parentPage,
             __( 'Alchemy Options', 'alchemy-options' ),
             __( 'Alchemy Options', 'alchemy-options' ),
             'manage_options',
