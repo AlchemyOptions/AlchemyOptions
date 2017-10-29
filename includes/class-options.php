@@ -7,7 +7,6 @@
 
 namespace Alchemy_Options\Includes;
 
-use Alchemy_Options\Includes\Fields;
 use WP_Query;
 use Exception;
 

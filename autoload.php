@@ -24,7 +24,6 @@ function alchemy_options_autoload( $class_name ) {
                 $interface_name = explode( '_', $file_parts[ count( $file_parts ) - 1 ] )[0];
 
                 $file_name = "interface-$interface_name.php";
-
             } else {
                 $file_name = "class-$current.php";
             }

@@ -14,8 +14,6 @@
 
 namespace Alchemy_Options;
 
-use Alchemy_Options\Includes;
-
 if( ! defined( 'ABSPATH' ) ) {
     exit;
 }

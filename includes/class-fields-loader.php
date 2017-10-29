@@ -7,8 +7,6 @@
 
 namespace Alchemy_Options\Includes;
 
-use Alchemy_Options\Includes\Fields;
-
 //no direct access allowed
 if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
     exit;
