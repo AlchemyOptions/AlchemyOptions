@@ -360,7 +360,7 @@ class Options {
         $optionsHTML = "";
         $hasTabs = false;
 
-        if( is_array( $options[ 'tabs' ] ) && count( $options[ 'tabs' ] ) > 0 ) {
+        if( isset( $options[ 'tabs' ] ) && is_array( $options[ 'tabs' ] ) && count( $options[ 'tabs' ] ) > 0 ) {
             $hasTabs = true;
 
             reset( $options[ 'tabs' ] );
