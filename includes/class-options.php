@@ -145,11 +145,39 @@ class Options {
             return;
         }
 
+        if( is_multisite() ) {
+            $this->create_adminbar_link(
+                $wp_adminbar,
+                'network-admin',
+                network_admin_url( sprintf( '%s?page=alchemy-options', $this->parentPage ) )
+            );
+
+            $blogs = get_blogs_of_user( get_current_user_id() );
+
+            if( count( $blogs ) > 0 ) {
+                foreach( $blogs as $blog ) {
+                    $this->create_adminbar_link(
+                        $wp_adminbar,
+                        sprintf( 'blog-%s', $blog->userblog_id ),
+                        get_admin_url( $blog->userblog_id, sprintf( '%s?page=alchemy-options', $this->parentPage ) )
+                    );
+                }
+            }
+        } else {
+            $this->create_adminbar_link(
+                $wp_adminbar,
+                'site-name',
+                admin_url( sprintf( '%s?page=alchemy-options', $this->parentPage ) )
+            );
+        }
+    }
+
+    public function create_adminbar_link( $wp_adminbar, $parent, $href ) {
         $wp_adminbar->add_node( array(
-            'id' => 'alchemy-options',
+            'id' => sprintf( '%s-alchemy-options', $parent ),
             'title' => __( 'Alchemy Options', 'alchemy-options' ),
-            'parent' => 'site-name',
-            'href' => admin_url( $this->parentPage . '?page=alchemy-options' ),
+            'parent' => $parent,
+            'href' => $href,
         ));
     }
 
