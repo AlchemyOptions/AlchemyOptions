@@ -163,13 +163,13 @@ class Options {
                     );
                 }
             }
-        } else {
-            $this->create_adminbar_link(
-                $wp_adminbar,
-                'site-name',
-                admin_url( sprintf( '%s?page=alchemy-options', $this->parentPage ) )
-            );
         }
+
+        $this->create_adminbar_link(
+            $wp_adminbar,
+            'site-name',
+            admin_url( sprintf( '%s?page=alchemy-options', $this->parentPage ) )
+        );
     }
 
     public function create_adminbar_link( $wp_adminbar, $parent, $href ) {
