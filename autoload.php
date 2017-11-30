@@ -21,7 +21,7 @@ function alchemy_options_autoload( $class_name ) {
 
         if ( count( $file_parts ) - 1 === $i ) {
             if ( strpos( strtolower( $file_parts[ count( $file_parts ) - 1 ] ), 'interface' ) ) {
-                $interface_name = explode( '_', $file_parts[ count( $file_parts ) - 1 ] )[0];
+                $interface_name = strtolower( explode( '_', $file_parts[ count( $file_parts ) - 1 ] )[0] );
 
                 $file_name = "interface-$interface_name.php";
             } else {
@@ -32,7 +32,7 @@ function alchemy_options_autoload( $class_name ) {
         }
     }
 
-    $filepath = trailingslashit( ALCHEMY_OPTIONS_PLUGIN_DIR . $namespace ) . $file_name;
+    $filepath = trailingslashit( untrailingslashit( ALCHEMY_OPTIONS_PLUGIN_DIR ) . $namespace ) . $file_name;
 
     if ( file_exists( $filepath ) ) {
         include_once( $filepath );
