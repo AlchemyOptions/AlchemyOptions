@@ -131,6 +131,31 @@ function getThingsGoing(scope = document) {
                 });
             });
 
+            $repeater.on('click', '.jsAlchemyRepeateeCopy', function(e) {
+                const $btn = $(this);
+                const $parent = $btn.closest( '.repeatee' );
+
+                saveEditors($repeater);
+
+                const $copiedRepeatee = $parent.clone(true);
+                const copiedID = $parent.attr('id');
+                const copiedArr = copiedID.split('_');
+                const repeateeHTML = $copiedRepeatee.html();
+
+                copiedArr[copiedArr.length - 1] = clickIndex;
+
+                const changedID = copiedArr.join('_');
+
+                $copiedRepeatee
+                    .attr('id', changedID)
+                    .html(repeateeHTML.replace(new RegExp(copiedID, 'g'), changedID))
+                    .insertAfter($parent);
+
+                restoreEditors($repeater);
+
+                clickIndex++;
+            });
+
             $repeater.on('click', '.repeatee__actions', e => {
                 e.stopPropagation();
             });

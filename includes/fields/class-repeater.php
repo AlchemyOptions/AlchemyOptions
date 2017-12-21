@@ -277,6 +277,14 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
             $actionGroupHTML .= sprintf(
                 '<button type="button" class="%2$s" data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
                 $repeateeID,
+                'repeatee__btn button button-secondary jsAlchemyRepeateeCopy',
+                '<span class="dashicons dashicons-admin-page"></span>',
+                __( 'Copy this item', 'alchemy-options' )
+            );
+
+            $actionGroupHTML .= sprintf(
+                '<button type="button" class="%2$s" data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
+                $repeateeID,
                 'repeatee__btn button button-secondary jsAlchemyRepeateeRemove',
                 '<span class="dashicons dashicons-trash"></span>',
                 __( 'Delete this item', 'alchemy-options' )
