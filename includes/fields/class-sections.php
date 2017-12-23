@@ -37,7 +37,7 @@ if( ! class_exists(  __NAMESPACE__ . '\Sections' ) ) {
             $fieldsHTML = '';
             $sections = isset( $field['sections'] ) ? $field['sections'] : array();
 
-            if( is_array( $sections ) && count( $sections ) > 0 ) {
+            if( isset( $sections ) && alch_is_not_empty_array( $sections ) ) {
                 $navHTML = '<div class="field__tabs-nav jsAlchemySectionsNav">';
                 $tabsHTML = '<div class="field__tabs jsAlchemySectionsTabs">';
 
@@ -58,7 +58,7 @@ if( ! class_exists(  __NAMESPACE__ . '\Sections' ) ) {
                             $btnClass
                     );
 
-                    if( is_array( $section['options'] ) && count( $section['options'] ) > 0 ) {
+                    if( isset( $section['options'] ) && alch_is_not_empty_array( $section['options'] ) ) {
                         $tabsHTML .= sprintf(
                             '<div class="%2$s" data-controlled-by="%1$s">',
                                 $this->make_label( $section['title'] ),

@@ -66,6 +66,12 @@ if( ! function_exists( 'alchemy_array_flatten' ) ) {
     }
 }
 
+if( ! function_exists('alch_is_not_empty_array') ) {
+    function alch_is_not_empty_array ($value ) {
+        return is_array( $value ) && count( $value ) > 0;
+    }
+}
+
 if ( ! function_exists( 'alch_get_network_option' ) ) {
     function alch_get_network_option( $optionID, $default = "" ) {
         $savedValue = get_site_option( $optionID );

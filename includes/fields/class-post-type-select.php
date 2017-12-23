@@ -59,7 +59,7 @@ if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
 
             $optionsHTML = '';
 
-            if( is_array( $value['ids'] ) && count( $value['ids'] ) > 0 ) {
+            if( isset( $value['ids'] ) && alch_is_not_empty_array( $value['ids'] ) ) {
                 $the_query = new WP_Query( array(
                     'post_type' => $value['type'],
                     'post_status' => 'publish',

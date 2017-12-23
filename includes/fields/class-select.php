@@ -38,7 +38,7 @@ if( ! class_exists( __NAMESPACE__ . '\Select' ) ) {
 
             $optionsHTML = "";
 
-            if( isset( $options[ 'optgroups' ] ) && is_array( $options[ 'optgroups' ] ) && count( $options[ 'optgroups' ] ) > 0 ) {
+            if( isset( $options['optgroups'] ) && alch_is_not_empty_array( $options['optgroups'] ) ) {
                 foreach ( $options[ 'optgroups' ] as $group ) {
                     $optionsHTML .= '<optgroup label="' . esc_attr( $group[ 'label' ] ) . '" ' . ( isset( $group[ 'disabled' ] ) ? $this->is_disabled( $group[ 'disabled' ] ) : "" ) . '>';
 
@@ -54,7 +54,7 @@ if( ! class_exists( __NAMESPACE__ . '\Select' ) ) {
 
                     $optionsHTML .= '</optgroup>';
                 }
-            } else if( is_array( $options[ 'choices' ] ) && count( $options[ 'choices' ] ) > 0 ) {
+            } else if( isset( $options['choices'] ) && alch_is_not_empty_array( $options['choices'] ) ) {
                 if( ! $this->array_has_string_keys( $options[ 'choices' ] ) && 'array' !== gettype( $options[ 'choices' ][0] ) ) {
                     foreach ( $options[ 'choices' ] as $choice ) {
                         $optionsHTML .= '<option value="' . esc_attr( $choice ) . '" ' . $this->is_selected( $choice, $options[ 'value' ] ) . '>' . $choice . '</option>';

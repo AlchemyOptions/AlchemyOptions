@@ -38,7 +38,7 @@ if( ! class_exists( __NAMESPACE__ . '\Image_Radio' ) ) {
         public function alch_get_image_radio_choices( $id, $choices ) {
             $choicesHTML = "";
 
-            if( is_array( $choices ) && count( $choices ) > 0 ) {
+            if( isset( $choices ) && alch_is_not_empty_array( $choices ) ) {
                 foreach ( $choices as $choice ) {
                     $fieldID = esc_attr( $id . '_' . $this->make_label( $choice[ 'value' ] ) );
 

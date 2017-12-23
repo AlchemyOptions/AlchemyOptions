@@ -37,7 +37,7 @@ if( ! class_exists( __NAMESPACE__ . '\Button_Group' ) ) {
         public function alch_get_btn_group_choices( $choices ) {
             $choicesHTML = "";
 
-            if( is_array( $choices ) && count( $choices ) > 0 ) {
+            if( isset( $choices ) && alch_is_not_empty_array( $choices ) ) {
                 foreach ( $choices as $choice ) {
                     $choicesHTML .= sprintf (
                         '<button%1$s data-value=\'' . esc_attr( $choice[ 'value' ] ) . '\' ' . $this->is_disabled( $choice[ 'disabled' ] ) . ' >' . $choice[ 'label' ] . '</button>',

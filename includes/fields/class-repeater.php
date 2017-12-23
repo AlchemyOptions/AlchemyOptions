@@ -98,7 +98,7 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
         public function parse_value( $field ) {
             $repeateesHTML = '';
 
-            if( is_array( $field[ 'value' ] ) && count( $field[ 'value' ] ) > 0 ) {
+            if( isset( $field['value'] ) && alch_is_not_empty_array( $field['value'] ) ) {
                 foreach ( $field[ 'value' ] as $i => $repeatee ) {
 
                     $repeateesHTML .= $this->generate_repeatee(array(

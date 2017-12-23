@@ -69,8 +69,12 @@ class Options {
 
         $savedOptions = get_option( $type, array() );
 
-        if( isset( $savedOptions['options'] ) && is_array( $savedOptions['options'] ) && count( $savedOptions['options'] ) > 0 ) {
-            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $savedOptions['options'] ) ) );
+        $repeaters = isset( $savedOptions['repeaters'] ) && alch_is_not_empty_array( $savedOptions['repeaters'] )
+            ? $savedOptions['repeaters']
+            : array() ;
+
+        if( isset( $savedOptions['options'] ) && alch_is_not_empty_array( $savedOptions['options'] ) ) {
+            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $savedOptions['options'], $repeaters ) ) );
 
             if( in_array( 'colorpicker', $types ) ) {
                 $deps[] = 'iris';
@@ -96,19 +100,21 @@ class Options {
         return $deps;
     }
 
-    public function walk_the_fields( $fields ) {
+    public function walk_the_fields( $fields, $repeaters = array() ) {
         $types = [];
 
-        foreach ( $fields as $field ) {
-            $types[] = $field['type'];
-
-            if( 'repeater' === $field['type'] ) {
-                if( $field['repeatees'] ) {
-                    foreach( $field['repeatees'] as $repeatee ) {
-                        $types[] = $this->walk_the_fields( $repeatee['fields'] );
+        if( count( $repeaters ) > 0 ) {
+            foreach ( $repeaters as $repeater ) {
+                if( count( $repeater['fields'] ) > 0 ) {
+                    foreach ( $repeater['fields'] as $field ) {
+                        array_push( $fields, $field );
                     }
                 }
             }
+        }
+
+        foreach ( $fields as $field ) {
+            $types[] = $field['type'];
 
             if( 'sections' === $field['type'] ) {
                 foreach( $field['sections'] as $section ) {
@@ -360,7 +366,7 @@ class Options {
         $optionsHTML = "";
         $hasTabs = false;
 
-        if( isset( $options[ 'tabs' ] ) && is_array( $options[ 'tabs' ] ) && count( $options[ 'tabs' ] ) > 0 ) {
+        if( isset( $options['tabs'] ) && alch_is_not_empty_array( $options['tabs'] ) ) {
             $hasTabs = true;
 
             reset( $options[ 'tabs' ] );
@@ -375,7 +381,7 @@ class Options {
             $optionsHTML .= $this->get_tabs_html( $tabsSettings );
         }
 
-        if( is_array( $options[ 'options' ] ) && count( $options[ 'options' ] ) > 0 ) {
+        if( isset( $options['options'] ) && alch_is_not_empty_array( $options['options'] ) ) {
             $optionsHTML .= '<div class="alchemy__options">';
 
             $optionsHTML .= $this->get_options_html( $options[ 'options' ], $hasTabs, $isNetwork );

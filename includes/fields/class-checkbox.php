@@ -38,7 +38,7 @@ if( ! class_exists( __NAMESPACE__ . '\Checkbox' ) ) {
         public function get_checkbox_choices( $id, $choices ) {
             $checksHTML = "";
 
-            if( is_array( $choices ) && count( $choices ) > 0 ) {
+            if( isset( $choices ) && alch_is_not_empty_array( $choices ) ) {
                 foreach ( $choices as $choice ) {
                     $id = esc_attr( $id . '_' . $this->make_label( $choice[ 'value' ] ) );
 

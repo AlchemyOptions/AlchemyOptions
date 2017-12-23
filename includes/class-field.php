@@ -70,7 +70,7 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
         public function concat_attributes( $attrs ) {
             $attrString = "";
 
-            if( is_array( $attrs ) && count( $attrs ) > 0 ) {
+            if( isset( $attrs ) && alch_is_not_empty_array( $attrs ) ) {
                 foreach ( $attrs as $attrName => $attrValue ) {
                     $attrString .= sprintf( ' %1$s="%2$s"', $attrName, esc_attr( $attrValue ) );
                 }
