@@ -37,6 +37,7 @@ if( ! class_exists(  __NAMESPACE__ . '\Taxonomy_Select' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
+            $field['multiple'] = isset( $field['multiple'] ) ? $field['multiple'] : false;
             $field['taxonomy'] = ( isset( $field['taxonomy'] ) && taxonomy_exists( $field['taxonomy'] ) ) ? $field['taxonomy'] : 'category';
             $field['clear'] = $field['multiple'] ? '' : '<button type="button" class="button button-secondary jsAlchemyTaxonomySelectClear"><span class="dashicons dashicons-trash"></span></button>';
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
