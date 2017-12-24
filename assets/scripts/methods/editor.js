@@ -1,7 +1,7 @@
 export default function(scope = document) {
     let $editors = $('.jsAlchemyEditorTextarea', scope);
 
-    if( $editors ) {
+    if( $editors[0] ) {
         if( scope.length && scope.length > 0 ) {
             getThingsGoing();
         } else {

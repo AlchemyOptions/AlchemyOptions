@@ -188,6 +188,8 @@ class Meta_Box {
 
         $optionsHTML = '';
 
+        $optionsHTML .= '<div class="wrap alchemy">';
+
         foreach ( $this->options['meta']['options'] as $option ) {
             if( isset( $option['id'] ) ) {
                 $optionFields = new Fields_Loader(false, array(
@@ -195,15 +197,19 @@ class Meta_Box {
                     'postID' => $post->ID,
                     'key' => $option['id']
                 ));
-
-                $optionsHTML .= '<div class="wrap alchemy">';
                 $optionsHTML .= $optionFields->get_fields_html( array( $option ) );
-                $optionsHTML .= '</div>';
             } else {
                 // posts without id (like sections)
             }
         }
 
+        $optionsHTML .= '</div>';
+
         echo $optionsHTML;
+
+        //hack to include editor assets. Will be removed when support of the wp_enqueue_editor() is high and there's a way to get the default editor settings for posts
+        echo '<div class="hidden">';
+        wp_editor( '', 'alchemy-temp-editor' );
+        echo '</div>';
     }
 }
