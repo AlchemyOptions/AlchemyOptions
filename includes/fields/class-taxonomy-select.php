@@ -44,8 +44,8 @@ if( ! class_exists(  __NAMESPACE__ . '\Taxonomy_Select' ) ) {
             $field['options'] = $this->get_options_html( $field );
             $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
             $field[ 'attributes' ] = $this->concat_attributes( array(
-                'id' => $field[ 'id' ],
-                'name' => $field[ 'id' ],
+                'id' => $field['id'],
+                'name' => $field['id'] . '[]',
             ) );
 
             return $field;

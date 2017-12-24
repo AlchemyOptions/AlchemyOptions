@@ -50,8 +50,8 @@ if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
             $field['options'] = $this->get_options_html( $field['value'] );
             $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
             $field['attributes'] = $this->concat_attributes( array(
-                'id' => $field[ 'id' ],
-                'name' => $field[ 'id' ],
+                'id' => $field['id'],
+                'name' => $field['id'] . '[]',
             ) );
 
             return $field;
@@ -64,7 +64,7 @@ if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
 
             $optionsHTML = '';
 
-            if( isset( $value['ids'] ) && alch_is_not_empty_array( $value['ids'] ) ) {
+            if( alch_is_not_empty_array( $value['ids'] ) ) {
                 $the_query = new WP_Query( array(
                     'post_type' => $value['type'],
                     'post_status' => 'publish',
