@@ -39,7 +39,7 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
                 return $field;
             }
 
-            if( $this->options['meta'] ) {
+            if( alch_is_not_empty_array( $this->options ) && isset( $this->options['meta'] ) && $this->options['meta'] ) {
                 $savedData = get_post_meta( $this->options['postID'], $this->options['key'], true );
             } else {
                 $savedData = $this->networkField
