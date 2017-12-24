@@ -63,13 +63,17 @@ class Meta_Box {
         // todo maybe current_user_can check
 
         foreach ( $this->options['meta']['options'] as $option ) {
-            $passedValue = isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
+            $passedValue = isset( $option['id'] ) && isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
 
             if( '' !== $passedValue ) {
+                if( 'checkbox' === $option['type'] && is_array( $passedValue ) ) {
+                    $passedValue = array_keys( $passedValue );
+                }
+
                 $value = new Database_Value( array(
                     'type' => $option['type'],
                     'value' => $passedValue
-            ) );
+                ) );
 
                 update_post_meta( $post_id, $option['id'], array(
                     'type' => $option['type'],
@@ -85,13 +89,17 @@ class Meta_Box {
         $optionsHTML = '';
 
         foreach ( $this->options['meta']['options'] as $option ) {
-            $optionFields = new Fields_Loader(false, array(
-                'meta' => true,
-                'postID' => $post->ID,
-                'key' => $option['id']
-            ));
+            if( isset( $option['id'] ) ) {
+                $optionFields = new Fields_Loader(false, array(
+                    'meta' => true,
+                    'postID' => $post->ID,
+                    'key' => $option['id']
+                ));
 
-            $optionsHTML .= $optionFields->get_fields_html( array( $option ) );
+                $optionsHTML .= $optionFields->get_fields_html( array( $option ) );
+            } else {
+                // posts without id (like sections)
+            }
         }
 
         echo $optionsHTML;

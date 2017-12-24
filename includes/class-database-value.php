@@ -59,7 +59,7 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
             $allow_html = apply_filters( 'alch_allow_html_in_textarea', false );
 
             if ( ! $allow_html ) {
-                return sanitize_textarea_field( $value );
+                return sanitize_textarea_field( alch_kses_stripslashes( $value ) );
             }
 
             return alch_kses_stripslashes( $value );

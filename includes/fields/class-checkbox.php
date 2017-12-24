@@ -35,18 +35,20 @@ if( ! class_exists( __NAMESPACE__ . '\Checkbox' ) ) {
             ';
         }
 
-        public function get_checkbox_choices( $id, $choices ) {
+        public function get_checkbox_choices( $passedID, $choices ) {
             $checksHTML = "";
 
             if( isset( $choices ) && alch_is_not_empty_array( $choices ) ) {
                 foreach ( $choices as $choice ) {
-                    $id = esc_attr( $id . '_' . $this->make_label( $choice[ 'value' ] ) );
+                    $id = esc_attr( $passedID . '_' . $this->make_label( $choice[ 'value' ] ) );
 
                     $checksHTML .= sprintf (
                         '<label%1$s><input%2$s data-value=\'' . esc_attr( $choice[ 'value' ] ) . '\' ' . $this->is_disabled( $choice[ 'disabled' ] ) . ' ' . $this->is_checked( $choice[ 'checked' ] ) . '/> ' . $choice[ 'label' ] . '</label><br>',
                         $this->concat_attributes( array( 'for' => $id ) ),
-                        $this->concat_attributes( array( 'id' => $id, 'name' => $id, 'type' => 'checkbox' ) )
+                        $this->concat_attributes( array( 'id' => $id, 'name' => $passedID . '[' . $choice[ 'value' ] . ']', 'type' => 'checkbox' ) )
                     );
+
+                    $id = '';
                 }
             }
 
