@@ -37,6 +37,7 @@ if( ! class_exists( __NAMESPACE__ . '\Datalist' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
+            $field['multiple'] = isset( $field['multiple'] ) ? $field['multiple'] : false;
             $field['clear'] = $field['multiple'] ? '' : '<button type="button" class="button button-secondary jsAlchemyDatalistClear"><span class="dashicons dashicons-trash"></span></button>';
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
             $field['options'] = $this->get_options_html( $field );
@@ -59,11 +60,13 @@ if( ! class_exists( __NAMESPACE__ . '\Datalist' ) ) {
             }
 
             $optionsHTML .= join('', array_map( function( $option ){
+                $isSelected = isset( $option['alchemy_is_selected'] ) ? $option['alchemy_is_selected'] : false;
+
                 return sprintf(
                     '<option value="%1$s"%3$s>%2$s</option>',
                     esc_attr( $option['value'] ),
                     $option['name'],
-                    $this->is_selected( $option['alchemy_is_selected'] )
+                    $this->is_selected( $isSelected )
                 );
             }, $field['options'] ));
 

@@ -43,6 +43,7 @@ if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
                 'value' => wp_create_nonce( $field[ 'id' ] . '_pts_nonce' )
             ) );
 
+            $field['multiple'] = isset( $field['multiple'] ) ? $field['multiple'] : false;
             $field['post-type'] = ( isset( $field['post-type'] ) && post_type_exists( $field['post-type'] ) ) ? $field['post-type'] : 'post';
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
             $field['clear'] = $field['multiple'] ? '' : '<button type="button" class="button button-secondary jsAlchemyPostTypeSelectClear"><span class="dashicons dashicons-trash"></span></button>';
