@@ -17,8 +17,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( __NAMESPACE__ . '\Colorpicker' ) ) {
 
     class Colorpicker extends Includes\Field {
-        public function __construct( $networkField = false ) {
-            parent::__construct( $networkField );
+        public function __construct( $networkField = false, $options = array() ) {
+            parent::__construct( $networkField, $options );
 
             $this->template = '
                 <div class="alchemy__field alchemy__clearfix field field--colorpicker alchemy__colorpicker jsAlchemyColorpicker" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"colorpicker"}\'>
@@ -40,6 +40,7 @@ if( ! class_exists( __NAMESPACE__ . '\Colorpicker' ) ) {
             $mergedAttrs = array_merge( array(
                 'type' => 'text',
                 'id' => $field[ 'id' ],
+                'name' => $field[ 'id' ],
                 'value' => $field[ 'value' ],
                 'class' => 'jsAlchemyColorpickerInput'
             ), $passedAttrs );

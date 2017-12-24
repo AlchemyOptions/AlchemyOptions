@@ -17,8 +17,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( __NAMESPACE__ . '\Datalist' ) ) {
 
     class Datalist extends Includes\Field {
-        public function __construct( $networkField = false ) {
-            parent::__construct( $networkField );
+        public function __construct( $networkField = false, $options = array() ) {
+            parent::__construct( $networkField, $options );
 
             $this->template = '
                 <div class="alchemy__field alchemy__clearfix field field--datalist jsAlchemyDatalistBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"datalist"}\'>
@@ -27,7 +27,7 @@ if( ! class_exists( __NAMESPACE__ . '\Datalist' ) ) {
                         {{DESCRIPTION}}
                     </div>
                     <div class="field__content"{{PADDED}}>
-                        <select style="width: 100%;" class="jsAlchemyDatalistSelect"{{MULTIPLE}}>{{OPTIONS}}</select>
+                        <select style="width: 100%;" class="jsAlchemyDatalistSelect"{{MULTIPLE}} {{ATTRIBUTES}}>{{OPTIONS}}</select>
                         {{CLEAR}}
                     </div>
                 </div>
@@ -41,6 +41,10 @@ if( ! class_exists( __NAMESPACE__ . '\Datalist' ) ) {
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
             $field['options'] = $this->get_options_html( $field );
             $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
+            $field[ 'attributes' ] = $this->concat_attributes( array(
+                'id' => $field[ 'id' ],
+                'name' => $field[ 'id' ],
+            ) );
 
             return $field;
         }

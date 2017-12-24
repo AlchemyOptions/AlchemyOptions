@@ -17,13 +17,13 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( __NAMESPACE__ . '\Button_Group' ) ) {
 
     class Button_Group extends Includes\Field {
-        public function __construct( $networkField = false ) {
-            parent::__construct( $networkField );
+        public function __construct( $networkField = false, $options = array() ) {
+            parent::__construct( $networkField, $options );
 
             $this->template = '
                 <div class="alchemy__field alchemy__clearfix field field--button-group jsAlchemyButtonGroup" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"button-group"}\'>
                     <div class="field__side">
-                        <input class="jsAlchemyButtonGroupInput" type="hidden" id="{{ID}}" value="{{VALUE}}" />
+                        <input class="jsAlchemyButtonGroupInput" type="hidden" id="{{ID}}" name="{{ID}}" value="{{VALUE}}" />
                         <h2 class="field__label">{{TITLE}}</h2>
                         {{DESCRIPTION}}
                     </div>

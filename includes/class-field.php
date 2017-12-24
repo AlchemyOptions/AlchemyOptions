@@ -19,9 +19,12 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
 
         protected $networkField = false;
 
-        public function __construct( $networkField = false ) {
+        protected $options = array();
+
+        public function __construct( $networkField = false, $options = array() ) {
             $this->template = '';
             $this->networkField = $networkField;
+            $this->options = $options;
         }
 
         public function normalize_field_keys( $field ) {
@@ -36,9 +39,13 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
                 return $field;
             }
 
-            $savedData = $this->networkField
-                ? get_site_option( $field[ 'id' ] )
-                : get_option( $field[ 'id' ] );
+            if( $this->options['meta'] ) {
+                $savedData = get_post_meta( $this->options['postID'], $this->options['key'], true );
+            } else {
+                $savedData = $this->networkField
+                    ? get_site_option( $field[ 'id' ] )
+                    : get_option( $field[ 'id' ] );
+            }
 
             if( ! isset( $field[ 'value' ] ) ) {
                 $field[ 'value' ] = is_array( $savedData ) ? $savedData[ 'value' ] : '';

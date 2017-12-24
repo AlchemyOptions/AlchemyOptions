@@ -17,8 +17,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists(  __NAMESPACE__ . '\Taxonomy_Select' ) ) {
 
     class Taxonomy_Select extends Includes\Field {
-        public function __construct( $networkField = false ) {
-            parent::__construct( $networkField );
+        public function __construct( $networkField = false, $options = array() ) {
+            parent::__construct( $networkField, $options );
 
             $this->template = '
                 <div class="alchemy__field alchemy__clearfix field field--taxonomy-select jsAlchemyTaxonomySelectBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"taxonomy-select","taxonomy":"{{TAXONOMY}}"}\'>
@@ -27,7 +27,7 @@ if( ! class_exists(  __NAMESPACE__ . '\Taxonomy_Select' ) ) {
                         {{DESCRIPTION}}
                     </div>
                     <div class="field__content"{{PADDED}}>
-                        <select style="width: 100%;" class="jsAlchemyTaxonomySelect"{{MULTIPLE}}>{{OPTIONS}}</select>
+                        <select style="width: 100%;" class="jsAlchemyTaxonomySelect"{{MULTIPLE}} {{ATTRIBUTES}}>{{OPTIONS}}</select>
                         {{CLEAR}}
                     </div>
                 </div>
@@ -43,6 +43,10 @@ if( ! class_exists(  __NAMESPACE__ . '\Taxonomy_Select' ) ) {
             $field['multiple'] = $this->is_multiple( $field['multiple'] );
             $field['options'] = $this->get_options_html( $field );
             $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
+            $field[ 'attributes' ] = $this->concat_attributes( array(
+                'id' => $field[ 'id' ],
+                'name' => $field[ 'id' ],
+            ) );
 
             return $field;
         }

@@ -19,8 +19,11 @@ if( class_exists( __NAMESPACE__ . '\Fields_Loader' ) ) {
 class Fields_Loader {
     private $valid_field_types;
 
-    public function __construct( $networkFields = false ) {
+    private $options;
+
+    public function __construct( $networkFields = false, $options = array() ) {
         $this->networkFields = $networkFields;
+        $this->options = $options;
 
         //repeater should always be the last one since it can render all of the types
         $this->valid_field_types = array(
@@ -76,64 +79,64 @@ class Fields_Loader {
             case 'url' :
             case 'tel' :
             case 'text' :
-                return new Fields\Text( $this->networkFields );
+                return new Fields\Text( $this->networkFields, $this->options );
             break;
             case 'password' :
-                return new Fields\Password( $this->networkFields );
+                return new Fields\Password( $this->networkFields, $this->options );
             break;
             case 'radio' :
-                return new Fields\Radio( $this->networkFields );
+                return new Fields\Radio( $this->networkFields, $this->options );
             break;
             case 'checkbox' :
-                return new Fields\Checkbox( $this->networkFields );
+                return new Fields\Checkbox( $this->networkFields, $this->options );
             break;
             case 'select' :
-                return new Fields\Select( $this->networkFields );
+                return new Fields\Select( $this->networkFields, $this->options );
             break;
             case 'textarea' :
-                return new Fields\Textarea( $this->networkFields );
+                return new Fields\Textarea( $this->networkFields, $this->options );
             break;
             case 'colorpicker' :
-                return new Fields\Colorpicker( $this->networkFields );
+                return new Fields\Colorpicker( $this->networkFields, $this->options );
             break;
             case 'datepicker' :
-                return new Fields\Datepicker( $this->networkFields );
+                return new Fields\Datepicker( $this->networkFields, $this->options );
             break;
             case 'button-group' :
-                return new Fields\Button_Group( $this->networkFields );
+                return new Fields\Button_Group( $this->networkFields, $this->options );
             break;
             case 'upload' :
-                return new Fields\Upload( $this->networkFields );
+                return new Fields\Upload( $this->networkFields, $this->options );
             break;
             case 'editor' :
-                return new Fields\Editor( $this->networkFields );
+                return new Fields\Editor( $this->networkFields, $this->options );
             break;
             case 'image-radio' :
-                return new Fields\Image_Radio( $this->networkFields );
+                return new Fields\Image_Radio( $this->networkFields, $this->options );
             break;
             case 'textblock' :
-                return new Fields\Textblock( $this->networkFields );
+                return new Fields\Textblock( $this->networkFields, $this->options );
             break;
             case 'slider' :
-                return new Fields\Slider( $this->networkFields );
+                return new Fields\Slider( $this->networkFields, $this->options );
             break;
             case 'sections' :
-                return new Fields\Sections( $this->networkFields );
+                return new Fields\Sections( $this->networkFields, $this->options );
             break;
             case 'post-type-select' :
-                return new Fields\Post_Type_Select( $this->networkFields );
+                return new Fields\Post_Type_Select( $this->networkFields, $this->options );
             break;
             case 'taxonomy-select' :
-                return new Fields\Taxonomy_Select( $this->networkFields );
+                return new Fields\Taxonomy_Select( $this->networkFields, $this->options );
             break;
             case 'datalist' :
-                return new Fields\Datalist( $this->networkFields );
+                return new Fields\Datalist( $this->networkFields, $this->options );
             break;
             case 'field-group' :
-                return new Fields\Field_Group( $this->networkFields );
+                return new Fields\Field_Group( $this->networkFields, $this->options );
             break;
             case 'repeater' :
-                return new Fields\Repeater( $this->networkFields );
+                return new Fields\Repeater( $this->networkFields, $this->options );
             break;
             default : break;
         }

@@ -17,8 +17,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( __NAMESPACE__ . '\Radio' ) ) {
 
     class Radio extends Includes\Field {
-        public function __construct( $networkField = false ) {
-            parent::__construct( $networkField );
+        public function __construct( $networkField = false, $options = array() ) {
+            parent::__construct( $networkField, $options );
 
             $this->template = '
                 <div class="alchemy__field alchemy__clearfix field field--radio" id="field--{{NAME}}" data-alchemy=\'{"id":"{{NAME}}","type":"radio"}\'>

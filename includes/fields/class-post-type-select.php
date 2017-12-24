@@ -18,8 +18,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
 
     class Post_Type_Select extends Includes\Field {
-        public function __construct( $networkField = false ) {
-            parent::__construct( $networkField );
+        public function __construct( $networkField = false, $options = array() ) {
+            parent::__construct( $networkField, $options );
 
             $this->template = '
                 <div class="alchemy__field alchemy__clearfix field field--post-type-select jsAlchemyPostTypeSelectBlock" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"post-type-select","post-type":"{{POST-TYPE}}"}\'>
@@ -28,7 +28,7 @@ if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
                         {{DESCRIPTION}}
                     </div>
                     <div class="field__content"{{PADDED}}>
-                        <select style="width: 100%;" class="jsAlchemyPostTypeSelect"{{MULTIPLE}} data-nonce=\'{{NONCE}}\'>{{OPTIONS}}</select>
+                        <select style="width: 100%;" class="jsAlchemyPostTypeSelect"{{MULTIPLE}} {{ATTRIBUTES}} data-nonce=\'{{NONCE}}\'>{{OPTIONS}}</select>
                         {{CLEAR}}
                     </div>
                 </div>
@@ -48,6 +48,10 @@ if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
             $field['clear'] = $field['multiple'] ? '' : '<button type="button" class="button button-secondary jsAlchemyPostTypeSelectClear"><span class="dashicons dashicons-trash"></span></button>';
             $field['options'] = $this->get_options_html( $field['value'] );
             $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
+            $field['attributes'] = $this->concat_attributes( array(
+                'id' => $field[ 'id' ],
+                'name' => $field[ 'id' ],
+            ) );
 
             return $field;
         }
