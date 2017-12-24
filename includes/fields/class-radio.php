@@ -45,8 +45,10 @@ if( ! class_exists( __NAMESPACE__ . '\Radio' ) ) {
                     $choicesHTML .= sprintf (
                         '<label%1$s><input%2$s data-value=\'' . esc_attr( $choice[ 'value' ] ) . '\' ' . $this->is_disabled( $choice[ 'disabled' ] ) . ' ' . $this->is_checked( $choice[ 'checked' ] ) . '/> ' . $choice[ 'label' ] . '</label><br>',
                         $this->concat_attributes( array( 'for' => $fieldID ) ),
-                        $this->concat_attributes( array( 'id' => $fieldID, 'name' => $id, 'type' => 'radio' ) )
+                        $this->concat_attributes( array( 'id' => $fieldID, 'name' => $id . '[]', 'value' => esc_attr( $choice[ 'value' ] ), 'type' => 'radio' ) )
                     );
+
+                    $fieldID = '';
                 }
             }
 

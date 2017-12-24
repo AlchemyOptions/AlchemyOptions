@@ -68,13 +68,15 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
         public function sanitize_field_group_field( $value ) {
             $valToReturn = array();
 
-            foreach( $value as $fieldID => $field ){
-                $safeVal = new self( $field );
+            if( is_array( $value ) ) {
+                foreach( $value as $fieldID => $field ){
+                    $safeVal = new self( $field );
 
-                $valToReturn[$fieldID] = array(
-                    'type' => $field['type'],
-                    'value' => $safeVal->get_safe_value(),
-                );
+                    $valToReturn[$fieldID] = array(
+                        'type' => $field['type'],
+                        'value' => $safeVal->get_safe_value(),
+                    );
+                }
             }
 
             return $valToReturn;

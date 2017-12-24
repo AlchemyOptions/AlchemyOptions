@@ -45,7 +45,7 @@ if( ! class_exists( __NAMESPACE__ . '\Checkbox' ) ) {
                     $checksHTML .= sprintf (
                         '<label%1$s><input%2$s data-value=\'' . esc_attr( $choice[ 'value' ] ) . '\' ' . $this->is_disabled( $choice[ 'disabled' ] ) . ' ' . $this->is_checked( $choice[ 'checked' ] ) . '/> ' . $choice[ 'label' ] . '</label><br>',
                         $this->concat_attributes( array( 'for' => $id ) ),
-                        $this->concat_attributes( array( 'id' => $id, 'name' => $passedID . '[' . $choice[ 'value' ] . ']', 'type' => 'checkbox' ) )
+                        $this->concat_attributes( array( 'id' => $id, 'name' => $passedID . '[]', 'value' => esc_attr( $choice[ 'value' ] ), 'type' => 'checkbox' ) )
                     );
 
                     $id = '';

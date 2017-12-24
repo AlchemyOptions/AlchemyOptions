@@ -65,11 +65,11 @@ class Meta_Box {
         foreach ( $this->options['meta']['options'] as $option ) {
             $passedValue = isset( $option['id'] ) && isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
 
-            if( '' !== $passedValue ) {
-                if( 'checkbox' === $option['type'] && is_array( $passedValue ) ) {
-                    $passedValue = array_keys( $passedValue );
-                }
+            if( 'checkbox' === $option['type'] && "" === $passedValue ) {
+                $passedValue = array();
+            }
 
+            if( isset( $option['id'] ) ) {
                 $value = new Database_Value( array(
                     'type' => $option['type'],
                     'value' => $passedValue
