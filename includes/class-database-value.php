@@ -34,7 +34,7 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
                 case 'datepicker' :
                 case 'upload' :
                 case 'slider' :
-                    $this->value['value'] = sanitize_text_field( $this->value['value'] );
+                    $this->value['value'] = alch_kses_stripslashes( sanitize_text_field( $this->value['value'] ) );
                 break;
                 case 'textarea' :
                     $this->value['value'] = $this->sanitize_textarea_field( $this->value['value'] );
@@ -62,7 +62,7 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
                 return sanitize_textarea_field( $value );
             }
 
-            return wp_kses_stripslashes( $value );
+            return alch_kses_stripslashes( $value );
         }
 
         public function sanitize_field_group_field( $value ) {
@@ -86,7 +86,7 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
             $allowed_html = apply_filters( 'alch_allowed_editor_html_tags', $allowedposttags );
             $allowed_protocols = apply_filters('alch_allowed_editor_protocols', wp_allowed_protocols());
 
-            return wp_kses( $value, $allowed_html, $allowed_protocols );
+            return wp_kses( alch_kses_stripslashes( $value ), $allowed_html, $allowed_protocols );
         }
 
         public function sanitize_repeater_field( $value ) {

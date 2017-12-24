@@ -72,6 +72,12 @@ if( ! function_exists('alch_is_not_empty_array') ) {
     }
 }
 
+if( ! function_exists( 'alch_kses_stripslashes' ) ) {
+    function alch_kses_stripslashes( $string ) {
+        return preg_replace("%\\\\'%", "'", wp_kses_stripslashes( $string ));
+    }
+}
+
 if ( ! function_exists( 'alch_get_network_option' ) ) {
     function alch_get_network_option( $optionID, $default = "" ) {
         $savedValue = get_site_option( $optionID );
