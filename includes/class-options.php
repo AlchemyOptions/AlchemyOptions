@@ -69,11 +69,24 @@ class Options {
 
         $savedOptions = get_option( $type, array() );
 
-        $repeaters = isset( $savedOptions['repeaters'] ) && alch_is_not_empty_array( $savedOptions['repeaters'] )
-            ? $savedOptions['repeaters']
-            : array() ;
-
         if( isset( $savedOptions['options'] ) && alch_is_not_empty_array( $savedOptions['options'] ) ) {
+            $hasRepeaters = array_filter($savedOptions['options'], function( $option ) {
+                return strpos( $option['type'], 'repeater:' ) === 0;
+            });
+            $repeaters = array();
+
+            if( alch_is_not_empty_array( $hasRepeaters ) ) {
+                $repeatersIDs = array_map(function($repeater){
+                    return explode( ':', $repeater['type'] )[1];
+                }, $hasRepeaters);
+
+                $savedRepeaters = get_option( alch_repeaters_id(), array() ) ;
+
+                $repeaters = array_filter( $savedRepeaters, function( $repeater ) use ( $repeatersIDs ) {
+                    return in_array( $repeater['id'], $repeatersIDs );
+                } );
+            }
+
             $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $savedOptions['options'], $repeaters ) ) );
 
             if( in_array( 'colorpicker', $types ) ) {
@@ -111,6 +124,8 @@ class Options {
                     }
                 }
             }
+
+            $types[] = 'repeater';
         }
 
         foreach ( $fields as $field ) {

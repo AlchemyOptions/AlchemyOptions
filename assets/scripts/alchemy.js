@@ -13,6 +13,7 @@ import postTypeSelect from './methods/postTypeSelect';
 import taxonomySelect from './methods/taxonomySelect';
 import conditions from './methods/conditions';
 import sections from './methods/sections';
+import getMetaBoxRepeater from './methods/getMetaBoxRepeater';
 
 (function (document, window, $) {
     $(function () {
@@ -31,5 +32,6 @@ import sections from './methods/sections';
         postTypeSelect();
         taxonomySelect();
         conditions();
+        getMetaBoxRepeater();
     });
 })(document, window, jQuery);

@@ -62,7 +62,24 @@ class Meta_Box {
         );
 
         if( isset( $this->options['meta']['options'] ) && alch_is_not_empty_array( $this->options['meta']['options'] ) ) {
-            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $this->options['meta']['options'] ) ) );
+            $hasRepeaters = array_filter($this->options['meta']['options'], function( $option ) {
+                return strpos( $option['type'], 'repeater:' ) === 0;
+            });
+            $repeaters = array();
+
+            if( alch_is_not_empty_array( $hasRepeaters ) ) {
+                $repeatersIDs = array_map(function($repeater){
+                    return explode( ':', $repeater['type'] )[1];
+                }, $hasRepeaters);
+
+                $savedRepeaters = get_option( alch_repeaters_id(), array() ) ;
+
+                $repeaters = array_filter( $savedRepeaters, function( $repeater ) use ( $repeatersIDs ) {
+                    return in_array( $repeater['id'], $repeatersIDs );
+                } );
+            }
+
+            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $this->options['meta']['options'], $repeaters ) ) );
 
             if( in_array( 'colorpicker', $types ) ) {
                 $deps[] = 'iris';
@@ -99,6 +116,8 @@ class Meta_Box {
                     }
                 }
             }
+
+            $types[] = 'repeater';
         }
 
         foreach ( $fields as $field ) {
@@ -150,70 +169,88 @@ class Meta_Box {
     }
 
     public function save_option( $post_id, $option ) {
-        $passedValue = isset( $option['id'] ) && isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
-
-        if( 'sections' === $option['type'] ) {
-            if( isset( $option['sections'] ) && alch_is_not_empty_array( $option['sections'] ) ) {
-                foreach( $option['sections'] as $passedSection ) {
-                    if( isset( $passedSection['options'] ) && alch_is_not_empty_array( $passedSection['options'] ) ) {
-                        foreach ( $passedSection['options'] as $passedOption ) {
-                            $this->save_option( $post_id, $passedOption );
-                        }
-                    }
-                }
-            }
-        }
-
-        if( 'checkbox' === $option['type'] && "" === $passedValue ) {
-            $passedValue = array();
-        }
-
-        if( 'datalist' === $option['type'] ) {
-            $passedValue = array( $passedValue );
-        }
-
-        if( 'post-type-select' === $option['type'] ) {
-            $passedValue = array(
-                'type' => $option['post-type'],
-                'ids' => $passedValue
-            );
-        }
-
-        if( 'taxonomy-select' === $option['type'] ) {
-            $passedValue = array(
-                'taxonomy' => $option['taxonomy'],
-                'ids' => $passedValue
-            );
-        }
-
-        if( 'field-group' === $option['type'] ) {
-            $newPassedValue = array();
-
-            foreach ( $passedValue as $id => $value ) {
-                $neededField = array_filter( $option['fields'], function( $fld ) use( $id ) {
-                    return $fld['id'] == $id;
-                } );
-
-                $newPassedValue[$id] = array(
-                    'type' => $neededField[0]['type'],
-                    'value' => $value
-                );
-            }
-
-            $passedValue = $newPassedValue;
+        if( strpos( $option['type'], 'repeater:' ) === 0 ) {
+            $fieldType = 'repeater';
+            $passedValue = $this->normalise_repeater_value( $option );
+        } else {
+            $fieldType = $option['type'];
+            $passedValue = $this->normalize_passed_value( $post_id, $option );
         }
 
         if( isset( $option['id'] ) ) {
             $value = new Database_Value( array(
-                'type' => $option['type'],
+                'type' => $fieldType,
                 'value' => $passedValue
             ) );
 
             update_post_meta( $post_id, $option['id'], array(
-                'type' => $option['type'],
+                'type' => $fieldType,
                 'value' => $value->get_safe_value()
             ) );
         }
+    }
+
+    public function normalise_repeater_value( $option ) {
+        $passedValue = isset( $option['id'] ) && isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
+
+        return json_decode( alch_kses_stripslashes( $passedValue ), true );
+    }
+
+    public function normalize_passed_value( $post_id, $option ) {
+        $passedValue = isset( $option['id'] ) && isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
+
+        switch( $option['type'] ) {
+            case 'sections' :
+                if( isset( $option['sections'] ) && alch_is_not_empty_array( $option['sections'] ) ) {
+                    foreach( $option['sections'] as $passedSection ) {
+                        if( isset( $passedSection['options'] ) && alch_is_not_empty_array( $passedSection['options'] ) ) {
+                            foreach ( $passedSection['options'] as $passedOption ) {
+                                $this->save_option( $post_id, $passedOption );
+                            }
+                        }
+                    }
+                }
+            break;
+            case 'checkbox' :
+                if( "" === $passedValue ) {
+                    $passedValue = array();
+                }
+            break;
+            case 'datalist' :
+                $passedValue = array( $passedValue );
+            break;
+            case 'post-type-select' :
+                $passedValue = array(
+                    'type' => $option['post-type'],
+                    'ids' => $passedValue
+                );
+            break;
+            case 'taxonomy-select' :
+                $passedValue = array(
+                    'taxonomy' => $option['taxonomy'],
+                    'ids' => $passedValue
+                );
+            break;
+            case 'field-group' :
+                $newPassedValue = array();
+
+                foreach ( $passedValue as $id => $value ) {
+                    $neededField = array_filter( $option['fields'], function( $fld ) use( $id ) {
+                        return $fld['id'] == $id;
+                    } );
+
+                    $newPassedValue[$id] = array(
+                        'type' => $neededField[0]['type'],
+                        'value' => $value
+                    );
+                }
+
+                $passedValue = $newPassedValue;
+            break;
+            default : break;
+        }
+
+        return $passedValue;
     }
 
     public function meta_box_html( $post ) {
@@ -221,7 +258,7 @@ class Meta_Box {
 
         $optionsHTML = '';
 
-        $optionsHTML .= '<div class="wrap alchemy">';
+        $optionsHTML .= '<div class="wrap alchemy jsAlchemyMetaBox">';
 
         foreach ( $this->options['meta']['options'] as $option ) {
             if( isset( $option['id'] ) || 'sections' === $option['type'] ) {

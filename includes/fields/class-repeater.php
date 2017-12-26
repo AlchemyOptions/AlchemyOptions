@@ -23,6 +23,7 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
             $this->template = '
                 <div class="alchemy__field alchemy__clearfix field field--repeater jsAlchemyRepeaterField" id="field--{{ID}}" data-alchemy=\'{"id":"{{ID}}","type":"repeater"}\'>
                     <fieldset>
+                    <input type="hidden" name="{{ID}}" class="jsRepeaterHidden" />
                         <div class="field__side">
                             <legend class="field__label">{{TITLE}}</legend>
                             {{DESCRIPTION}}
@@ -210,7 +211,7 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
                 $repeateeClass
             );
 
-            $repeateesHTML .= '<input type="hidden" class="jsAlchemyRepeateeVisible" name="' . $repeateeID . '_visible" value="' . $repeateeVisible . '" />';
+            $repeateesHTML .= '<input type="hidden" class="jsAlchemyRepeateeVisible" name="' . $repeateeID . '_alchemy_visible" value="' . $repeateeVisible . '" />';
 
             $repeateesHTML .= $this->generate_repeatee_toolbar( $repeateeID, $repeateeVisible, $repeateeTitle );
 
