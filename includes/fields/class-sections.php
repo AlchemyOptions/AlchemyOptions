@@ -65,7 +65,7 @@ if( ! class_exists(  __NAMESPACE__ . '\Sections' ) ) {
                                 $tabClass
                         );
 
-                        $sectionFields = new Includes\Fields_Loader( $this->networkField );
+                        $sectionFields = new Includes\Fields_Loader( $this->networkField, $this->options );
 
                         $tabsHTML .= $sectionFields->get_fields_html( $section['options'] );
                         $tabsHTML .= '</div>';

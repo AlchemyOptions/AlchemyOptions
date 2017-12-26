@@ -40,7 +40,9 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
             }
 
             if( alch_is_not_empty_array( $this->options ) && isset( $this->options['meta'] ) && $this->options['meta'] ) {
-                $savedData = get_post_meta( $this->options['postID'], $this->options['key'], true );
+                $key = $this->options['key'] !== 'alchemy-section' ? $this->options['key'] : $field['id'];
+
+                $savedData = get_post_meta( $this->options['postID'], $key, true );
             } else {
                 $savedData = $this->networkField
                     ? get_site_option( $field[ 'id' ] )

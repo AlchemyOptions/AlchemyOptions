@@ -145,58 +145,74 @@ class Meta_Box {
         // todo maybe current_user_can check
 
         foreach ( $this->options['meta']['options'] as $option ) {
-            $passedValue = isset( $option['id'] ) && isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
+            $this->save_option( $post_id, $option );
+        }
+    }
 
-            if( 'checkbox' === $option['type'] && "" === $passedValue ) {
-                $passedValue = array();
-            }
+    public function save_option( $post_id, $option ) {
+        $passedValue = isset( $option['id'] ) && isset( $_POST[$option['id']] ) ? $_POST[$option['id']] : '';
 
-            if( 'datalist' === $option['type'] ) {
-                $passedValue = array( $passedValue );
-            }
-
-            if( 'post-type-select' === $option['type'] ) {
-                $passedValue = array(
-                    'type' => $option['post-type'],
-                    'ids' => $passedValue
-                );
-            }
-
-            if( 'taxonomy-select' === $option['type'] ) {
-                $passedValue = array(
-                    'taxonomy' => $option['taxonomy'],
-                    'ids' => $passedValue
-                );
-            }
-
-            if( 'field-group' === $option['type'] ) {
-                $newPassedValue = array();
-
-                foreach ( $passedValue as $id => $value ) {
-                    $neededField = array_filter( $option['fields'], function( $fld ) use( $id ) {
-                        return $fld['id'] == $id;
-                    } );
-
-                    $newPassedValue[$id] = array(
-                        'type' => $neededField[0]['type'],
-                        'value' => $value
-                    );
+        if( 'sections' === $option['type'] ) {
+            if( isset( $option['sections'] ) && alch_is_not_empty_array( $option['sections'] ) ) {
+                foreach( $option['sections'] as $passedSection ) {
+                    if( isset( $passedSection['options'] ) && alch_is_not_empty_array( $passedSection['options'] ) ) {
+                        foreach ( $passedSection['options'] as $passedOption ) {
+                            $this->save_option( $post_id, $passedOption );
+                        }
+                    }
                 }
+            }
+        }
 
-                $passedValue = $newPassedValue;
+        if( 'checkbox' === $option['type'] && "" === $passedValue ) {
+            $passedValue = array();
+        }
+
+        if( 'datalist' === $option['type'] ) {
+            $passedValue = array( $passedValue );
+        }
+
+        if( 'post-type-select' === $option['type'] ) {
+            $passedValue = array(
+                'type' => $option['post-type'],
+                'ids' => $passedValue
+            );
+        }
+
+        if( 'taxonomy-select' === $option['type'] ) {
+            $passedValue = array(
+                'taxonomy' => $option['taxonomy'],
+                'ids' => $passedValue
+            );
+        }
+
+        if( 'field-group' === $option['type'] ) {
+            $newPassedValue = array();
+
+            foreach ( $passedValue as $id => $value ) {
+                $neededField = array_filter( $option['fields'], function( $fld ) use( $id ) {
+                    return $fld['id'] == $id;
+                } );
+
+                $newPassedValue[$id] = array(
+                    'type' => $neededField[0]['type'],
+                    'value' => $value
+                );
             }
 
-            if( isset( $option['id'] ) ) {
-                $value = new Database_Value( array(
-                    'type' => $option['type'],
-                    'value' => $passedValue
-                ) );
+            $passedValue = $newPassedValue;
+        }
 
-                update_post_meta( $post_id, $option['id'], array(
-                    'type' => $option['type'],
-                    'value' => $value->get_safe_value()
-                ) );
-            }
+        if( isset( $option['id'] ) ) {
+            $value = new Database_Value( array(
+                'type' => $option['type'],
+                'value' => $passedValue
+            ) );
+
+            update_post_meta( $post_id, $option['id'], array(
+                'type' => $option['type'],
+                'value' => $value->get_safe_value()
+            ) );
         }
     }
 
@@ -208,15 +224,13 @@ class Meta_Box {
         $optionsHTML .= '<div class="wrap alchemy">';
 
         foreach ( $this->options['meta']['options'] as $option ) {
-            if( isset( $option['id'] ) ) {
+            if( isset( $option['id'] ) || 'sections' === $option['type'] ) {
                 $optionFields = new Fields_Loader(false, array(
                     'meta' => true,
                     'postID' => $post->ID,
-                    'key' => $option['id']
+                    'key' => isset( $option['id'] ) ? $option['id'] : "alchemy-section"
                 ));
                 $optionsHTML .= $optionFields->get_fields_html( array( $option ) );
-            } else {
-                // posts without id (like sections)
             }
         }
 
