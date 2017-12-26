@@ -13,6 +13,12 @@ if ( ! function_exists( 'alch_options_id' ) ) {
     }
 }
 
+if ( ! function_exists( 'alch_repeaters_id' ) ) {
+    function alch_repeaters_id() {
+        return apply_filters( 'alch_repeaters_id', 'alchemy_repeaters' );
+    }
+}
+
 if ( ! function_exists('alch_network_options_id') ) {
     function alch_network_options_id() {
         return apply_filters( 'alch_network_options_id', 'alchemy_network_options' );

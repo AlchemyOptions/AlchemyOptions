@@ -126,14 +126,13 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
                 return '';
             }
 
-            $optionFields = new Includes\Fields_Loader( $this->networkField );
+            $optionFields = new Includes\Fields_Loader( $this->networkField, $this->options, $data['id'] );
             $repeateeTitle = '';
 
             $repeateesHTML ="";
             $repeateeID = sprintf(
-                '%s_%s_%s',
+                '%s_alchemy_%s',
                 $data['id'],
-                $data['repeater']['type'],
                 $data['index']
             );
 
@@ -177,10 +176,12 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
                 }
 
                 $data['fields'][ $id ]['id'] = sprintf(
-                    '%s_%s',
+                    '%s_alchemy_%s',
                     $repeateeID,
                     $field['id']
                 );
+
+                $data['fields'][ $id ]['name'] = $data['fields'][ $id ]['id'];
 
                 if ( isset( $values[ $field['id'] ] ) ) {
                     $data['fields'][ $id ]['value'] = $values[ $field['id'] ]['value'];
@@ -224,12 +225,10 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
         }
 
         public function find_needed_repeater( $data ) {
-            $savedOptions = $this->networkField
-                ? get_option( alch_network_options_id(), array() )
-                : get_option( alch_options_id(), array() );
+            $savedRepeaters = get_option( alch_repeaters_id(), array() );
 
-            if( isset( $savedOptions['repeaters'] ) ) {
-                return array_filter( $savedOptions['repeaters'], function( $repeater ) use( $data ) {
+            if( isset( $savedRepeaters ) && alch_is_not_empty_array( $savedRepeaters ) ) {
+                return array_filter( $savedRepeaters, function( $repeater ) use( $data ) {
                     return $repeater['id'] === $data['repeater']['type'];
                 } );
             }
