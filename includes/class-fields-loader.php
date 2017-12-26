@@ -19,11 +19,16 @@ if( class_exists( __NAMESPACE__ . '\Fields_Loader' ) ) {
 class Fields_Loader {
     private $valid_field_types;
 
+    private $networkFields;
+
     private $options;
 
-    public function __construct( $networkFields = false, $options = array() ) {
+    private $parentName;
+
+    public function __construct( $networkFields = false, $options = array(), $parentName = '' ) {
         $this->networkFields = $networkFields;
         $this->options = $options;
+        $this->parentName = $parentName;
 
         //repeater should always be the last one since it can render all of the types
         $this->valid_field_types = array(
@@ -57,6 +62,10 @@ class Fields_Loader {
 
                 if( ! $this->is_ok_without_id( $field[ 'type' ] ) ) {
                     $options[$i][ 'id' ] = sanitize_key( $field[ 'id' ] );
+                }
+
+                if( "" !== $this->parentName ) {
+                    $options[$i]['name'] = isset( $options[$i]['name'] ) ? $options[$i]['name'] : $this->parentName . '[' . $field[ 'id' ] . ']';
                 }
 
                 $fieldInstance = $this->choose_class( $field[ 'type' ] );

@@ -55,7 +55,7 @@ if( ! class_exists( __NAMESPACE__ . '\Button_Group' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
-            $field[ 'name' ] = $field[ 'id' ];
+            $field[ 'name' ] = isset( $field['name'] ) ? $field['name'] : $field['id'];
             $field[ 'choices' ] = isset( $field[ 'choices' ] ) ? $field[ 'choices' ] : array();
 
             if( ! $this->array_has_string_keys( $field[ 'choices' ] ) && 'array' !== gettype( $field[ 'choices' ][0] ) ) {

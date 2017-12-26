@@ -41,7 +41,7 @@ if( ! class_exists( __NAMESPACE__ . '\Slider' ) ) {
             $mergedAttrs = array_merge( array(
                 'type' => 'number',
                 'id' => $field['id'],
-                'name' => $field['id'],
+                'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
                 'value' => $field['value'],
                 'readonly' => true,
                 'class' => 'jsAlchemySliderInput'

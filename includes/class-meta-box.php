@@ -169,6 +169,23 @@ class Meta_Box {
                 );
             }
 
+            if( 'field-group' === $option['type'] ) {
+                $newPassedValue = array();
+
+                foreach ( $passedValue as $id => $value ) {
+                    $neededField = array_filter( $option['fields'], function( $fld ) use( $id ) {
+                        return $fld['id'] == $id;
+                    } );
+
+                    $newPassedValue[$id] = array(
+                        'type' => $neededField[0]['type'],
+                        'value' => $value
+                    );
+                }
+
+                $passedValue = $newPassedValue;
+            }
+
             if( isset( $option['id'] ) ) {
                 $value = new Database_Value( array(
                     'type' => $option['type'],

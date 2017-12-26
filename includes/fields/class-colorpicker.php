@@ -40,7 +40,7 @@ if( ! class_exists( __NAMESPACE__ . '\Colorpicker' ) ) {
             $mergedAttrs = array_merge( array(
                 'type' => 'text',
                 'id' => $field[ 'id' ],
-                'name' => $field[ 'id' ],
+                'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
                 'value' => $field[ 'value' ],
                 'class' => 'jsAlchemyColorpickerInput'
             ), $passedAttrs );

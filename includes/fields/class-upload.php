@@ -56,7 +56,7 @@ if( ! class_exists( __NAMESPACE__ . '\Upload' ) ) {
             $mergedAttrs = array_merge( array(
                 'type' => 'hidden',
                 'id' => $field[ 'id' ],
-                'name' => $field[ 'id' ],
+                'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
                 'value' => $field[ 'value' ],
                 'class' => 'jsAlchemyUploaderInput'
             ), $passedAttrs );

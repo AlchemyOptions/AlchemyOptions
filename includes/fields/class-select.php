@@ -74,7 +74,7 @@ if( ! class_exists( __NAMESPACE__ . '\Select' ) ) {
 
             $field[ 'attributes' ] = $this->concat_attributes( array(
                 'id' => $field[ 'id' ],
-                'name' => $field[ 'id' ],
+                'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
                 'class' => 'alchemy__input alchemy__input--select',
             ) );
 

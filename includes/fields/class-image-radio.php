@@ -62,7 +62,7 @@ if( ! class_exists( __NAMESPACE__ . '\Image_Radio' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
-            $field[ 'name' ] = $field[ 'id' ];
+            $field[ 'name' ] = isset( $field['name'] ) ? $field['name'] : $field['id'];
 
             foreach( $field[ 'choices' ] as $i => $choice ) {
                 $field[ 'choices' ][ $i ][ 'disabled' ] = isset( $choice[ 'disabled' ] ) ? $choice[ 'disabled' ] : false;

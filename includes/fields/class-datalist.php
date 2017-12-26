@@ -44,7 +44,7 @@ if( ! class_exists( __NAMESPACE__ . '\Datalist' ) ) {
             $field['padded'] = '' !== $field['multiple'] ? '' : 'style="padding-right: 50px;"';
             $field[ 'attributes' ] = $this->concat_attributes( array(
                 'id' => $field[ 'id' ],
-                'name' => $field[ 'id' ],
+                'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
             ) );
 
             return $field;

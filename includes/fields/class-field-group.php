@@ -58,6 +58,7 @@ if( ! class_exists( __NAMESPACE__ . '\Field_Group' ) ) {
                         $fld['value'] = $field['value'][$fld['id']]['value'];
                     }
 
+                    $fld['name'] = $field['id'] . '[' . $fld['id'] . ']';
                     $fld['id'] = $field['id'] . '_field-group_' . $fld['id'];
 
                     return $fld;
@@ -65,7 +66,7 @@ if( ! class_exists( __NAMESPACE__ . '\Field_Group' ) ) {
 
                 $fieldsHTML .= '<div class="field__wrapper jsAlchemyFiledGroupWrapper" data-fields=\'' . json_encode( $repeateesFieldsData ) . '\'>';
 
-                $optionFields = new Includes\Fields_Loader( $this->networkField );
+                $optionFields = new Includes\Fields_Loader( $this->networkField, array(), $field['id'] );
 
                 //Sections field is top-level only
                 $field['fields'] = array_filter($field['fields'], function( $field ) {

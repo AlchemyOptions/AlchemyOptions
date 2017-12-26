@@ -39,7 +39,7 @@ if( ! class_exists( __NAMESPACE__ . '\Text' ) ) {
             $mergedAttrs = array_merge( array(
                 'type' => $field['type'],
                 'id' => $field['id'],
-                'name' => $field['id'],
+                'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
                 'value' => $field['value']
             ), $passedAttrs );
 

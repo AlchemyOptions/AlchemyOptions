@@ -39,7 +39,7 @@ if( ! class_exists( __NAMESPACE__ . '\Textarea' ) ) {
             $field[ 'allow-html' ] = isset( $field[ 'allow-html' ] ) ? $field[ 'allow-html' ] : false;
             $field[ 'attributes' ] = $this->concat_attributes(array(
                 'id' => $field[ 'id' ],
-                'name' => $field[ 'id' ],
+                'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
                 'cols' => 60,
                 'rows' => 5,
             ));
