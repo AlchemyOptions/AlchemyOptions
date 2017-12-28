@@ -76,6 +76,10 @@ function getFieldValue( alchemyField ) {
                         fields: {}
                     };
 
+                    if(data.typed) {
+                        valueToStore.typeID = repeateeData.repeateeTypeID
+                    }
+
                     if( repeateeData.fieldIDs ) {
                         $.each(repeateeData.fieldIDs, (ind, field) => {
                             valueToStore.fields[field.id] = {

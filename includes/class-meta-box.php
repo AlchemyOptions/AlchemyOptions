@@ -110,9 +110,21 @@ class Meta_Box {
 
         if( count( $repeaters ) > 0 ) {
             foreach ( $repeaters as $repeater ) {
-                if( count( $repeater['fields'] ) > 0 ) {
-                    foreach ( $repeater['fields'] as $field ) {
-                        array_push( $fields, $field );
+                if( isset( $repeater['fields'] ) ) {
+                    if( alch_is_not_empty_array( $repeater['fields'] ) ) {
+                        foreach ( $repeater['fields'] as $field ) {
+                            array_push( $fields, $field );
+                        }
+                    }
+                } else if( isset( $repeater['field-types'] ) ) {
+                    if( alch_is_not_empty_array( $repeater['field-types'] ) ) {
+                        foreach ( $repeater['field-types'] as $fieldType ) {
+                            if( isset( $fieldType['fields'] ) && alch_is_not_empty_array( $fieldType['fields'] ) ) {
+                                foreach ( $fieldType['fields'] as $field ) {
+                                    array_push( $fields, $field );
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -238,6 +250,8 @@ class Meta_Box {
                     $neededField = array_filter( $option['fields'], function( $fld ) use( $id ) {
                         return $fld['id'] == $id;
                     } );
+
+                    $neededField = array_values( $neededField );
 
                     $newPassedValue[$id] = array(
                         'type' => $neededField[0]['type'],

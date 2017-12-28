@@ -92,6 +92,10 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
         }
 
         public function sanitize_repeater_field( $value ) {
+            if( ! $value ) {
+                return "";
+            }
+
             return array_map(function( $item ){
                 $item['fields'] = array_map(function( $field ){
                     $safeVal = new self( $field );
