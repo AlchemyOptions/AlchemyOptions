@@ -17,6 +17,7 @@ function getThingsGoing(scope = document) {
 
     if( $repeaterFields[0] ) {
         const isNetworkForm = $("#jsAlchemyForm").data('is-network');
+        const $document = $(document);
 
         $repeaterFields.each((i, el) => {
             const $repeater = $(el);
@@ -28,7 +29,7 @@ function getThingsGoing(scope = document) {
                 e.stopPropagation();
 
                 const $btn = $(this);
-                const $loader = $btn.next('.jsAlchemyRepeaterLoader');
+                const $loader = $btn.closest('.alchemy__add-new').children('.jsAlchemyRepeaterLoader');
                 const nonce = $btn.data('nonce');
 
                 $btn.attr('disabled', true);
@@ -71,6 +72,8 @@ function getThingsGoing(scope = document) {
                         console.error('error', err);
                     },
                     'complete': () => {
+                        $btn.closest('.jsTypeList').removeClass('type-list--visible');
+                        $btn.closest('.alchemy__add-new').removeClass('alchemy__add-new--active');
                         $btn.removeAttr('disabled');
                         $loader.addClass('alchemy__repeater-add-spinner--hidden');
                     }
@@ -85,8 +88,29 @@ function getThingsGoing(scope = document) {
                 $input.closest('.repeatee').children('.jsAlchemyRepeateeToolbar').find('.jsAlchemyRepeateeTitle').text($input.val());
             });
 
+            $repeater.on('click', '.jsAlchemyRepeaterAddType', function(e){
+                const $btn = $(this);
+                const $parent = $btn.parent('.alchemy__add-new');
+                const $list = $btn.siblings('.jsTypeList');
+
+                e.stopPropagation();
+
+                $parent.addClass('alchemy__add-new--active');
+                $list.addClass('type-list--visible');
+
+                $document.one('click', function() {
+                    $parent.removeClass('alchemy__add-new--active');
+                    $list.removeClass('type-list--visible');
+                });
+            });
+
+            $repeater.on('click', '.jsTypeList', function(e){
+                e.stopPropagation();
+            });
+
             $repeater.on('click', '.jsAlchemyRepeateeToolbar', function(e) {
                 e.stopPropagation();
+                $document.trigger('click');
 
                 const $toolbar = $(this);
                 const $repeatee = $toolbar.closest( '.repeatee' );

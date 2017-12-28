@@ -62,19 +62,15 @@
     }
 
     &__field {
+        margin-bottom: 2em;
+
         .field--sections & + &,
         .repeatee & + & {
             margin-top: 4em;
         }
 
-        & + & {
-            margin-top: 2em;
-        }
-
         @media all and ( max-width: 1024px ) {
-            & + & {
-                margin-top: 4em;
-            }
+            margin-bottom: 4em;
         }
     }
 
@@ -94,10 +90,27 @@
         }
     }
 
+    &__add-new {
+        margin-top: 1em;
+
+        position: relative;
+        z-index: 0;
+
+        &--active {
+            z-index: 2;
+        }
+    }
+
     &__repeater-add.button,
     &__repeater-add-spinner {
-        margin-top: 1em;
+        position: relative;
+        z-index: 1;
+
         vertical-align: middle;
+
+        .dashicons {
+            margin-left: 6px;
+        }
     }
 
     &__repeater-add-spinner,

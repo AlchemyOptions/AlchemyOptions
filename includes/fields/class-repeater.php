@@ -73,7 +73,7 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
                 );
                 $text = __( 'Add from type', 'alchemy-options' ) . '<span class="dashicons dashicons-arrow-down-alt2"></span>';
 
-                $typeList = "<div class='type-list'><ul>";
+                $typeList = "<div class='type-list jsTypeList'><ul>";
                     foreach( $this->repeater['field-types'] as $fieldtype ) {
                         $typeList .= sprintf(
                             '<li><button%2$s data-nonce=\'%4$s\' data-repeater-data=\'%3$s\'>%1$s</button></li>',

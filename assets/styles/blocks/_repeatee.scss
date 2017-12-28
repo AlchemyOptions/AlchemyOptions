@@ -18,10 +18,14 @@
 
     &__title {
         display: inline-block;
-        margin: 0 .5em;
+        margin: 0 .2em 0 .5em;
 
         line-height: 1.5;
         vertical-align: middle;
+
+        + small {
+            margin-left: .6em;
+        }
 
         @media all and (max-width: 782px) {
             line-height: 2.2;

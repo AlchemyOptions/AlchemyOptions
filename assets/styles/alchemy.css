@@ -93,7 +93,8 @@ html {
   margin-bottom: 1.5em; }
 .field--repeater .ui-sortable {
   overflow: hidden;
-  position: relative; }
+  position: relative;
+  z-index: 1; }
 .field--colorpicker {
   position: relative;
   z-index: 5; }
@@ -349,13 +350,13 @@ html {
   border: 1px dashed transparent;
   border-top-color: #ccc;
   border-bottom-color: #ccc; }
-.field--sections .alchemy__field + .alchemy__field, .repeatee .alchemy__field + .alchemy__field {
-  margin-top: 4em; }
-.alchemy__field + .alchemy__field {
-  margin-top: 2em; }
-@media all and (max-width: 1024px) {
-  .alchemy__field + .alchemy__field {
-    margin-top: 4em; } }
+.alchemy__field {
+  margin-bottom: 2em; }
+  .field--sections .alchemy__field + .alchemy__field, .repeatee .alchemy__field + .alchemy__field {
+    margin-top: 4em; }
+  @media all and (max-width: 1024px) {
+    .alchemy__field {
+      margin-bottom: 4em; } }
 .alchemy__clearfix:after {
   display: table;
   content: " ";
@@ -364,9 +365,18 @@ html {
   display: table;
   content: " ";
   clear: right; }
-.alchemy__repeater-add.button, .alchemy__repeater-add-spinner {
+.alchemy__add-new {
   margin-top: 1em;
+  position: relative;
+  z-index: 0; }
+  .alchemy__add-new--active {
+    z-index: 2; }
+.alchemy__repeater-add.button, .alchemy__repeater-add-spinner {
+  position: relative;
+  z-index: 1;
   vertical-align: middle; }
+  .alchemy__repeater-add.button .dashicons, .alchemy__repeater-add-spinner .dashicons {
+    margin-left: 6px; }
 .alchemy__repeater-add-spinner, .alchemy__spinner {
   transition: opacity .3s;
   opacity: 1;
@@ -411,9 +421,11 @@ html {
       vertical-align: sub; }
   .repeatee__title {
     display: inline-block;
-    margin: 0 .5em;
+    margin: 0 .2em 0 .5em;
     line-height: 1.5;
     vertical-align: middle; }
+    .repeatee__title + small {
+      margin-left: .6em; }
     @media all and (max-width: 782px) {
       .repeatee__title {
         line-height: 2.2; } }
@@ -467,6 +479,37 @@ html {
     bottom: 0;
     z-index: 5;
     background: #fff; }
+
+.type-list {
+  padding: 20px 0 14px 20px;
+  border-radius: 4px;
+  transition: opacity .3s, bottom .3s;
+  filter: drop-shadow(1px 2px 4px #ccc);
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  bottom: 165%;
+  z-index: 2;
+  background: #fff; }
+  .type-list:after {
+    border: 7px solid transparent;
+    border-top-color: #fff;
+    margin-left: -6px;
+    position: absolute;
+    bottom: -13px;
+    left: 50%;
+    z-index: 1;
+    content: ""; }
+  .type-list--visible {
+    pointer-events: all;
+    opacity: 1;
+    bottom: 150%; }
+  .type-list ul {
+    padding-right: 20px;
+    margin: 0;
+    max-height: 500px;
+    overflow: auto; }
 
 @keyframes fadeOutUp {
   from {
