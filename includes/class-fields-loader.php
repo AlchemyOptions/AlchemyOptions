@@ -52,7 +52,9 @@ class Fields_Loader {
 
             if( 2 === count( $repeaterCheck ) && 'repeater' === $repeaterCheck[0] ) {
                 $field['type'] = 'repeater';
-                $field['_repeater-type'] = $repeaterCheck[1];
+                $field['repeater'] = array(
+                    'type' => $repeaterCheck[1]
+                );
             }
 
             if ( $this->is_valid_field_type( $field[ 'type' ] ) ) {

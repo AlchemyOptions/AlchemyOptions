@@ -17,6 +17,8 @@ if( ! defined( 'ALCHEMY_OPTIONS_VERSION' ) ) {
 if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
 
     class Repeater extends Includes\Field {
+        private $repeater;
+
         public function __construct( $networkField = false, $options = array() ) {
             parent::__construct( $networkField, $options );
 
@@ -42,56 +44,84 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
         public function normalize_field_keys( $field ) {
             $field = parent::normalize_field_keys( $field );
 
+            $this->repeater = array_values( $this->find_needed_repeater( $field ) )[0];
+
+            if( ! $this->repeater ) {
+                return '';
+            }
+
+            $this->repeater['isTyped'] = isset( $this->repeater['field-types'] ) && alch_is_not_empty_array( $this->repeater['field-types'] );
+
             if( $field[ 'value' ] ) {
                 $field[ 'repeatees' ] = $this->parse_value( $field );
             } else {
                 $field[ 'repeatees' ] = '';
             }
 
-            $field[ 'add' ] = $this->generate_add_new_button( false, $field );
+            $field[ 'add' ] = $this->generate_add_new_button( $field );
 
             return $field;
         }
 
-        public function generate_add_new_button( $hasRepeatees, $field ) {
-            $addBtn = '';
+        public function generate_add_new_button( $field ) {
+            if( $this->repeater['isTyped'] ) {
+                $attributes = array(
+                    'class' => 'alchemy__repeater-add button button-primary jsAlchemyRepeaterAddType',
+                    'type' => 'button'
+                );
+                $text = __( 'Add from type', 'alchemy-options' ) . '<span class="dashicons dashicons-arrow-down-alt2"></span>';
 
-            if( $hasRepeatees ) {
-                $addBtn = sprintf(
-                    '<button%1$s data-nonce=\'%4$s\' data-repeater-id=\'%3$s\'>%2$s</button>',
-                    $this->concat_attributes( array(
-                        'class' => 'alchemy__repeater-add button button-primary jsAlchemyRepeaterAddType',
-                        'type' => 'button'
-                    ) ),
-                    __( 'Choose type', 'alchemy-options' ),
-                    $field['id'],
-                    json_encode( array(
-                        'id' => $field['id'] . '_repeater_nonce',
-                        'value' => wp_create_nonce( $field['id'] . '_repeater_nonce' )
-                    ) )
-                );
+                $typeList = "<div class='type-list'><ul>";
+                    foreach( $this->repeater['field-types'] as $fieldtype ) {
+                        $typeList .= sprintf(
+                            '<li><button%2$s data-nonce=\'%4$s\' data-repeater-data=\'%3$s\'>%1$s</button></li>',
+                            $fieldtype['title'],
+                            $this->concat_attributes(array(
+                                'class' => 'alchemy__repeater-add button button-secondary jsAlchemyRepeaterAdd',
+                                'type' => 'button'
+                            )),
+                            json_encode(array(
+                                'id' => $field['id'],
+                                'repeater' => array(
+                                    'simple' => ! $this->repeater['isTyped'],
+                                    'type' => $field['repeater']['type'],
+                                    'type-id' => $fieldtype['id']
+                                )
+                            )),
+                            json_encode( array(
+                                'id' => $field['id'] . '_' . $fieldtype['id'] . '_repeater_nonce',
+                                'value' => wp_create_nonce( $field['id'] . '_' . $fieldtype['id'] . '_repeater_nonce' )
+                            ) )
+                        );
+                    }
+                $typeList .= "</ul></div>";
             } else {
-                $addBtn = sprintf(
-                    '<button%1$s data-nonce=\'%4$s\' data-repeater-data=\'%3$s\'>%2$s</button><img src="%5$s" class="alchemy__repeater-add-spinner alchemy__repeater-add-spinner--hidden jsAlchemyRepeaterLoader" width="20" height="20" />',
-                    $this->concat_attributes( array(
-                        'class' => 'alchemy__repeater-add button button-primary jsAlchemyRepeaterAdd',
-                        'type' => 'button'
-                    ) ),
-                    __( 'Add new', 'alchemy-options' ),
-                    json_encode( array(
-                        'id' => $field['id'],
-                        'repeater' => array(
-                            'simple' => true,
-                            'type' => $field['_repeater-type']
-                        )
-                    ) ),
-                    json_encode( array(
-                        'id' => $field[ 'id' ] . '_repeater_nonce',
-                        'value' => wp_create_nonce( $field[ 'id' ] . '_repeater_nonce' )
-                    ) ),
-                    get_site_url() . '/wp-includes/images/spinner-2x.gif'
+                $attributes = array(
+                    'class' => 'alchemy__repeater-add button button-primary jsAlchemyRepeaterAdd',
+                    'type' => 'button'
                 );
+                $text = __( 'Add new', 'alchemy-options' );
+                $typeList = "";
             }
+
+            $addBtn = sprintf(
+                '<div class="alchemy__add-new"><button%1$s data-nonce=\'%4$s\' data-repeater-data=\'%3$s\'>%2$s</button><img src="%5$s" class="alchemy__repeater-add-spinner alchemy__repeater-add-spinner--hidden jsAlchemyRepeaterLoader" width="20" height="20" />%6$s</div>',
+                $this->concat_attributes( $attributes ),
+                $text,
+                json_encode( array(
+                    'id' => $field['id'],
+                    'repeater' => array(
+                        'simple' => ! $this->repeater['isTyped'],
+                        'type' => $field['repeater']['type']
+                    )
+                ) ),
+                json_encode( array(
+                    'id' => $field[ 'id' ] . '_repeater_nonce',
+                    'value' => wp_create_nonce( $field[ 'id' ] . '_repeater_nonce' )
+                ) ),
+                get_site_url() . '/wp-includes/images/spinner-2x.gif',
+                $typeList
+            );
 
             return $addBtn;
         }
@@ -121,11 +151,15 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
         }
 
         public function generate_repeatee( $data, $ssr = false ) {
-            $neededRepeater = array_values( $this->find_needed_repeater( $data ) )[0];
+            $neededRepeater = isset( $this->repeater )
+                ? $this->repeater
+                : array_values( $this->find_needed_repeater( $data ) )[0];
 
             if( ! $neededRepeater ) {
                 return '';
             }
+
+            $neededRepeater['isTyped'] = isset( $this->repeater['field-types'] ) && alch_is_not_empty_array( $this->repeater['field-types'] );
 
             $optionFields = new Includes\Fields_Loader( $this->networkField, $this->options, $data['id'] );
             $repeateeTitle = '';

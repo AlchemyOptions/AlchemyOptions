@@ -118,9 +118,21 @@ class Options {
 
         if( count( $repeaters ) > 0 ) {
             foreach ( $repeaters as $repeater ) {
-                if( count( $repeater['fields'] ) > 0 ) {
-                    foreach ( $repeater['fields'] as $field ) {
-                        array_push( $fields, $field );
+                if( isset( $repeater['fields'] ) ) {
+                    if( alch_is_not_empty_array( $repeater['fields'] ) ) {
+                        foreach ( $repeater['fields'] as $field ) {
+                            array_push( $fields, $field );
+                        }
+                    }
+                } else if( isset( $repeater['field-types'] ) ) {
+                    if( alch_is_not_empty_array( $repeater['field-types'] ) ) {
+                        foreach ( $repeater['field-types'] as $fieldType ) {
+                            if( isset( $fieldType['fields'] ) && alch_is_not_empty_array( $fieldType['fields'] ) ) {
+                                foreach ( $fieldType['fields'] as $field ) {
+                                    array_push( $fields, $field );
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -307,15 +319,15 @@ class Options {
         $index = $_GET[ 'index' ];
         $networkSave = isset( $_GET['network'] ) && $_GET['network'] !== 'false';
 
-        $repeater = new Fields\Repeater( $networkSave );
-
-        $repeaterHTML = $repeater->generate_repeatee( array(
+        $repeateeSettings = array(
             'id' => $rID,
             'repeater' => $repeaterData,
             'index' => $index
-        ) );
+        );
 
-        wp_send_json( $repeaterHTML );
+        $repeater = new Fields\Repeater( $networkSave );
+
+        wp_send_json( $repeater->generate_repeatee( $repeateeSettings ) );
     }
 
     public function create_network_options_page() {
