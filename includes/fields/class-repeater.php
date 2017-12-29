@@ -258,8 +258,17 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
             $repeateeClass = 'repeatee jsAlchemyRepeatee';
 
             if( ! $ssr ) {
-                $repeateeClass .= ' repeatee--expanded';
-                $repeateeVisible = "true";
+                if( isset( $data['isVisible'] ) ) {
+                    $repeateeClass .= ' repeatee--expanded';
+                    $repeateeVisible = $data['isVisible'];
+
+                    if( $data['isVisible'] === 'false' ) {
+                        $repeateeClass .= ' repeatee--hidden';
+                    }
+                } else {
+                    $repeateeClass .= ' repeatee--expanded';
+                    $repeateeVisible = "true";
+                }
             } else {
                 $repeateeVisible = $data[ 'isVisible' ];
 
@@ -342,11 +351,15 @@ if( ! class_exists( __NAMESPACE__ . '\Repeater' ) ) {
             );
 
             $actionGroupHTML .= sprintf(
-                '<button type="button" class="%2$s" data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
+                '<button type="button" class="%2$s" data-nonce=\'%5$s\' data-repeatee-id=\'%1$s\' title="%4$s">%3$s</button>',
                 $repeateeID,
                 'repeatee__btn button button-secondary jsAlchemyRepeateeCopy',
                 '<span class="dashicons dashicons-admin-page"></span>',
-                __( 'Copy this item', 'alchemy-options' )
+                __( 'Copy this item', 'alchemy-options' ),
+                json_encode(array(
+                    'id' => $repeateeID . '_copy_nonce',
+                    'value' => wp_create_nonce( $repeateeID . '_copy_nonce' )
+                ))
             );
 
             $actionGroupHTML .= sprintf(

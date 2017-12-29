@@ -325,6 +325,15 @@ class Options {
             'index' => $index
         );
 
+        if( isset( $_GET['value'] ) ) {
+            $repeateeSettings['isVisible'] = $_GET['value']['isVisible'];
+            $repeateeSettings['savedFields'] = $_GET['value']['fields'];
+
+            if( isset( $_GET['value']['typeID'] ) ) {
+                $repeateeSettings['repeater']['type-id'] = $_GET['value']['typeID'];
+            }
+        }
+
         $repeater = new Fields\Repeater( $networkSave );
 
         wp_send_json( $repeater->generate_repeatee( $repeateeSettings ) );

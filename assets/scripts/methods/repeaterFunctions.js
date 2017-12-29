@@ -11,6 +11,7 @@ import taxonomySelect from './taxonomySelect';
 import datalistFunctions from './datalistFunctions';
 import conditions from './conditions';
 import sections from './sections';
+import getFieldValue from './getFieldValue';
 
 function getThingsGoing(scope = document) {
     const $repeaterFields = $('.jsAlchemyRepeaterField', scope);
@@ -22,6 +23,7 @@ function getThingsGoing(scope = document) {
         $repeaterFields.each((i, el) => {
             const $repeater = $(el);
             const $dropIn = $repeater.children('fieldset').children('.field__content').children('.jsAlchemyRepeaterSortable');
+            const $addNew = $repeater.children('fieldset').children('.field__content').children('.alchemy__add-new').children('.button-primary');
 
             let clickIndex = $dropIn.children().length;
 
@@ -133,7 +135,7 @@ function getThingsGoing(scope = document) {
                 }
             });
 
-            $repeater.on('click', '.jsAlchemyRepeateeHide', function(e) {
+            $repeater.on('click', '.jsAlchemyRepeateeHide', function() {
                 const $toolbar = $(this);
                 const $parent = $toolbar.closest( '.repeatee' );
                 const $visibilityInput = $parent.children('.jsAlchemyRepeateeVisible');
@@ -144,7 +146,7 @@ function getThingsGoing(scope = document) {
                 $visibilityInput.val( $visibilityInput.val() === 'true' ? 'false' : 'true' );
             });
 
-            $repeater.on('click', '.jsAlchemyRepeateeRemove', function(e) {
+            $repeater.on('click', '.jsAlchemyRepeateeRemove', function() {
                 const $toolbar = $(this);
                 const $parent = $toolbar.closest( '.repeatee' );
 
@@ -155,25 +157,62 @@ function getThingsGoing(scope = document) {
                 });
             });
 
-            $repeater.on('click', '.jsAlchemyRepeateeCopy', function(e) {
+            $repeater.on('click', '.jsAlchemyRepeateeCopy', function() {
                 const $btn = $(this);
-                const $parent = $btn.closest( '.repeatee' );
+                const nonce = $btn.data('nonce');
+                const $parent = $btn.closest('.repeatee');
+                const $loader = $addNew.closest('.alchemy__add-new').children('.jsAlchemyRepeaterLoader');
+                const repeaterValues = getFieldValue($repeater);
+
+                $addNew.attr('disabled', true);
+                $loader.removeClass('alchemy__repeater-add-spinner--hidden');
 
                 saveEditors($repeater);
 
-                const $copiedRepeatee = $parent.clone(true);
-                const copiedID = $parent.attr('id');
-                const copiedArr = copiedID.split('_');
-                const repeateeHTML = $copiedRepeatee.html();
+                $.ajax({
+                    'type': 'get',
+                    'url': alchemyData.adminURL,
+                    'data': {
+                        'action': 'alchemy_options_repeater_item_add',
+                        'nonce': [nonce.id, nonce.value],
+                        'repeater': $addNew.data('repeater-data'),
+                        'index': clickIndex,
+                        'network': isNetworkForm,
+                        'value': repeaterValues[$parent.index()]
+                    },
+                    'success': data => {
+                        console.log('success');
 
-                copiedArr[copiedArr.length - 1] = clickIndex;
+                        const $data = $(data);
 
-                const changedID = copiedArr.join('_');
+                        $parent.after($data);
+                        $dropIn.sortable( "refresh" );
 
-                $copiedRepeatee
-                    .attr('id', changedID)
-                    .html(repeateeHTML.replace(new RegExp(copiedID, 'g'), changedID))
-                    .insertAfter($parent);
+                        sections($data);
+                        mediaUploader($data);
+                        togglePassword($data);
+                        colorpicker($data);
+                        datepicker($data);
+                        editor($data);
+                        buttonGroup($data);
+                        imageRadios($data);
+                        slider($data);
+                        postTypeSelect($data);
+                        taxonomySelect($data);
+                        datalistFunctions($data);
+                        conditions($data);
+                        getThingsGoing($data);
+                    },
+                    'error': err => {
+                        console.error('error', err);
+                    },
+                    'complete': () => {
+                        $addNew.closest('.jsTypeList').removeClass('type-list--visible');
+                        $addNew.closest('.alchemy__add-new').removeClass('alchemy__add-new--active');
+                        $addNew.removeAttr('disabled');
+                        $loader.addClass('alchemy__repeater-add-spinner--hidden');
+                    }
+                });
 
                 restoreEditors($repeater);
 
