@@ -25,9 +25,10 @@ if( ! class_exists( __NAMESPACE__ . '\Text' ) ) {
                     <div class="field__side">
                         <label class="field__label" for="{{ID}}">{{TITLE}}</label>
                         {{DESCRIPTION}}
+                        {{VARIATIONS-SELECT}}
                     </div>
                     <div class="field__content">
-                        <input {{ATTRIBUTES}} />
+                        {{CONTENT}}
                     </div> 
                 </div>
             ';
@@ -43,12 +44,46 @@ if( ! class_exists( __NAMESPACE__ . '\Text' ) ) {
                 'value' => $field['value']
             ), $passedAttrs );
 
-            $field['attributes'] = $this->concat_attributes( $mergedAttrs );
+            $field['content'] = $this->get_field_content( $field, $mergedAttrs );
 
             $field['visible'] = isset( $field['visible'] ) ? sprintf( ' data-condition=\'%1$s\'', esc_attr( $field['visible'] ) ) : '';
             $field['hidden'] = '' !== $field['visible'] ? ' jsAlchemyConditionallyHidden' : '' ;
 
             return $field;
+        }
+
+        public function get_field_content( $field, $attrs ) {
+            $fieldHTML = '';
+
+            if( alch_is_not_empty_array( $field['variations'] ) ) {
+                $fieldHTML .= '<div class="variations-content jsAlchemyVariationsContent">';
+
+                foreach ( $field['variations'] as $contentVariation ) {
+                    $inputAttrs = $attrs;
+
+                    $inputAttrs['id'] = $inputAttrs['id'] . '_' . $contentVariation['id'];
+                    $inputAttrs['name'] = $inputAttrs['name'] . '[' . $contentVariation['id'] . ']';
+
+                    $fieldHTML .= sprintf(
+                        '<div class="variations__item" data-variation-id="%1$s">%2$s</div>',
+                            $contentVariation['id'],
+                            $this->get_input_html( $inputAttrs )
+                    );
+                }
+
+                $fieldHTML .= '</div>';
+            } else {
+                $fieldHTML .= $this->get_input_html( $attrs );
+            }
+
+            return $fieldHTML;
+        }
+
+        public function get_input_html( $attrs ) {
+            return sprintf(
+                '<input %s />',
+                $this->concat_attributes( $attrs )
+            );
         }
     }
 }
