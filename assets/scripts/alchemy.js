@@ -14,6 +14,7 @@ import taxonomySelect from './methods/taxonomySelect';
 import conditions from './methods/conditions';
 import sections from './methods/sections';
 import getMetaBoxRepeater from './methods/getMetaBoxRepeater';
+import variations from './methods/variations';
 
 (function (document, window, $) {
     $(function () {
@@ -33,5 +34,6 @@ import getMetaBoxRepeater from './methods/getMetaBoxRepeater';
         taxonomySelect();
         conditions();
         getMetaBoxRepeater();
+        variations();
     });
 })(document, window, jQuery);
