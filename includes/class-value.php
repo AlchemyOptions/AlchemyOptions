@@ -133,6 +133,13 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
                     }
                 }
 
+                if( isset( $item['typeID'] ) ) {
+                    return array(
+                        'type' => $item['typeID'],
+                        'value' => $values
+                    );
+                }
+
                 return $values;
             }, $value);
 
