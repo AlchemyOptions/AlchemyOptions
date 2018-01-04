@@ -23,7 +23,6 @@ define( 'ALCHEMY_OPTIONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ALCHEMY_OPTIONS_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
 
 include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'autoload.php' );
-include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/class-meta-box.php' );
 
 function alch_run_plugin() {
     load_plugin_textdomain( 'alchemy-options', false, ALCHEMY_OPTIONS_PLUGIN_DIR . 'languages' );
