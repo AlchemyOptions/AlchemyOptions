@@ -27,7 +27,7 @@ include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'autoload.php' );
 function alch_run_plugin() {
     load_plugin_textdomain( 'alchemy-options', false, ALCHEMY_OPTIONS_PLUGIN_DIR . 'languages' );
 
-    $alch_options = new Includes\Options();
+    $alch_options = new Includes\Options_Loader();
     $alch_options->activate();
 }
 
