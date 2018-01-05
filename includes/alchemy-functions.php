@@ -25,6 +25,18 @@ if ( ! function_exists( 'alch_variations_id' ) ) {
     }
 }
 
+if ( ! function_exists( 'alchemy_default_variation_id' ) ) {
+    function alchemy_default_variation_id() {
+        return apply_filters( 'alchemy_default_variation_id', 'alchemy_default_variation_id' );
+    }
+}
+
+if ( ! function_exists( 'alchemy_default_variation_title' ) ) {
+    function alchemy_default_variation_title() {
+        return apply_filters( 'alchemy_default_variation_title', 'Default' );
+    }
+}
+
 if ( ! function_exists('alch_network_options_id') ) {
     function alch_network_options_id() {
         return apply_filters( 'alch_network_options_id', 'alchemy_network_options' );

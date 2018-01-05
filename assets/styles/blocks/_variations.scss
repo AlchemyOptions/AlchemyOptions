@@ -1,0 +1,15 @@
+.variations {
+    padding-top: 2em;
+
+    &__item {
+        display: none;
+
+        &--visible {
+            display: block;
+        }
+    }
+
+    .field__label {
+        margin-bottom: .4em;
+    }
+}

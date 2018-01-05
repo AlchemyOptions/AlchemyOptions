@@ -41,7 +41,6 @@ if( ! class_exists( __NAMESPACE__ . '\Text' ) ) {
                 'type' => $field['type'],
                 'id' => $field['id'],
                 'name' => isset( $field['name'] ) ? $field['name'] : $field['id'],
-                'value' => $field['value']
             ), $passedAttrs );
 
             $field['content'] = $this->get_field_content( $field, $mergedAttrs );
@@ -58,21 +57,36 @@ if( ! class_exists( __NAMESPACE__ . '\Text' ) ) {
             if( alch_is_not_empty_array( $field['variations'] ) ) {
                 $fieldHTML .= '<div class="variations-content jsAlchemyVariationsContent">';
 
-                foreach ( $field['variations'] as $contentVariation ) {
+                foreach ( $field['variations'] as $i => $contentVariation ) {
                     $inputAttrs = $attrs;
+                    $classNames = array(
+                        'variations__item',
+                        'jsAlchemyVariation'
+                    );
+
+                    if( $i === 0 ) {
+                        array_push( $classNames, 'variations__item--visible' );
+                    }
 
                     $inputAttrs['id'] = $inputAttrs['id'] . '_' . $contentVariation['id'];
                     $inputAttrs['name'] = $inputAttrs['name'] . '[' . $contentVariation['id'] . ']';
 
+                    if( "" !== $field['value'] ) {
+                        $inputAttrs['value'] = $field['value']['alchemy-variations'][$contentVariation['id']];
+                    }
+
                     $fieldHTML .= sprintf(
-                        '<div class="variations__item" data-variation-id="%1$s">%2$s</div>',
+                        '<div class="%3$s" data-variation-id="%1$s">%2$s</div>',
                             $contentVariation['id'],
-                            $this->get_input_html( $inputAttrs )
+                            $this->get_input_html( $inputAttrs ),
+                            join( " ", $classNames )
                     );
                 }
 
                 $fieldHTML .= '</div>';
             } else {
+                $attrs['value'] = $field['value'];
+
                 $fieldHTML .= $this->get_input_html( $attrs );
             }
 

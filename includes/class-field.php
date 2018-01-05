@@ -54,32 +54,40 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
 
                 if( alch_is_not_empty_array( $savedVariations ) ) {
                     $field['variations'] = array();
-                    $field['variations']['settings'] = $this->add_default_variation( $savedVariations );
-
-                    $field['variations']['select'] = $this->get_variations_html(
+                    $field['variations'] = $this->add_default_variation( $savedVariations );
+                    $field['variations-select'] = $this->get_variations_html(
                         $field['id'],
                         $field['variations']
                     );
                 } else {
                     $field['variations'] = array();
-                    $field['variations']['select'] = '';
+                    $field['variations-select'] = '';
                 }
             } else {
-                $field['variations'] = array();
-                $field['variations']['settings'] = $this->add_default_variation( $field['variations'] );
-                $field['variations']['select'] = $this->get_variations_html(
+                $field['variations'] = $this->add_default_variation( $field['variations'] );
+                $field['variations-select'] = $this->get_variations_html(
                     $field['id'],
                     $field['variations']
                 );
             }
 
-            if( alch_is_not_empty_array( $field['variations'] ) ) {
-                if( ! isset( $field['value'] ) ) {
-                    $field['value'] = is_array( $savedData ) ? $savedData['value'] : '';
-                }
-            } else {
-                if( ! isset( $field[ 'value' ] ) ) {
-                    $field[ 'value' ] = is_array( $savedData ) ? $savedData[ 'value' ] : '';
+            if( ! isset( $field['value'] ) ) {
+                if( is_array( $savedData ) ) {
+                    if( alch_is_not_empty_array( $savedData['variations'] ) ) {
+                        $field['value'] = array(
+                            'alchemy-variations' => $savedData['variations']
+                        );
+                    } else if ( alch_is_not_empty_array( $field['variations'] ) && ! alch_is_not_empty_array( $savedData['variations'] ) ) {
+                        $field['value'] = array(
+                            'alchemy-variations' => array(
+                                alchemy_default_variation_id() => $savedData['value']
+                            )
+                        );
+                    } else {
+                        $field['value'] = $savedData['value'];
+                    }
+                } else {
+                    $field['value'] = "";
                 }
             }
 
@@ -88,8 +96,8 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
 
         public function add_default_variation( $variations ) {
             array_unshift( $variations, array(
-                'id' => apply_filters( 'alchemy_default_variation_id', 'alchemy_default_variation_id' ),
-                'title' => apply_filters( 'alchemy_default_variation_title', 'Default' )
+                'id' => apply_filters( alchemy_default_variation_id(), 'alchemy_default_variation_id' ),
+                'title' => apply_filters( alchemy_default_variation_title(), 'Default' )
             ) );
 
             return $variations;
@@ -102,7 +110,7 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
                 return $savedVariations;
             }
 
-            return false;
+            return array();
         }
 
         public function get_variations_html( $id, $variations ) {
@@ -119,7 +127,7 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
 
             foreach ( $variations as $variation ) {
                 $variationsHTML .= sprintf(
-                    '<option id="%2$s">%1$s</option>',
+                    '<option value="%2$s">%1$s</option>',
                     $variation['title'],
                     $variation['id']
                 );

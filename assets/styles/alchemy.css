@@ -511,6 +511,15 @@ html {
     max-height: 500px;
     overflow: auto; }
 
+.variations {
+  padding-top: 2em; }
+  .variations__item {
+    display: none; }
+    .variations__item--visible {
+      display: block; }
+  .variations .field__label {
+    margin-bottom: .4em; }
+
 @keyframes fadeOutUp {
   from {
     opacity: 1; }
