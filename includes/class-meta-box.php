@@ -34,8 +34,13 @@ class Meta_Box {
                 }
             }
 
-            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+            add_action( 'load-post.php', array( $this, 'register_assets' ) );
+            add_action( 'load-post-new.php', array( $this, 'register_assets' ) );
         }
+    }
+
+    public function register_assets() {
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
     }
 
     public function enqueue_assets() {
