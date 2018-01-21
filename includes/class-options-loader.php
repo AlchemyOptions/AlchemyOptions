@@ -216,7 +216,7 @@ class Options_Loader {
 
     public function handle_save_options() {
         if ( ! isset( $_POST[ 'nonce' ] ) || ! wp_verify_nonce( $_POST[ 'nonce' ], 'alchemy_ajax_nonce' ) ) {
-            die();
+            wp_die( 'Failed to check the nonce' );
         }
 
         $fields = $_POST[ 'fields' ];
@@ -228,32 +228,40 @@ class Options_Loader {
         $networkSave = isset( $_POST[ 'network' ] );
 
         if( count( $fields ) > 0 ) {
-            try {
-                $this->save_options( $fields, $networkSave );
+            $saved = $this->save_options( $fields, $networkSave );
 
+            if( $saved ) {
                 wp_send_json_success( __( 'Options saved', 'alchemy-options' ) );
-            } catch( Exception $err ) {
-                wp_send_json_error( $err->getMessage() );
+            } else {
+                wp_send_json_error( __( 'Some error happened', 'alchemy-options' ) );
             }
         }
     }
 
     public function save_options( $fields, $networkSave ) {
+        $saved = true;
+
         foreach ( $fields as $id => $payload ) {
             $value = new Database_Value( $payload );
 
-            if( $networkSave ) {
-                update_site_option( $id, array(
-                    'type' => $payload[ 'type' ],
-                    'value' => $value->get_safe_value(),
-                ) );
-            } else {
-                update_option( $id, array(
-                    'type' => $payload[ 'type' ],
-                    'value' => $value->get_safe_value(),
-                ) );
+            try {
+                if( $networkSave ) {
+                    update_site_option( $id, array(
+                        'type' => $payload[ 'type' ],
+                        'value' => $value->get_safe_value(),
+                    ) );
+                } else {
+                    update_option( $id, array(
+                        'type' => $payload[ 'type' ],
+                        'value' => $value->get_safe_value(),
+                    ) );
+                }
+            } catch ( Exception $e ) {
+                $saved = false;
             }
         }
+
+        return $saved;
     }
 
     public function handle_client_requests() {
