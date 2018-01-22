@@ -34,25 +34,59 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
                 case 'datepicker' :
                 case 'upload' :
                 case 'slider' :
-                    $this->value['value'] = alch_kses_stripslashes( sanitize_text_field( $this->value['value'] ) );
+                    $this->value['value'] = $this->sanitize_text_value( $this->value['value'] );
                 break;
                 case 'textarea' :
-                    $this->value['value'] = $this->sanitize_textarea_field( $this->value['value'] );
+                    $this->value['value'] = $this->sanitize_textarea_value( $this->value['value'] );
                 break;
                 case 'field-group' :
-                    $this->value['value'] = $this->sanitize_field_group_field( $this->value['value'] );
+                    $this->value['value'] = $this->sanitize_field_group_value( $this->value['value'] );
                 break;
                 case 'repeater' :
-                    $this->value['value'] = $this->sanitize_repeater_field( $this->value['value'] );
+                    $this->value['value'] = $this->sanitize_repeater_value( $this->value['value'] );
                 break;
                 case 'editor' :
-                    $this->value['value'] = $this->sanitize_editor_field( $this->value['value'] );
+                    $this->value['value'] = $this->sanitize_editor_value( $this->value['value'] );
                 break;
                 case 'email' :
-                    $this->value['value'] = sanitize_email( $this->value['value'] );
+                    $this->value['value'] = $this->sanitize_email_value( $this->value['value'] );
                 break;
                 default : break;
             }
+        }
+
+        public function handle_field_value( $value, $function ) {
+            if( isset( $value['variations'] ) && $value['variations'] === 'true' ) {
+                $valToReturn = array(
+                    'variations' => array()
+                );
+
+                if( isset( $value['data'] ) && alch_is_not_empty_array( $value['data'] ) ) {
+                    foreach( $value['data'] as $variationID => $variationValue ) {
+                        $valToReturn['variations'][$variationID] = call_user_func_array( $function, array( $variationValue ) );
+                    }
+                }
+            } else {
+                $valToReturn = call_user_func_array( $function, array( $value ) );
+            }
+
+            return $valToReturn;
+        }
+
+        public function sanitize_email_value( $value ) {
+            return $this->handle_field_value( $value, 'sanitize_email' );
+        }
+
+        public function sanitize_text_value( $value ) {
+            return $this->handle_field_value( $value, array( $this, 'sanitize_text_field' ) );
+        }
+
+        public function sanitize_text_field( $value ) {
+            return alch_kses_stripslashes( sanitize_text_field( $value ) );
+        }
+
+        public function sanitize_textarea_value( $value ) {
+            return $this->handle_field_value( $value, array( $this, 'sanitize_textarea_field' ) );
         }
 
         public function sanitize_textarea_field( $value ) {
@@ -63,6 +97,10 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
             }
 
             return alch_kses_stripslashes( $value );
+        }
+
+        public function sanitize_field_group_value( $value ) {
+            return $this->handle_field_value( $value, array( $this, 'sanitize_field_group_field' ) );
         }
 
         public function sanitize_field_group_field( $value ) {
@@ -82,6 +120,10 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
             return $valToReturn;
         }
 
+        public function sanitize_editor_value( $value ) {
+            return $this->handle_field_value( $value, array( $this, 'sanitize_editor_field' ) );
+        }
+
         public function sanitize_editor_field( $value ) {
             global $allowedposttags;
 
@@ -89,6 +131,10 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
             $allowed_protocols = apply_filters('alch_allowed_editor_protocols', wp_allowed_protocols());
 
             return wp_kses( alch_kses_stripslashes( $value ), $allowed_html, $allowed_protocols );
+        }
+
+        public function sanitize_repeater_value( $value ) {
+            return $this->handle_field_value( $value, array( $this, 'sanitize_repeater_field' ) );
         }
 
         public function sanitize_repeater_field( $value ) {

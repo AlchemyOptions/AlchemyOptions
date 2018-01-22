@@ -59,6 +59,9 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
                         $field['id'],
                         $field['variations']
                     );
+                    $field['variations-data'] = ',"variations":' . json_encode(array_map(function( $variation ){
+                        return $variation['id'];
+                    }, $field['variations']));
                 } else {
                     $field['variations'] = array();
                     $field['variations-select'] = '';
@@ -69,13 +72,16 @@ if( ! class_exists( __NAMESPACE__ . '\Field' ) ) {
                     $field['id'],
                     $field['variations']
                 );
+                $field['variations-data'] = ',"variations":' . json_encode(array_map(function( $variation ){
+                    return $variation['id'];
+                }, $field['variations']));
             }
 
             if( ! isset( $field['value'] ) ) {
                 if( is_array( $savedData ) ) {
-                    if( alch_is_not_empty_array( $savedData['variations'] ) ) {
+                    if( isset( $savedData['value']['variations'] ) && alch_is_not_empty_array( $savedData['value']['variations'] ) ) {
                         $field['value'] = array(
-                            'alchemy-variations' => $savedData['variations']
+                            'alchemy-variations' => $savedData['value']['variations']
                         );
                     } else if ( alch_is_not_empty_array( $field['variations'] ) && ! alch_is_not_empty_array( $savedData['variations'] ) ) {
                         $field['value'] = array(

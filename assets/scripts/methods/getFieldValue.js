@@ -20,123 +20,361 @@ function getFieldValue( alchemyField ) {
         case 'button-group' :
         case 'upload' :
         case 'slider' :
-            value = alchemyField.find('input,select,textarea').val();
-            break;
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
+
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
+
+                $.each(data.variations, (i, variationID) => {
+                    value.data[variationID] = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    }).find('input,select,textarea').val()
+                });
+            } else {
+                value = alchemyField.find('input,select,textarea').val();
+            }
+        break;
         case 'checkbox':
         case 'radio':
         case 'image-radio':
-            value = [];
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
 
-            alchemyField.find(':checked').each((i, el) => {
-                value.push($(el).data('value'));
-            });
-            break;
-        case 'editor' :
-            const $area = $('.jsAlchemyEditorTextarea ', alchemyField);
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
 
-            if( $area.hasClass('tinymce--init') && typeof( tinymce ) !== 'undefined' ) {
-                value = tinymce.get($area.attr('id')).getContent()
+                $.each(data.variations, (i, variationID) => {
+                    const checkedValues = [];
+
+                    $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    }).find(':checked').each((i, el) => {
+                        checkedValues.push($(el).data('value'));
+                    });
+
+                    value.data[variationID] = checkedValues;
+                });
             } else {
-                value = $area.val();
+                value = [];
+
+                alchemyField.find(':checked').each((i, el) => {
+                    value.push($(el).data('value'));
+                });
             }
-            break;
+        break;
+        case 'editor' :
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
+
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
+
+                $.each(data.variations, (i, variationID) => {
+                    const $block = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    });
+
+                    const $area = $('.jsAlchemyEditorTextarea', $block);
+
+                    if( $area.hasClass('tinymce--init') && typeof( tinymce ) !== 'undefined' ) {
+                        value.data[variationID] = tinymce.get($area.attr('id')).getContent()
+                    } else {
+                        value.data[variationID] = $area.val();
+                    }
+                });
+            } else {
+                const $area = $('.jsAlchemyEditorTextarea', alchemyField);
+
+                if( $area.hasClass('tinymce--init') && typeof( tinymce ) !== 'undefined' ) {
+                    value = tinymce.get($area.attr('id')).getContent()
+                } else {
+                    value = $area.val();
+                }
+            }
+        break;
         case 'sections' :
-            value = [];
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
 
-            const $childFields = alchemyField.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field');
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
 
-            console.log($childFields);
+                $.each(data.variations, (i, variationID) => {
+                    const sectionValues = [];
+                    const $block = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    });
 
-            if( $childFields[0] ) {
-                $childFields.each((i, el) => {
-                    const $el = $(el);
-                    const data = $el.data('alchemy');
+                    const $grandChildFields = $block.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field');
 
-                    if( data ) {
-                        value.push({
-                            'type': data.type,
-                            'value': getFieldValue($el)
-                        })
+                    if( $grandChildFields[0] ) {
+                        $grandChildFields.each((i, el) => {
+                            const $el = $(el);
+                            const data = $el.data('alchemy');
+
+                            if( data ) {
+                                sectionValues.push({
+                                    'type': data.type,
+                                    'value': getFieldValue($el)
+                                })
+                            }
+                        });
                     }
+
+                    value.data[variationID] = sectionValues;
                 });
+            } else {
+                value = [];
+
+                const $childFields = alchemyField.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field');
+
+                if( $childFields[0] ) {
+                    $childFields.each((i, el) => {
+                        const $el = $(el);
+                        const data = $el.data('alchemy');
+
+                        if( data ) {
+                            value.push({
+                                'type': data.type,
+                                'value': getFieldValue($el)
+                            })
+                        }
+                    });
+                }
             }
-            break;
+        break;
         case 'repeater' :
-            value = [];
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
 
-            const fields = alchemyField.children('fieldset').children('.field__content').children('.jsAlchemyRepeaterSortable').children('.repeatee');
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
 
-            if( fields[0] ) {
-                fields.each((i, el) => {
-                    const $repeatee = $(el);
-                    const repeateeData = $repeatee.data('alchemy');
-                    const $childFields = $repeatee.children('.repeatee__content').children('.alchemy__field');
-                    const valueToStore = {
-                        isVisible: $repeatee.children('.jsAlchemyRepeateeVisible').val(),
-                        fields: {}
-                    };
+                $.each(data.variations, (i, variationID) => {
+                    const sectionValues = [];
+                    const $block = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    });
 
-                    if(data.typed) {
-                        valueToStore.typeID = repeateeData.repeateeTypeID
-                    }
+                    const fields = $block.children('fieldset').children('.field__content').children('.jsAlchemyRepeaterSortable').children('.repeatee');
 
-                    if( repeateeData.fieldIDs ) {
-                        $.each(repeateeData.fieldIDs, (ind, field) => {
-                            valueToStore.fields[field.id] = {
-                                'type': field.type,
-                                'value': getFieldValue( $childFields.eq(ind) )
+                    if( fields[0] ) {
+                        fields.each((i, el) => {
+                            const $repeatee = $(el);
+                            const repeateeData = $repeatee.data('alchemy');
+                            const $childFields = $repeatee.children('.repeatee__content').children('.alchemy__field');
+                            const valueToStore = {
+                                isVisible: $repeatee.children('.jsAlchemyRepeateeVisible').val(),
+                                fields: {}
                             };
+
+                            if(data.typed) {
+                                valueToStore.typeID = repeateeData.repeateeTypeID
+                            }
+
+                            if( repeateeData.fieldIDs ) {
+                                $.each(repeateeData.fieldIDs, (ind, field) => {
+                                    valueToStore.fields[field.id] = {
+                                        'type': field.type,
+                                        'value': getFieldValue( $childFields.eq(ind) )
+                                    };
+                                });
+                            }
+
+                            sectionValues.push(valueToStore);
                         });
                     }
 
-                    value.push(valueToStore);
+                    value.data[variationID] = sectionValues;
                 });
+            } else {
+                value = [];
+
+                const fields = alchemyField.children('fieldset').children('.field__content').children('.jsAlchemyRepeaterSortable').children('.repeatee');
+
+                if( fields[0] ) {
+                    fields.each((i, el) => {
+                        const $repeatee = $(el);
+                        const repeateeData = $repeatee.data('alchemy');
+                        const $childFields = $repeatee.children('.repeatee__content').children('.alchemy__field');
+                        const valueToStore = {
+                            isVisible: $repeatee.children('.jsAlchemyRepeateeVisible').val(),
+                            fields: {}
+                        };
+
+                        if(data.typed) {
+                            valueToStore.typeID = repeateeData.repeateeTypeID
+                        }
+
+                        if( repeateeData.fieldIDs ) {
+                            $.each(repeateeData.fieldIDs, (ind, field) => {
+                                valueToStore.fields[field.id] = {
+                                    'type': field.type,
+                                    'value': getFieldValue( $childFields.eq(ind) )
+                                };
+                            });
+                        }
+
+                        value.push(valueToStore);
+                    });
+                }
             }
-            break;
+        break;
         case 'post-type-select' :
-            const selectVal = alchemyField.find('select').val();
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
 
-            value = {
-                'type': data['post-type'],
-                'ids': typeof selectVal === 'string' ? [selectVal]: selectVal
-            };
-            break;
-        case 'taxonomy-select' :
-            const taxSelectVal = alchemyField.find('select').val();
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
 
-            value = {
-                'taxonomy': data.taxonomy,
-                'ids': typeof taxSelectVal === 'string' ? [taxSelectVal]: taxSelectVal
-            };
-            break;
-        case 'datalist' :
-            const datalistSelectVal = alchemyField.find('select').val();
+                $.each(data.variations, (i, variationID) => {
+                    const $block = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    });
 
-            value = typeof datalistSelectVal === 'string' ? [datalistSelectVal]: datalistSelectVal;
-            break;
-        case 'field-group' :
-            value = {};
+                    const selectVal = $block.find('select').val();
+                    const data = $block.data('alchemy');
 
-            const $groupFields = alchemyField.children('fieldset').children('.jsAlchemyFiledGroupWrapper');
-
-            if( $groupFields[0] ) {
-                $groupFields.each((i, el) => {
-                    const $group = $(el);
-                    const groupData = $group.data('fields');
-                    const $childFields = $group.children('.alchemy__field');
-
-                    if( groupData ) {
-                        $.each(groupData, (ind, field) => {
-                            value[field.id] = {
-                                'type': field.type,
-                                'value': getFieldValue( $childFields.eq(ind) )
-                            };
-                        });
-
+                    value.data[variationID] = {
+                        'type': data['post-type'],
+                        'ids': typeof selectVal === 'string' ? [selectVal]: selectVal
                     }
                 });
+            } else {
+                const selectVal = alchemyField.find('select').val();
+
+                value = {
+                    'type': data['post-type'],
+                    'ids': typeof selectVal === 'string' ? [selectVal]: selectVal
+                };
             }
-            break;
+        break;
+        case 'taxonomy-select' :
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
+
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
+
+                $.each(data.variations, (i, variationID) => {
+                    const $block = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    });
+
+                    const taxSelectVal = $block.find('select').val();
+                    const data = $block.data('alchemy');
+
+                    value.data[variationID] = {
+                        'taxonomy': data.taxonomy,
+                        'ids': typeof taxSelectVal === 'string' ? [taxSelectVal]: taxSelectVal
+                    }
+                });
+            } else {
+                const taxSelectVal = alchemyField.find('select').val();
+
+                value = {
+                    'taxonomy': data.taxonomy,
+                    'ids': typeof taxSelectVal === 'string' ? [taxSelectVal]: taxSelectVal
+                };
+            }
+        break;
+        case 'datalist' :
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
+
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
+
+                $.each(data.variations, (i, variationID) => {
+                    const datalistSelectVal = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    }).find('select').val();
+
+                    value.data[variationID] = typeof datalistSelectVal === 'string' ? [datalistSelectVal]: datalistSelectVal;
+                });
+            } else {
+                const datalistSelectVal = alchemyField.find('select').val();
+
+                value = typeof datalistSelectVal === 'string' ? [datalistSelectVal]: datalistSelectVal;
+            }
+        break;
+        case 'field-group' :
+            if( data.variations ) {
+                value = {
+                    'variations': true,
+                    'data': {}
+                };
+
+                const $childFields = alchemyField.children('.field__content').children('.jsAlchemyVariationsContent').children('.jsAlchemyVariation');
+
+                $.each(data.variations, (i, variationID) => {
+                    const $block = $childFields.filter((i, el) => {
+                        return $(el).data('variation-id') === variationID;
+                    });
+                    const $groupFields = $block.children('fieldset').children('.jsAlchemyFiledGroupWrapper');
+                    const groupValue = {};
+
+                    if( $groupFields[0] ) {
+                        $groupFields.each((i, el) => {
+                            const $group = $(el);
+                            const groupData = $group.data('fields');
+                            const $childFields = $group.children('.alchemy__field');
+
+                            if( groupData ) {
+                                $.each(groupData, (ind, field) => {
+                                    groupValue[field.id] = {
+                                        'type': field.type,
+                                        'value': getFieldValue( $childFields.eq(ind) )
+                                    };
+                                });
+
+                            }
+                        });
+                    }
+
+                    value.data[variationID] = groupValue
+                });
+            } else {
+                value = {};
+
+                const $groupFields = alchemyField.children('fieldset').children('.jsAlchemyFiledGroupWrapper');
+
+                if( $groupFields[0] ) {
+                    $groupFields.each((i, el) => {
+                        const $group = $(el);
+                        const groupData = $group.data('fields');
+                        const $childFields = $group.children('.alchemy__field');
+
+                        if( groupData ) {
+                            $.each(groupData, (ind, field) => {
+                                value[field.id] = {
+                                    'type': field.type,
+                                    'value': getFieldValue( $childFields.eq(ind) )
+                                };
+                            });
+
+                        }
+                    });
+                }
+            }
+        break;
         default : break;
     }
 
