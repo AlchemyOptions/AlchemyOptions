@@ -15,6 +15,7 @@ function alchemy_options_autoload( $class_name ) {
 
     $file_parts = explode( '\\', $class_name );
     $namespace = '';
+    $file_name = '';
 
     for ( $i = count( $file_parts ) - 1; $i > 0; $i-- ) {
         $current = str_ireplace( '_', '-', strtolower( $file_parts[ $i ] ) );

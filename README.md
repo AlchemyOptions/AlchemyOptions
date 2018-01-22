@@ -5,9 +5,10 @@ Alchemy Options is an options plugin for Wordpress, simple but powerful. Inspire
 ## Features
 
 * Multiple [WYSIWYG editors](https://docs.alchemy-options.com/fields/editor.html) (including dynamic creation in a [Repeater](https://docs.alchemy-options.com/fields/repeater.html) field)
-* Multisite compatible with network options stored on the Network admin page
-* [Field groups](https://docs.alchemy-options.com/fields/field-group.html)
-* [Repeater](https://docs.alchemy-options.com/fields/repeater.html) fields can be [nested](https://docs.alchemy-options.com/fields/repeater.html#nested-repeaters)
+* Multisite compatible with [network options](https://docs.alchemy-options.com/samples.html#network-options) stored on the Network admin page
+* Can be used in [Meta Boxes](https://docs.alchemy-options.com/Meta-boxes.html)
+* [Field groups](https://docs.alchemy-options.com/fields/field-group.html) and [Sections](https://docs.alchemy-options.com/fields/sections.html)
+* [Repeater](https://docs.alchemy-options.com/fields/repeater.html) fields can be [nested](https://docs.alchemy-options.com/fields/repeater.html#nested-repeaters) and allow adding repeatees of [different types](https://docs.alchemy-options.com/fields/repeater.html#typed-repeaters).
 * [Dynamic filter](https://docs.alchemy-options.com/filters/alch_value_option_id.html) for each option before returning its value
 * [Client-side helpers](https://docs.alchemy-options.com/javascript/)
 * Translation ready
