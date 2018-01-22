@@ -11,7 +11,7 @@
 class Test_Alchemy_Text_Field extends WP_Ajax_UnitTestCase {
     private $id = 'my-text-option';
 
-    public function setUp() {
+    function setUp() {
         parent::setUp();
 
         $_POST['fields'] = array(
@@ -22,7 +22,11 @@ class Test_Alchemy_Text_Field extends WP_Ajax_UnitTestCase {
         );
     }
 
-    public function add_nonce() {
+    function test_class_exists() {
+        $this->assertTrue( class_exists( 'Alchemy_Options\Includes\Fields\Text' ) );
+    }
+
+    function add_nonce() {
         $_POST['nonce'] = wp_create_nonce( 'alchemy_ajax_nonce' );
     }
 
@@ -34,6 +38,74 @@ class Test_Alchemy_Text_Field extends WP_Ajax_UnitTestCase {
 
             unset( $e );
         }
+    }
+
+    function test_slashes_are_stripped_from_value() {
+        $this->add_nonce();
+
+        $_POST['fields'] = array(
+            $this->id => array(
+                'type' => 'text',
+                'value' => 'lorem \" \' ipsum'
+            ),
+        );
+
+        try {
+            $this->_handleAjax( 'alchemy_options_save_options' );
+        } catch ( WPAjaxDieContinueException $e ) {
+            unset( $e );
+        }
+
+        $this->assertEquals( alch_get_option( $this->id ), sprintf('lorem %1$s %2$s ipsum', '"', "'") );
+    }
+
+    function test_value_is_sanitised() {
+        $this->add_nonce();
+
+        $_POST['fields'] = array(
+            $this->id => array(
+                'type' => 'text',
+                'value' => 'lorem <p>ipsum</p> <script>alert("hi");</script>'
+            ),
+        );
+
+        try {
+            $this->_handleAjax( 'alchemy_options_save_options' );
+        } catch ( WPAjaxDieContinueException $e ) {
+            unset( $e );
+        }
+
+        $this->assertEquals( alch_get_option( $this->id ), 'lorem ipsum' );
+
+        $_POST['fields'] = array(
+            $this->id => array(
+                'type' => 'email',
+                'value' => 'test'
+            ),
+        );
+
+        try {
+            $this->_handleAjax( 'alchemy_options_save_options' );
+        } catch ( WPAjaxDieContinueException $e ) {
+            unset( $e );
+        }
+
+        $this->assertEquals( alch_get_option( $this->id ), '' );
+
+        $_POST['fields'] = array(
+            $this->id => array(
+                'type' => 'email',
+                'value' => 'a@bc.d'
+            ),
+        );
+
+        try {
+            $this->_handleAjax( 'alchemy_options_save_options' );
+        } catch ( WPAjaxDieContinueException $e ) {
+            unset( $e );
+        }
+
+        $this->assertEquals( alch_get_option( $this->id ), 'a@bc.d' );
     }
 
     function test_value_is_saved() {
