@@ -24,7 +24,7 @@ class Options_Loader {
     private $parentPage = 'themes.php';
 
     public function activate() {
-        include_once( ALCHEMY_OPTIONS_PLUGIN_DIR . 'includes/alchemy-functions.php' );
+        include_once( ALCHEMY_OPTIONS_DIR . 'includes/alchemy-functions.php' );
 
         /* all of the hooks go here */
         $this->hook_up();
@@ -35,16 +35,16 @@ class Options_Loader {
             return;
         }
 
-        wp_register_script( 'select2-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/vendor/select2/js/select2.min.js', array(), '4.0.3', true );
-        wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy.min.js', $this->get_scripts_deps(), ALCHEMY_OPTIONS_VERSION, true );
+        wp_register_script( 'select2-scripts', ALCHEMY_OPTIONS_DIR_URL . 'assets/vendor/select2/js/select2.min.js', array(), '4.0.3', true );
+        wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_DIR_URL . 'assets/scripts/alchemy.min.js', $this->get_scripts_deps(), ALCHEMY_OPTIONS_VERSION, true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
             'adminURL' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'alchemy_ajax_nonce' )
         ) );
 
         wp_register_style( 'alchemy-jquery', '//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css', array(), '1.12.1' );
-        wp_register_style( 'select2-style', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/vendor/select2/css/select2.min.css', array(), '4.0.3' );
-        wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/styles/alchemy.css', array( 'alchemy-jquery', 'select2-style' ), ALCHEMY_OPTIONS_VERSION );
+        wp_register_style( 'select2-style', ALCHEMY_OPTIONS_DIR_URL . 'assets/vendor/select2/css/select2.min.css', array(), '4.0.3' );
+        wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_DIR_URL . 'assets/styles/alchemy.css', array( 'alchemy-jquery', 'select2-style' ), ALCHEMY_OPTIONS_VERSION );
 
         wp_enqueue_media();
         wp_enqueue_script( 'alchemy-scripts' );
@@ -53,7 +53,7 @@ class Options_Loader {
     }
 
     public function register_client_assets() {
-        wp_register_script( 'alchemy-options-client-scripts', ALCHEMY_OPTIONS_PLUGIN_DIR_URL . 'assets/scripts/alchemy-client.min.js', array(), ALCHEMY_OPTIONS_VERSION, true );
+        wp_register_script( 'alchemy-options-client-scripts', ALCHEMY_OPTIONS_DIR_URL . 'assets/scripts/alchemy-client.min.js', array(), ALCHEMY_OPTIONS_VERSION, true );
 
         wp_localize_script( 'alchemy-options-client-scripts', 'alchemyOptionsClientData', array(
             'adminURL' => admin_url( 'admin-ajax.php' ),
@@ -162,6 +162,7 @@ class Options_Loader {
             add_action( 'network_admin_menu', array( $this, 'create_network_options_page' ) );
         }
 
+        add_filter( 'plugin_action_links_' . ALCHEMY_OPTIONS_BASENAME, array( $this, 'add_plugin_action_links' ) );
         add_action( 'admin_menu', array( $this, 'create_options_submenu_page' ) );
         add_action( 'admin_bar_menu', array( $this, 'update_adminbar' ), 999 );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
@@ -171,6 +172,12 @@ class Options_Loader {
         add_action( 'wp_ajax_alchemy_options_post_type_selection', array( $this, 'handle_post_type_selection' ) );
         add_action( 'wp_ajax_alchemy_options_client_request', array( $this, 'handle_client_requests' ) );
         add_action( 'wp_ajax_nopriv_alchemy_options_client_request', array( $this, 'handle_client_requests' ) );
+    }
+
+    public function add_plugin_action_links( $links ) {
+        $links[] = sprintf( '<a target="_blank" href="https://docs.alchemy-options.com">%s</a>', __( 'Documentation', 'alchemy-options' ) );
+
+        return $links;
     }
 
     public function update_adminbar( $wp_adminbar ) {

@@ -33,7 +33,7 @@ function alchemy_options_autoload( $class_name ) {
         }
     }
 
-    $filepath = trailingslashit( untrailingslashit( ALCHEMY_OPTIONS_PLUGIN_DIR ) . $namespace ) . $file_name;
+    $filepath = trailingslashit( untrailingslashit( ALCHEMY_OPTIONS_DIR ) . $namespace ) . $file_name;
 
     if ( file_exists( $filepath ) ) {
         include_once( $filepath );
