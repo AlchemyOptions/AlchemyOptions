@@ -14,8 +14,8 @@ class Test_Alchemy_Existence extends WP_UnitTestCase {
      */
     function test_constants_defined() {
         $this->assertTrue( defined( 'ALCHEMY_OPTIONS_VERSION' ) );
-        $this->assertTrue( defined( 'ALCHEMY_OPTIONS_PLUGIN_DIR' ) );
-        $this->assertTrue( defined( 'ALCHEMY_OPTIONS_PLUGIN_DIR_URL' ) );
+        $this->assertTrue( defined( 'ALCHEMY_OPTIONS_DIR' ) );
+        $this->assertTrue( defined( 'ALCHEMY_OPTIONS_DIR_URL' ) );
     }
 
     /**
