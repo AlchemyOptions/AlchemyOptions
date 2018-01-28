@@ -162,7 +162,10 @@ class Options_Loader {
             add_action( 'network_admin_menu', array( $this, 'create_network_options_page' ) );
         }
 
-        add_filter( 'plugin_action_links_' . ALCHEMY_OPTIONS_BASENAME, array( $this, 'add_plugin_action_links' ) );
+        if( defined( 'ALCHEMY_OPTIONS_PLUGIN_BASENAME' ) ) {
+            add_filter( 'plugin_action_links_' . ALCHEMY_OPTIONS_PLUGIN_BASENAME, array( $this, 'add_plugin_action_links' ) );
+        }
+
         add_action( 'admin_menu', array( $this, 'create_options_submenu_page' ) );
         add_action( 'admin_bar_menu', array( $this, 'update_adminbar' ), 999 );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
