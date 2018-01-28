@@ -21,7 +21,7 @@ const plugins = require('gulp-load-plugins')({
 const productionBuild = process.env.NODE_ENV === 'production';
 const pathToBuild = 'dist';
 const destinationFolder = productionBuild
-    ? path.resolve(__dirname, `./${pathToBuild}/assets/scripts`)
+    ? path.resolve(__dirname, `./${pathToBuild}/alchemy-options/assets/scripts`)
     : path.resolve(__dirname, './assets/scripts');
 const webpackConfig = {
     entry: {
@@ -68,12 +68,12 @@ const replaceInFiles = [
     `./${pathToBuild}/includes/class-meta-box.php`
 ];
 const sourceFilesToDelete = [
-    `./${pathToBuild}/assets/styles/rev-manifest.json`,
-    `./${pathToBuild}/assets/scripts/rev-manifest.json`,
-    `./${pathToBuild}/assets/scripts/alchemy.min.js`,
-    `./${pathToBuild}/assets/scripts/alchemy-client.min.js`,
-    `./${pathToBuild}/assets/scripts/alchemy.min.js.map`,
-    `./${pathToBuild}/assets/scripts/alchemy-client.min.js.map`
+    `./${pathToBuild}/alchemy-options/assets/styles/rev-manifest.json`,
+    `./${pathToBuild}/alchemy-options/assets/scripts/rev-manifest.json`,
+    `./${pathToBuild}/alchemy-options/assets/scripts/alchemy.min.js`,
+    `./${pathToBuild}/alchemy-options/assets/scripts/alchemy-client.min.js`,
+    `./${pathToBuild}/alchemy-options/assets/scripts/alchemy.min.js.map`,
+    `./${pathToBuild}/alchemy-options/assets/scripts/alchemy-client.min.js.map`
 ];
 const alchemyVersion = argv.ver;
 
@@ -118,7 +118,7 @@ gulp.task('copy', cb => {
             `README.md`,
             `LICENSE`
         ], { base: `.` }),
-        gulp.dest(`./${pathToBuild}/`)
+        gulp.dest(`./${pathToBuild}/alchemy-options/`)
     ], cb);
 });
 
@@ -140,9 +140,9 @@ gulp.task('styles:main', cb => {
             outputStyle: 'compressed'
         }),
         plugins.rev(),
-        gulp.dest(`./${pathToBuild}/assets/styles/`),
+        gulp.dest(`./${pathToBuild}/alchemy-options/assets/styles/`),
         plugins.rev.manifest(),
-        gulp.dest(`./${pathToBuild}/assets/styles/`)
+        gulp.dest(`./${pathToBuild}/alchemy-options/assets/styles/`)
     ], cb);
 });
 
@@ -163,7 +163,7 @@ gulp.task('styles', ['styles:main'], cb => {
             outputStyle: 'compressed'
         }),
         plugins.rename('select2.min.css'),
-        gulp.dest(`./${pathToBuild}/assets/vendor/select2/css`)
+        gulp.dest(`./${pathToBuild}/alchemy-options/assets/vendor/select2/css`)
     ], cb);
 });
 
@@ -173,9 +173,9 @@ gulp.task('styles:watch', () => {
 
 gulp.task('version', cb => {
     pump([
-        gulp.src(`${pathToBuild}/alchemy-options.php`),
+        gulp.src(`${pathToBuild}/alchemy-options/alchemy-options.php`),
         plugins.replace('0.0.1', alchemyVersion),
-        gulp.dest(`./${pathToBuild}/`)
+        gulp.dest(`./${pathToBuild}/alchemy-options/`)
     ], cb)
 });
 
@@ -196,7 +196,7 @@ gulp.task('archive', cb => {
 });
 
 gulp.task('revreplace:styles', cb => {
-    const manifest = gulp.src(`./${pathToBuild}/assets/styles/rev-manifest.json`);
+    const manifest = gulp.src(`./${pathToBuild}/alchemy-options/assets/styles/rev-manifest.json`);
 
     pump([
         gulp.src(replaceInFiles),
@@ -204,12 +204,12 @@ gulp.task('revreplace:styles', cb => {
             replaceInExtensions: ['.php'],
             manifest: manifest
         }),
-        gulp.dest(`./${pathToBuild}/includes`)
+        gulp.dest(`./${pathToBuild}/alchemy-options/includes`)
     ], cb);
 });
 
 gulp.task('revreplace:scripts', cb => {
-    const manifest = gulp.src(`./${pathToBuild}/assets/scripts/rev-manifest.json`);
+    const manifest = gulp.src(`./${pathToBuild}/alchemy-options/assets/scripts/rev-manifest.json`);
 
     pump([
         gulp.src(replaceInFiles),
@@ -217,20 +217,20 @@ gulp.task('revreplace:scripts', cb => {
             replaceInExtensions: ['.php', '.js'],
             manifest: manifest
         }),
-        gulp.dest(`./${pathToBuild}/includes`)
+        gulp.dest(`./${pathToBuild}/alchemy-options/includes`)
     ], cb);
 });
 
 gulp.task('revreplace:maps', cb => {
-    const manifest = gulp.src(`./${pathToBuild}/assets/scripts/rev-manifest.json`);
+    const manifest = gulp.src(`./${pathToBuild}/alchemy-options/assets/scripts/rev-manifest.json`);
 
     pump([
-        gulp.src(`${pathToBuild}/assets/scripts/**/*.min.js`),
+        gulp.src(`${pathToBuild}/alchemy-options/assets/scripts/**/*.min.js`),
         plugins.revReplace({
             replaceInExtensions: ['.js'],
             manifest: manifest
         }),
-        gulp.dest(`./${pathToBuild}/assets/scripts`)
+        gulp.dest(`./${pathToBuild}/alchemy-options/assets/scripts`)
     ], cb);
 });
 
