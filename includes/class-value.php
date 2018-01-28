@@ -45,6 +45,9 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
                 case 'repeater' :
                     $this->value['value'] = $this->modify_repeater_value( $this->value['value'] );
                 break;
+                case 'editor' :
+                    $this->value['value'] = wp_specialchars_decode( $this->value['value'] );
+                break;
                 default : break;
             }
         }

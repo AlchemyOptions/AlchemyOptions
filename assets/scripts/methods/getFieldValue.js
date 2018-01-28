@@ -35,17 +35,15 @@ function getFieldValue( alchemyField ) {
             const $area = $('.jsAlchemyEditorTextarea ', alchemyField);
 
             if( $area.hasClass('tinymce--init') && typeof( tinymce ) !== 'undefined' ) {
-                value = tinymce.get($area.attr('id')).getContent()
-            } else {
-                value = $area.val();
+                $area.html(tinymce.get($area.attr('id')).getContent());
             }
+
+            value = $area.html();
             break;
         case 'sections' :
             value = [];
 
             const $childFields = alchemyField.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.alchemy__field');
-
-            console.log($childFields);
 
             if( $childFields[0] ) {
                 $childFields.each((i, el) => {

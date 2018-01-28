@@ -118,20 +118,23 @@ function getThingsGoing(scope = document) {
                 const $repeatee = $toolbar.closest( '.repeatee' );
 
                 if( $repeatee.hasClass('repeatee--expanded') ) {
-                    const $editor = $('.jsAlchemyEditorTextarea', $repeatee);
+                    const $editor = $repeatee.children('.repeatee__content').children('.field--editor').find('.jsAlchemyEditorTextarea');
                     const tmcEditor = tinymce.get($editor.attr('id'));
 
                     $editor.removeClass('tinymce--init');
                     $repeatee.removeClass('repeatee--expanded');
 
-                    $('.wp-editor-tools', $repeatee).remove();
+                    $repeatee.children('.repeatee__content').children('.field--editor').find('.wp-editor-tools').remove();
 
                     if( tmcEditor ) {
-                        tmcEditor.remove();
+                        $editor.html(tmcEditor.getContent());
+
+                        tmcEditor.destroy();
                     }
                 } else {
-                    editor($repeatee);
-                    $repeatee.addClass('repeatee--expanded')
+                    editor($repeatee.children('.repeatee__content').children('.field--editor'));
+
+                    $repeatee.addClass('repeatee--expanded');
                 }
             });
 

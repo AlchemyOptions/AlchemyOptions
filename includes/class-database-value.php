@@ -85,6 +85,8 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
         public function sanitize_editor_field( $value ) {
             global $allowedposttags;
 
+            $value = wp_specialchars_decode( $value );
+
             $allowed_html = apply_filters( 'alch_allowed_editor_html_tags', $allowedposttags );
             $allowed_protocols = apply_filters('alch_allowed_editor_protocols', wp_allowed_protocols());
 

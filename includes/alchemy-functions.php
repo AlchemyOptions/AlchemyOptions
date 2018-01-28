@@ -29,6 +29,28 @@ if ( ! function_exists( 'alch_get_option' ) ) {
     function alch_get_option( $optionID, $default = "" ) {
         $savedValue = get_option( $optionID );
 
+        if( ! $savedValue ) {
+            return $default;
+        }
+
+        return apply_filters( "alch_value_{$optionID}", alch_parse_saved_value( $savedValue, $default ) );
+    }
+}
+
+if ( ! function_exists( 'alch_get_post_meta' ) ) {
+    function alch_get_post_meta( $postID, $metaID, $default = "" ) {
+        $savedValue = get_post_meta( $postID, $metaID, true );
+
+        if( ! $savedValue ) {
+            return $default;
+        }
+
+        return alch_parse_saved_value( $savedValue, $default );
+    }
+}
+
+if( ! function_exists( 'alch_parse_saved_value' ) ) {
+    function alch_parse_saved_value( $savedValue, $default ) {
         if( $savedValue['value'] ) {
             $valueInst = new Includes\Value( $savedValue );
 
@@ -45,7 +67,7 @@ if ( ! function_exists( 'alch_get_option' ) ) {
                 default : break;
             }
 
-            return apply_filters( "alch_value_{$optionID}", $valueInst->get_value() );
+            return $valueInst->get_value();
         }
 
         return $default;
