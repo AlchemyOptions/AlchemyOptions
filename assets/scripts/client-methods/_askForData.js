@@ -1,6 +1,6 @@
 import q from 'kew';
 
-export default (id, network) => {
+export default (passedData) => {
     const alchemyClientData = window.alchemyOptionsClientData;
 
     if (!alchemyClientData) {
@@ -12,15 +12,18 @@ export default (id, network) => {
     const queryString = [];
     const data = {
         action: 'alchemy_options_client_request',
-        type: 'getValueById',
-        nonce: alchemyClientData.nonce,
-        id,
-        network
+        nonce: alchemyClientData.nonce
     };
 
     for (let key in data) {
         if (data.hasOwnProperty(key)) {
             queryString.push(`${key}=${data[key]}`);
+        }
+    }
+
+    for (let key in passedData) {
+        if (passedData.hasOwnProperty(key)) {
+            queryString.push(`${key}=${passedData[key]}`);
         }
     }
 

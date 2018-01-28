@@ -279,11 +279,24 @@ class Options_Loader {
 	        wp_send_json_error( __( 'Nonce check failed', 'alchemy-options' ) );
         }
 
-        $isNetworkCall = isset( $_GET['network'] ) && $_GET['network'] === 'true';
+        if ( ! isset( $_GET['type'] ) ) {
+            wp_send_json_error();
+        }
 
-        $savedVal = $isNetworkCall
-	        ? alch_get_network_option( $_GET['id'] )
-	        : alch_get_option( $_GET['id'] );
+        $savedVal = "";
+
+        switch( $_GET['type'] ) {
+            case 'getPostMeta' :
+                $savedVal = alch_get_post_meta( $_GET['postID'], $_GET['metaID'] );
+            break;
+            case 'getNetworkOption' :
+                $savedVal = alch_get_network_option( $_GET['id'] );
+            break;
+            case 'getOption' :
+                $savedVal = alch_get_option( $_GET['id'] );
+            break;
+            default : break;
+        }
 
         wp_send_json_success( $savedVal );
     }
