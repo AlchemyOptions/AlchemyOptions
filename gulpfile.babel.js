@@ -133,6 +133,13 @@ gulp.task('scripts', cb => {
     ], cb);
 });
 
+gulp.task('scripts:dev', cb => {
+    pump([
+        webpackStream(webpackConfig),
+        gulp.dest(destinationFolder)
+    ], cb);
+});
+
 gulp.task('styles:main', cb => {
     pump([
         gulp.src('./assets/styles/alchemy.scss'),
@@ -236,7 +243,7 @@ gulp.task('revreplace:maps', cb => {
 
 gulp.task('default', plugins.sequence(
     'styles:watch',
-    'scripts'
+    'scripts:dev'
 ));
 
 gulp.task('build', plugins.sequence(
