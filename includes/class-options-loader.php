@@ -22,12 +22,90 @@ if( class_exists( __NAMESPACE__ . '\Options_Loader' ) ) {
 class Options_Loader {
     private $active_tab;
     private $parentPage = 'themes.php';
+    private $githubVersion;
 
     public function activate() {
         include_once( ALCHEMY_OPTIONS_DIR . 'includes/alchemy-functions.php' );
 
         /* all of the hooks go here */
         $this->hook_up();
+    }
+
+    public function check_for_updates() {
+        $latestGithubVersion = wp_remote_get( 'https://raw.githubusercontent.com/AlchemyOptions/AlchemyOptions/master/dist/VERSION' );
+
+        if( ! is_wp_error( $latestGithubVersion ) ) {
+            $this->githubVersion = $latestGithubVersion['body'];
+            $this->githubVersion = '0.0.2';
+
+            if ( version_compare( ALCHEMY_OPTIONS_VERSION, $this->githubVersion, '<' ) ) {
+                if( ! isset( $_COOKIE['alchemy-options-notice-dismissed'] ) ) {
+                    $this->add_notification_actions();
+                } else if( isset( $_COOKIE['alchemy-options-notice-dismissed'] ) && isset( $_COOKIE['alchemy-options-show-when'] ) ) {
+                    if( time() > $_COOKIE['alchemy-options-show-when'] + MINUTE_IN_SECONDS ) {
+                        $this->add_notification_actions();
+                    }
+                }
+            }
+        }
+    }
+
+    public function add_notification_actions() {
+        add_action( 'wp_ajax_alchemy_options_notification_dismiss', array( $this, 'handle_notification_dismiss' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_notification_script' ) );
+        add_action( 'admin_notices', array( $this, 'add_update_notification' ) );
+        add_action( 'network_admin_notices', array( $this, 'add_update_notification' ) );
+    }
+
+    public function handle_notification_dismiss() {
+        if ( ! isset( $_POST[ 'nonce' ] ) || ! wp_verify_nonce( $_POST[ 'nonce' ], 'alchemy-options-notification-nonce' ) ) {
+            wp_die( 'Nonce is not present' );
+        }
+
+        $possibleActions = array( 'hide', 'dismiss' );
+        $action = isset( $_POST['type'] ) ? $_POST['type'] : 'no-action';
+
+        if( in_array( $action, $possibleActions ) ) {
+            $hid = -1;
+            $dismissed = -1;
+
+            $acted = setcookie( 'alchemy-options-notice-dismissed', 1, 5 * MINUTE_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+
+            if( 'hide' === $action ) {
+                $hid = setcookie( 'alchemy-options-show-when', 1, 5 * MINUTE_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+            }
+
+            if( 'dismiss' === $action ) {
+                $dismissed = setcookie( 'alchemy-options-show-when', 1, MINUTE_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+            }
+
+            wp_send_json_success( array(
+                'acted' => $acted,
+                'hid' => $hid,
+                'dismissed' => $dismissed
+            ) );
+        }
+    }
+
+    public function add_update_notification() {
+        echo sprintf(
+            '<div class="notice notice-info jsAlchemyOptionsNotification" data-nonce=\'%5$s\' data-admin-url="%6$s"><p>%1$s</p><p><button type="button" class="button-secondary jsButton" data-type="dismiss">%2$s</button> <button type="button" class="button-secondary jsButton" data-type="hide" title="%4$s">%3$s</button></p></div>',
+            sprintf(
+                __( 'The latest version of Alchemy Options available on GitHub is %1$s. This site uses version %2$s. Follow <a href="%3$s" target="_blank">installation instructions</a>.', 'alchemy-options' ),
+                $this->githubVersion,
+                ALCHEMY_OPTIONS_VERSION,
+                'https://docs.alchemy-options.com/Installation.html'
+            ),
+            __( 'Remind me tomorrow', 'alchemy-options' ),
+            __( 'Never show this message', 'alchemy-options' ),
+            __( 'I mean... like a year or so :)', 'alchemy-options' ),
+            wp_create_nonce( 'alchemy-options-notification-nonce' ),
+            admin_url( 'admin-ajax.php' )
+        );
+    }
+
+    public function enqueue_notification_script() {
+        wp_enqueue_script( 'alchemy-options-notification-script', ALCHEMY_OPTIONS_DIR_URL . 'assets/scripts/alchemy-notification-script.js', array('jquery'), ALCHEMY_OPTIONS_VERSION, true );
     }
 
     public function enqueue_assets() {

@@ -41,6 +41,7 @@ function alch_run_plugin() {
     load_plugin_textdomain( 'alchemy-options', false, ALCHEMY_OPTIONS_DIR . 'languages' );
 
     $alch_options = new Includes\Options_Loader();
+    $alch_options->check_for_updates();
     $alch_options->activate();
 }
 
