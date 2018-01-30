@@ -1,37 +1,28 @@
-(function($){
+(function(document, $){
     $(document).ready(function(){
         var $notification = $('.jsAlchemyOptionsNotification');
+        var maxAge;
 
         if( $notification[0] ) {
             var $actionButtons = $('.jsButton', $notification);
-            var adminURL = $notification.data('admin-url');
 
             $notification.on('click', '.jsButton', function(){
-                var $button = $(this);
-                var data = {
-                    'action': 'alchemy_options_notification_dismiss',
-                    'type': $button.data('type'),
-                    'nonce': $notification.data('nonce')
-                };
+                var buttonType = $(this).data('type');
 
                 $actionButtons.attr('disabled', true);
 
-                $.ajax({
-                    'type': 'post',
-                    'url': adminURL,
-                    'data': data,
-                    'success': function(){
-                        $notification.slideUp();
-                    },
-                    'error': function(data){
-                        console.log(data);
+                if( 'hide' === buttonType ) {
+                    maxAge = 31536000; // one year in seconds - 60 * 60 * 24 * 365
+                }
 
-                        $notification.removeClass('notice-info').addClass('notice-error').find('p').first().text(data);
+                if( 'dismiss' === buttonType ) {
+                    maxAge = 86400; // one day in seconds - 60 * 60 * 24
+                }
 
-                        $actionButtons.removeAttr('disabled');
-                    }
-                });
+                document.cookie = "alchemy-options-notice-dismissed=1;max-age=" + maxAge;
+
+                $notification.slideUp();
             });
         }
     });
-})(jQuery);
+})(document, jQuery);
