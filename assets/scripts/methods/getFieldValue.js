@@ -1,4 +1,4 @@
-function getFieldValue( alchemyField ) {
+function getFieldValue( alchemyField, escapeMeta = false ) {
     const data = alchemyField.data('alchemy');
 
     if( ! data ) {
@@ -138,7 +138,8 @@ function getFieldValue( alchemyField ) {
         default : break;
     }
 
-    return value;
+    // need to escape backslashes before sending
+    return typeof value === 'string' ? value.replace(/\\/g, '&#92;') : value;
 }
 
 export default getFieldValue;

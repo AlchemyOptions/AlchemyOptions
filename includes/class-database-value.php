@@ -56,13 +56,14 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
         }
 
         public function sanitize_textarea_field( $value ) {
+            $value = wp_unslash( $value );
             $allow_html = apply_filters( 'alch_allow_html_in_textarea', false );
 
             if ( ! $allow_html ) {
-                return sanitize_textarea_field( alch_kses_stripslashes( $value ) );
+                return sanitize_textarea_field( $value );
             }
 
-            return alch_kses_stripslashes( $value );
+            return $value;
         }
 
         public function sanitize_field_group_field( $value ) {
@@ -86,6 +87,7 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
             global $allowedposttags;
 
             $value = wp_specialchars_decode( $value );
+            $value = wp_unslash( $value );
 
             $allowed_html = apply_filters( 'alch_allowed_editor_html_tags', $allowedposttags );
             $allowed_protocols = apply_filters('alch_allowed_editor_protocols', wp_allowed_protocols());
@@ -100,6 +102,15 @@ if( ! class_exists( __NAMESPACE__ . '\Database_Value' ) ) {
 
             return array_map(function( $item ){
                 $item['fields'] = array_map(function( $field ){
+                    $repeaterCheck = explode( ':', $field['type'] );
+
+                    if( 2 === count( $repeaterCheck ) && 'repeater' === $repeaterCheck[0] ) {
+                        $field['type'] = 'repeater';
+                        $field['repeater'] = array(
+                            'type' => $repeaterCheck[1]
+                        );
+                    }
+
                     $safeVal = new self( $field );
 
                     return array(

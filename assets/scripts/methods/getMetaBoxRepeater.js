@@ -17,9 +17,12 @@ export default function() {
                     if( $repeaters[0] ) {
                         $repeaters.each((i, repeater) => {
                             const $repeater = $(repeater);
-                            const value = getFieldValue($repeater);
+                            let value = getFieldValue($repeater, true);
 
-                            $repeater.children('fieldset').children('.jsRepeaterHidden').val(JSON.stringify(value));
+                            value = JSON.stringify(value);
+                            value = value.replace(/\\\"/g, '&#34;'); // hack to replace escaped double quotes in JSON
+
+                            $repeater.children('fieldset').children('.jsRepeaterHidden').val(value);
                         });
                     }
 
