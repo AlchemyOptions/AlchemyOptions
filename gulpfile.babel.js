@@ -64,8 +64,8 @@ const webpackConfig = {
     watch: ! productionBuild
 };
 const replaceInFiles = [
-    `./${pathToBuild}/includes/class-options-loader.php`,
-    `./${pathToBuild}/includes/class-meta-box.php`
+    `./${pathToBuild}/alchemy-options/includes/class-options-loader.php`,
+    `./${pathToBuild}/alchemy-options/includes/class-meta-box.php`
 ];
 const sourceFilesToDelete = [
     `./${pathToBuild}/alchemy-options/assets/styles/rev-manifest.json`,
