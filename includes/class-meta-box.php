@@ -39,6 +39,8 @@ class Meta_Box {
     }
 
     public function enqueue_assets() {
+        $screen = get_current_screen();
+
         wp_register_script( 'select2-scripts', ALCHEMY_OPTIONS_DIR_URL . 'assets/vendor/select2/js/select2.min.js', array(), '4.0.3', true );
         wp_register_script( 'alchemy-scripts', ALCHEMY_OPTIONS_DIR_URL . 'assets/scripts/alchemy.min.js', $this->get_scripts_deps(), ALCHEMY_OPTIONS_VERSION, true );
         wp_localize_script( 'alchemy-scripts', 'alchemyData', array(
@@ -50,10 +52,13 @@ class Meta_Box {
         wp_register_style( 'select2-style', ALCHEMY_OPTIONS_DIR_URL . 'assets/vendor/select2/css/select2.min.css', array(), '4.0.3' );
         wp_register_style( 'alchemy-styles', ALCHEMY_OPTIONS_DIR_URL . 'assets/styles/alchemy.css', array( 'alchemy-jquery', 'select2-style' ), ALCHEMY_OPTIONS_VERSION );
 
-        wp_enqueue_media();
-        wp_enqueue_script( 'alchemy-scripts' );
+        // enqueue only on post editing screens
+        if( 'edit' === $screen->base ) {
+            wp_enqueue_media();
+            wp_enqueue_script( 'alchemy-scripts' );
 
-        wp_enqueue_style( 'alchemy-styles' );
+            wp_enqueue_style( 'alchemy-styles' );
+        }
     }
 
     public function get_scripts_deps() {
