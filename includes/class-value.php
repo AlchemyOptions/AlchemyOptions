@@ -107,6 +107,10 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
         }
 
         public function modify_repeater_value( $value ) {
+            if( '' === $value ) {
+                return array();
+            }
+
             //remove temporarily hidden fields
             $value = array_filter($value, function( $item ){
                 return $item['isVisible'] === 'true';
