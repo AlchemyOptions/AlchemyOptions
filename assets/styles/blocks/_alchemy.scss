@@ -1,5 +1,7 @@
 .alchemy {
     &__modal {
+        pointer-events: none;
+
         width: 100%;
         padding-left: 160px;
         box-sizing: border-box;
@@ -17,7 +19,6 @@
             margin-bottom: 0;
             border-radius: 3px;
             padding: .5em 1em .7em;
-            pointer-events: none;
             animation-duration: .5s;
             opacity: 0;
 
