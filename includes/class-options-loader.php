@@ -362,18 +362,6 @@ class Options_Loader {
         wp_send_json_success( $result );
     }
 
-    public function handle_datalist_search() {
-        if ( ! isset( $_GET[ 'nonce' ] ) || ! is_array( $_GET[ 'nonce' ] ) || ! wp_verify_nonce( $_GET[ 'nonce' ][ 'value' ], $_GET[ 'nonce' ][ 'id' ] ) ) {
-            die();
-        }
-
-        $fields = $_GET[ 'search-string' ];
-
-        if( ! $fields ) {
-            return;
-        }
-    }
-
     public function handle_repeater_item_add() {
         if ( ! isset( $_GET[ 'nonce' ] ) || ! wp_verify_nonce( $_GET[ 'nonce' ][1], $_GET[ 'nonce' ][0] ) ) {
             die();
