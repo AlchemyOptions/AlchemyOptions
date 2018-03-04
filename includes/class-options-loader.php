@@ -392,7 +392,14 @@ class Options_Loader {
 
         if( isset( $_GET['value'] ) ) {
             $repeateeSettings['isVisible'] = $_GET['value']['isVisible'];
-            $repeateeSettings['savedFields'] = $_GET['value']['fields'];
+            $repeateeSettings['savedFields'] = array_map( function( $field ) {
+                $value = new Database_Value( $field );
+
+                return array(
+                    'type' => $field[ 'type' ],
+                    'value' => $value->get_safe_value(),
+                );
+            }, $_GET['value']['fields'] );
 
             if( isset( $_GET['value']['typeID'] ) ) {
                 $repeateeSettings['repeater']['type-id'] = $_GET['value']['typeID'];
