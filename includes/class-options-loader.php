@@ -305,6 +305,8 @@ class Options_Loader {
             }
         }
 
+        do_action( $saved ? 'alchemy_options_saved' : 'alchemy_options_save_failed' );
+
         return $saved;
     }
 
