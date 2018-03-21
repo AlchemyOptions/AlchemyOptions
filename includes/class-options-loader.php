@@ -283,6 +283,8 @@ class Options_Loader {
     }
 
     public function save_options( $fields, $networkSave ) {
+        do_action( 'alchemy_options_before_save', $fields, $networkSave );
+
         $saved = true;
 
         foreach ( $fields as $id => $payload ) {
