@@ -27,6 +27,8 @@ class Meta_Box {
         $this->options = $options;
 
         if( alch_is_not_empty_array( $options['post-types'] ) ) {
+            Meta_Boxes::add_meta_box( $this->options );
+
             foreach ( $options['post-types'] as $postType ) {
                 if( post_type_exists( $postType ) ) {
                     add_action( 'add_meta_boxes_' . $postType, array( $this, 'add_meta_box' ) );
@@ -62,12 +64,25 @@ class Meta_Box {
     }
 
     public function get_scripts_deps() {
+        global $typenow;
+
+        $boxes = Meta_Boxes::get_meta_boxes();
+        $allOptionsForPostType = array();
+
+        foreach ( $boxes as $box ) {
+            if( in_array( $typenow, $box['post-types'] ) && ! empty( $box['meta']['options'] ) ) {
+                foreach ( $box['meta']['options'] as $opt ) {
+                    $allOptionsForPostType[] = $opt;
+                }
+            }
+        }
+
         $deps = array(
             'jquery'
         );
 
-        if( isset( $this->options['meta']['options'] ) && alch_is_not_empty_array( $this->options['meta']['options'] ) ) {
-            $hasRepeaters = array_filter($this->options['meta']['options'], function( $option ) {
+        if( alch_is_not_empty_array( $allOptionsForPostType ) ) {
+            $hasRepeaters = array_filter($allOptionsForPostType, function( $option ) {
                 return strpos( $option['type'], 'repeater:' ) === 0;
             });
             $repeaters = array();
@@ -84,7 +99,7 @@ class Meta_Box {
                 } );
             }
 
-            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $this->options['meta']['options'], $repeaters ) ) );
+            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $allOptionsForPostType, $repeaters ) ) );
 
             if( in_array( 'colorpicker', $types ) ) {
                 $deps[] = 'iris';
