@@ -21,7 +21,7 @@ if( ! class_exists(  __NAMESPACE__ . '\Sections' ) ) {
             parent::__construct( $networkField, $options );
 
             $this->template = '
-                <div class="alchemy__field field field--{{TYPE}} clearfix jsAlchemySectionsFiled" data-alchemy=\'{"type":"{{TYPE}}"}\'>
+                <div class="alchemy__field alchemy__clearfix field field--{{TYPE}} jsAlchemySectionsFiled" data-alchemy=\'{"type":"{{TYPE}}"}\'>
                 {{FIELDS}}
                 </div>
             ';

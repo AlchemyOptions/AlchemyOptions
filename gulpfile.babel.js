@@ -13,6 +13,7 @@ const webpackStream = require('webpack-stream');
 const gulp = require('gulp');
 const pump = require('pump');
 const del = require('del');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const plugins = require('gulp-load-plugins')({
     rename: {
         'gulp-rev-replace': 'revReplace'
@@ -50,9 +51,12 @@ const webpackConfig = {
     },
     externals: /^(jQuery|\$|tinymce)$/i,
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+        new UglifyJsPlugin({
+            cache: true,
+            parallel: true,
+            uglifyOptions: {
+                compress: true,
+                mangle: true
             },
             sourceMap: true
         }),

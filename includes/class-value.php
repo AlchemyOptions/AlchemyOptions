@@ -98,8 +98,10 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
             $modVal = [];
 
             foreach ( $value as $id => $val ) {
-                if( '' !== $val['value'] && ! is_null( $val['value'] ) ) {
-                    $modVal[$id] = $val['value'];
+                if( ! empty( $val['value'] ) ) {
+                    $newVal = new self( $val, $this->isNetworlValue );
+
+                    $modVal[$id] = $newVal->get_value();
                 }
             }
 

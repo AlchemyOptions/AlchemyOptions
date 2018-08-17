@@ -491,7 +491,9 @@
         }
 
         .field__tabs {
-            padding-left: 200px;
+            padding-left: 0;
+            float: left;
+            width: calc(100% - 200px);
             position: relative;
             z-index: 0;
         }

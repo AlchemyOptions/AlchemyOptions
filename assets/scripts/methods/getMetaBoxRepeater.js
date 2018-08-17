@@ -12,7 +12,11 @@ export default function() {
 
                 $metaBoxes.each((i, metabox) => {
                     const $metaBox = $(metabox);
-                    const $repeaters = $metaBox.children('.jsAlchemyRepeaterField');
+                    const $sections = $metaBox.children('.jsAlchemySectionsFiled');
+
+                    const $repeaters = $sections[0]
+                        ? $sections.children('.jsAlchemySectionsTabs').children('.jsAlchemySectionsTab').children('.jsAlchemyRepeaterField')
+                        : $metaBox.children('.jsAlchemyRepeaterField');
 
                     if( $repeaters[0] ) {
                         $repeaters.each((i, repeater) => {
