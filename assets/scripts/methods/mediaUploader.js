@@ -37,7 +37,7 @@ export default function (scope = document) {
 
                     if( 'image' === json.type ) {
                         $results.html($('<img />', {
-                            src: json.sizes.thumbnail.url,
+                            src: json.sizes.thumbnail ? json.sizes.thumbnail.url : json.sizes.full.url,
                             alt: json.caption,
                             title: json.title
                         }));

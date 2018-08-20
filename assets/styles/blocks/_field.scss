@@ -64,6 +64,7 @@
         .repeatee & {
             padding-top: 0;
             float: none;
+            max-width: none;
         }
 
         @media all and ( max-width: 1024px ) {
