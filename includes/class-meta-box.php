@@ -82,24 +82,7 @@ class Meta_Box {
         );
 
         if( alch_is_not_empty_array( $allOptionsForPostType ) ) {
-            $hasRepeaters = array_filter($allOptionsForPostType, function( $option ) {
-                return strpos( $option['type'], 'repeater:' ) === 0;
-            });
-            $repeaters = array();
-
-            if( alch_is_not_empty_array( $hasRepeaters ) ) {
-                $repeatersIDs = array_map(function($repeater){
-                    return explode( ':', $repeater['type'] )[1];
-                }, $hasRepeaters);
-
-                $savedRepeaters = get_option( alch_repeaters_id(), array() ) ;
-
-                $repeaters = array_filter( $savedRepeaters, function( $repeater ) use ( $repeatersIDs ) {
-                    return in_array( $repeater['id'], $repeatersIDs );
-                } );
-            }
-
-            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $allOptionsForPostType, $repeaters ) ) );
+            $types = array_unique( alchemy_array_flatten( $this->walk_the_fields( $allOptionsForPostType, $this->return_repeaters_if_any( $allOptionsForPostType ) ) ) );
 
             if( in_array( 'colorpicker', $types ) ) {
                 $deps[] = 'iris';
@@ -157,16 +140,38 @@ class Meta_Box {
 
             if( 'sections' === $field['type'] ) {
                 foreach( $field['sections'] as $section ) {
-                    $types[] = $this->walk_the_fields( $section['options'] );
+                    $types[] = $this->walk_the_fields( $section['options'], $this->return_repeaters_if_any( $section['options'] ) );
                 }
             }
 
             if( 'field-group' === $field['type'] ) {
-                $types[] = $this->walk_the_fields( $field['fields'] );
+                $types[] = $this->walk_the_fields( $field['fields'], $this->return_repeaters_if_any( $field['fields'] ) );
             }
         }
 
         return $types;
+    }
+
+    public function return_repeaters_if_any( $options ) {
+        $repeaters = array();
+
+        $hasRepeaters = array_filter( $options, function( $option ) {
+            return strpos( $option['type'], 'repeater:' ) === 0;
+        } );
+
+        if( alch_is_not_empty_array( $hasRepeaters ) ) {
+            $repeatersIDs = array_map(function($repeater){
+                return explode( ':', $repeater['type'] )[1];
+            }, $hasRepeaters);
+
+            $savedRepeaters = get_option( alch_repeaters_id(), array() ) ;
+
+            $repeaters = array_filter( $savedRepeaters, function( $repeater ) use ( $repeatersIDs ) {
+                return in_array( $repeater['id'], $repeatersIDs );
+            } );
+        }
+
+        return $repeaters;
     }
 
     public function add_meta_box() {
