@@ -78,7 +78,11 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
             $valueToReturn = $value;
             $imageMeta = wp_get_attachment_metadata( $value );
 
-            if( ! empty( $imageMeta['sizes'] ) && is_array( $imageMeta['sizes'] ) ) {
+            if( empty( $imageMeta ) ) {
+                return '';
+            }
+
+            if( is_array( $imageMeta['sizes'] ) ) {
                 $valueToReturn = array(
                     'id' => (int) $value,
                     'sizes' => array(),
