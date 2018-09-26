@@ -45,7 +45,7 @@ if( ! class_exists( __NAMESPACE__ . '\Image_Radio' ) ) {
                     $choicesHTML .= sprintf (
                         '<input%2$s data-value=\'%3$s\' %4$s %5$s/><label%1$s class="field__image-label %7$s %8$s jsAlchemyImageRadioLabel">%6$s</label>',
                         $this->concat_attributes( array( 'for' => $fieldID ) ),
-                        $this->concat_attributes( array( 'id' => $fieldID, 'name' => $id, 'type' => 'radio' ) ),
+                        $this->concat_attributes( array( 'id' => $fieldID, 'name' => $id . '[]', 'type' => 'radio', 'value' => esc_attr( $choice[ 'value' ] ) ) ),
                         esc_attr( $choice[ 'value' ] ),
                         $this->is_disabled( $choice[ 'disabled' ] ),
                         $this->is_checked( $choice[ 'checked' ] ),
