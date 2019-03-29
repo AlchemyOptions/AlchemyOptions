@@ -119,18 +119,21 @@ function getThingsGoing(scope = document) {
 
                 if( $repeatee.hasClass('repeatee--expanded') ) {
                     const $editor = $repeatee.children('.repeatee__content').children('.field--editor').find('.jsAlchemyEditorTextarea');
-                    const tmcEditor = tinymce.get($editor.attr('id'));
+                    
+                    $editor.each((i, el) => {
+                        let tmcEditor = tinymce.get($(el).attr('id'));
 
-                    $editor.removeClass('tinymce--init');
-                    $repeatee.removeClass('repeatee--expanded');
+                        $(el).removeClass('tinymce--init');
+                        $repeatee.removeClass('repeatee--expanded');
 
-                    $repeatee.children('.repeatee__content').children('.field--editor').find('.wp-editor-tools').remove();
+                        $repeatee.children('.repeatee__content').children('.field--editor').find('.wp-editor-tools').remove();
 
-                    if( tmcEditor ) {
-                        $editor.html(tmcEditor.getContent());
+                        if( tmcEditor ) {
+                            $(el).html(tmcEditor.getContent());
 
-                        tmcEditor.destroy();
-                    }
+                            tmcEditor.destroy();
+                        }
+                    });
                 } else {
                     editor($repeatee.children('.repeatee__content').children('.field--editor'));
 
