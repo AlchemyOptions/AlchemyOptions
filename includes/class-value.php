@@ -61,8 +61,16 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
         }
 
         public function modify_upload_value( $value ) {
+            $network_media_library_site_id = apply_filters( 'alch_network_media_library_site_id', 0 );
+
             if( $this->isNetworlValue ) {
                 switch_to_blog(1);
+
+                $valueToReturn = $this->get_attached_image( $value );
+
+                restore_current_blog();
+            } else if( ! empty( $network_media_library_site_id ) ) {
+                switch_to_blog( $network_media_library_site_id );
 
                 $valueToReturn = $this->get_attached_image( $value );
 
