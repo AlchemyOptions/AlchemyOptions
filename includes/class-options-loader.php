@@ -408,7 +408,7 @@ class Options_Loader {
             $this->parentPage,
             __( 'Alchemy Network Options', 'alchemy-options' ),
             __( 'Alchemy Network Options', 'alchemy-options' ),
-            'manage_options',
+            apply_filters( 'alch_options_capability', 'manage_options' ),
             'alchemy-options',
             array( $this, 'render_network_options_submenu' )
         );
@@ -419,7 +419,7 @@ class Options_Loader {
             $this->parentPage,
             __( 'Alchemy Options', 'alchemy-options' ),
             __( 'Alchemy Options', 'alchemy-options' ),
-            'manage_options',
+            apply_filters( 'alch_options_capability', 'manage_options' ),
             'alchemy-options',
             array( $this, 'render_options_submenu' )
         );
