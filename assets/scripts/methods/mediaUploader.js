@@ -43,6 +43,19 @@ export default function (scope = document) {
                         }));
 
                         $input.val(json.id);
+                    } else if ( 'video' === json.type || 'audio' === json.type ) {
+                        const results = [
+                            $('<img />', {
+                                src: json.icon,
+                                title: json.filename
+                            }),
+                            $('<div />', {
+                                html: `${json.filename} <span class="alchemy__filesize">(${json.filesizeHumanReadable})</span>`
+                            })
+                        ];
+
+                        $results.html(results);
+                        $input.val(json.id);
                     }
                 });
 

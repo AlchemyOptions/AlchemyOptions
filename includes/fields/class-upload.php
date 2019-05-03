@@ -39,11 +39,29 @@ if( ! class_exists( __NAMESPACE__ . '\Upload' ) ) {
         public function render_saved_upload( $value ) {
             $savedUpload = '';
 
-            if( $value ) {
-                $imageData = wp_get_attachment_image_src( $value, 'thumbnail' );
+            if( ! empty( $value ) ) {
+                if( wp_attachment_is( 'image', $value ) ) {
+                    $imageData = wp_get_attachment_image_src( $value, 'thumbnail' );
 
-                if( $imageData ) {
-                    $savedUpload .= sprintf( '<img src="%s" alt="" />', $imageData[0] );
+                    if( $imageData ) {
+                        $savedUpload .= sprintf( '<img src="%s" alt="" />', $imageData[0] );
+                    }
+                } else if( wp_attachment_is( 'video', $value ) ) {
+                    $videoMetaData = wp_get_attachment_metadata( $value );
+
+                    $savedUpload .= sprintf( '<img src="%1$s" alt="" /><div>%2$s <span class="alchemy__filesize">(%3$s)</span></div>',
+                        apply_filters( 'alch_default_video_icon_url', get_home_url() . '/wp-includes/images/media/video.png' ),
+                        sprintf( '%1$s.%2$s', get_the_title( $value ), $videoMetaData['fileformat'] ),
+                        size_format( $videoMetaData['filesize'] )
+                    );
+                } else if( wp_attachment_is( 'audio', $value ) ) {
+                    $videoMetaData = wp_get_attachment_metadata( $value );
+
+                    $savedUpload .= sprintf( '<img src="%1$s" alt="" /><div>%2$s <span class="alchemy__filesize">(%3$s)</span></div>',
+                        apply_filters( 'alch_default_audio_icon_url', get_home_url() . '/wp-includes/images/media/audio.png' ),
+                        esc_html( basename( get_attached_file( $value ) ) ),
+                        size_format( $videoMetaData['filesize'] )
+                    );
                 }
             }
 

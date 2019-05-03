@@ -84,23 +84,38 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
 
         public function get_attached_image( $value ) {
             $valueToReturn = $value;
-            $imageMeta = wp_get_attachment_metadata( $value );
+            if( wp_attachment_is( 'image', $value ) ) {
+                $imageMeta = wp_get_attachment_metadata( $value );
 
-            if( empty( $imageMeta ) ) {
-                return '';
-            }
-
-            if( is_array( $imageMeta['sizes'] ) ) {
-                $valueToReturn = array(
-                    'id' => (int) $value,
-                    'sizes' => array(),
-                );
-
-                foreach( $imageMeta['sizes'] as $sizeTitle => $sizeValue ) {
-                    $valueToReturn['sizes'][$sizeTitle] = wp_get_attachment_image_src( $value, $sizeTitle );
+                if( empty( $imageMeta ) ) {
+                    return '';
                 }
 
-                $valueToReturn['sizes']['full'] = wp_get_attachment_image_src( $value, 'full' );
+                if( is_array( $imageMeta['sizes'] ) ) {
+                    $valueToReturn = array(
+                        'id' => (int) $value,
+                        'type' => 'image',
+                        'sizes' => array(),
+                    );
+
+                    foreach( $imageMeta['sizes'] as $sizeTitle => $sizeValue ) {
+                        $valueToReturn['sizes'][$sizeTitle] = wp_get_attachment_image_src( $value, $sizeTitle );
+                    }
+
+                    $valueToReturn['sizes']['full'] = wp_get_attachment_image_src( $value, 'full' );
+                }
+            } elseif( wp_attachment_is( 'video', $value ) ) {
+                $valueToReturn = array(
+                    'id' => (int) $value,
+                    'type' => 'video',
+                    'url' => wp_get_attachment_url( $value ),
+                );
+            } elseif( wp_attachment_is( 'audio', $value ) ) {
+                $valueToReturn = array(
+                    'id' => (int) $value,
+                    'type' => 'audio',
+                    'url' => wp_get_attachment_url( $value ),
+                );
             }
 
             return $valueToReturn;
