@@ -6,6 +6,7 @@ if( 'build' === argv._[0] && ! argv.ver ) {
     throw new Error('--ver param is required for the build task');
 }
 
+const runSequence = require('gulp4-run-sequence');
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
@@ -157,17 +158,7 @@ gulp.task('styles:main', cb => {
     ], cb);
 });
 
-gulp.task('styles:main-watch', cb => {
-    pump([
-        gulp.src('./assets/styles/alchemy.scss'),
-        plugins.sass({
-            outputStyle: 'compressed'
-        }),
-        gulp.dest(`./assets/styles/`)
-    ], cb);
-});
-
-gulp.task('styles', ['styles:main'], cb => {
+gulp.task('styles', gulp.series('styles:main', cb => {
     pump([
         gulp.src('./assets/vendor/select2/css/select2.css'),
         plugins.sass({
@@ -176,10 +167,18 @@ gulp.task('styles', ['styles:main'], cb => {
         plugins.rename('select2.min.css'),
         gulp.dest(`./${pathToBuild}/alchemy-options/assets/vendor/select2/css`)
     ], cb);
-});
+}));
 
 gulp.task('styles:watch', () => {
-    gulp.watch('./assets/styles/**/*.scss', ['styles:main-watch']);
+    gulp.watch('./assets/styles/**/*.scss', cb => {
+        pump([
+            gulp.src('./assets/styles/alchemy.scss'),
+            plugins.sass({
+                outputStyle: 'compressed'
+            }),
+            gulp.dest(`./assets/styles/`)
+        ], cb);
+    });
 });
 
 gulp.task('version', cb => {
@@ -245,19 +244,19 @@ gulp.task('revreplace:maps', cb => {
     ], cb);
 });
 
-gulp.task('default', plugins.sequence(
-    'styles:watch',
-    'scripts:dev'
-));
+gulp.task('default', gulp.parallel('styles:watch', 'scripts:dev'));
 
-gulp.task('build', plugins.sequence(
-    ['clean'],
-    'copy',
-    ['styles', 'scripts', 'version'],
-    ['revreplace:styles', 'revreplace:maps'],
-    'revreplace:scripts',
-    'clean:source',
-    'archive',
-    'add-version',
-    'clean:build'
-));
+gulp.task('build', cb => {
+    runSequence(
+        ['clean'],
+        'copy',
+        ['styles', 'scripts', 'version'],
+        ['revreplace:styles', 'revreplace:maps'],
+        'revreplace:scripts',
+        'clean:source',
+        'archive',
+        'add-version',
+        'clean:build',
+        cb
+    )
+});
