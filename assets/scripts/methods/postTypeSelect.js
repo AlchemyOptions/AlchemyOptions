@@ -30,6 +30,18 @@ export default function( scope = document ) {
                     cache: false
                 },
                 minimumInputLength: 2
+            }).on('select2:select', e => {
+                const $target = $(e.target);
+                const option = $target.children(`[value=${e.params.data.id}]`);
+
+                option.detach();
+                $target.append(option).change();
+            }).on('select2:unselect', e => {
+                const $selected = $(e.target).find(":selected");
+
+                if ( $selected.length > 0 ) {
+                    $selected.eq(-1).after($(e.params.data.element));
+                }
             });
 
             $el.on('click', '.jsAlchemyPostTypeSelectClear', () => {

@@ -75,6 +75,22 @@ if( ! class_exists( __NAMESPACE__ . '\Post_Type_Select' ) ) {
 
                 if ( $the_query->have_posts() ) {
                     $found_posts = $the_query->get_posts();
+
+                    usort( $found_posts, function( $a, $b ) use( $value ) {
+                        if ( $a->ID == $b->ID ) { return 0; }
+
+                        $position = array_search( $a->ID, $value['ids'] );
+                        $position2 = array_search( $b->ID, $value['ids'] );
+
+                        if ( $position2 !== false && $position !== false ) {
+                            return ( $position < $position2 ) ? -1 : 1;
+                        }
+
+                        if( $position !== false ) { return -1; }
+                        if( $position2 !== false ) { return 1; }
+
+                        return ( $a->ID < $b->ID ) ? -1 : 1;
+                    } );
                 }
 
                 $optionsHTML .= join('',  array_map(function( $post ) {
