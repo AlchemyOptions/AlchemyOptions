@@ -40,7 +40,7 @@ export default function() {
                 e.preventDefault();
             });
         }
-    } else if( wp.data.subscribe ) {
+    } else if( wp.data && wp.data.subscribe ) {
         const $metaBoxes = $('.jsAlchemyMetaBox');
 
         if( $metaBoxes[0] ) {
