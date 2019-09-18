@@ -46,7 +46,7 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
                     $this->value['value'] = $this->modify_repeater_value( $this->value['value'] );
                 break;
                 case 'editor' :
-                    $this->value['value'] = wp_specialchars_decode( $this->value['value'] );
+                    $this->value['value'] = $this->modify_editor_value( $this->value['value'] );
                 break;
                 default : break;
             }
@@ -58,6 +58,14 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
             }
 
             return [];
+        }
+
+        public function modify_editor_value( $value ) {
+            if( apply_filters( 'alch_autop_editor_value', '__return_true' ) ) {
+                return wpautop( wp_specialchars_decode( $this->value['value'] ) );
+            }
+
+            return wp_specialchars_decode( $this->value['value'] );
         }
 
         public function modify_upload_value( $value ) {
