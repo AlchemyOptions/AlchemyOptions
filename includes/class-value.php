@@ -133,7 +133,11 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
             $modVal = [];
 
             foreach ( $value as $id => $val ) {
-                if( ! empty( $val['value'] ) ) {
+                $repeaterCheck = explode( ':', $val['type'] );
+
+                if( 2 === count( $repeaterCheck ) && 'repeater' === $repeaterCheck[0] && ! empty( $val['value'] ) ) {
+                    $modVal[$id] = $this->modify_repeater_value( $val['value'] );
+                } else if( ! empty( $val['value'] ) ) {
                     $newVal = new self( $val, $this->isNetworlValue );
 
                     $modVal[$id] = $newVal->get_value();
