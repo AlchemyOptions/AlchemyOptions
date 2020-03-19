@@ -61,11 +61,13 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
         }
 
         public function modify_editor_value( $value ) {
+            $modifiedValue = apply_filters( 'the_content', wp_specialchars_decode( $value ) );
+
             if( apply_filters( 'alch_autop_editor_value', '__return_true' ) ) {
-                return wpautop( wp_specialchars_decode( $this->value['value'] ) );
+                return wpautop( $modifiedValue );
             }
 
-            return wp_specialchars_decode( $this->value['value'] );
+            return $modifiedValue;
         }
 
         public function modify_upload_value( $value ) {
