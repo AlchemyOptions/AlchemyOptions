@@ -30,7 +30,7 @@ if( ! class_exists( __NAMESPACE__ . '\Value' ) ) {
                 break;
                 case 'radio' :
                 case 'image-radio' :
-                    $this->value['value'] = $this->value['value'][0];
+                    $this->value['value'] = empty( $this->value['value'] ) ? '' : $this->value['value'][0];
                 break;
                 case 'post-type-select' :
                 case 'taxonomy-select' :
