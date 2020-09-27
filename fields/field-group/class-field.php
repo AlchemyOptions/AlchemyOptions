@@ -70,7 +70,7 @@ class Field implements Field_Interface {
         );
 
         foreach ( $data['fields'] as $i => $field ) {
-            $savedField = array_values( array_filter( $savedValue, function( $savedValueField ) use( $field ) {
+            $savedField = is_array( $savedValue ) ? array_values( array_filter( $savedValue, function( $savedValueField ) use( $field ) {
                 $fieldType = $field['type'];
                 $savedFieldType = $savedValueField['type'];
 
@@ -86,7 +86,7 @@ class Field implements Field_Interface {
                 }
 
                 return $fieldType === $savedFieldType && substr( $savedValueField['id'], -strlen( $field['id'] ) ) === $field['id'];
-            } ) );
+            } ) ) : null;
 
             $data['fields'][$i]['id'] = sprintf( '%s-%s', $data['id'], $field['id'] );
 

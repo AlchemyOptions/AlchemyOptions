@@ -35,7 +35,7 @@ class Admin_Bar_Menu {
                 $pageArgs['parent'] = $page['parent-id'];
             }
 
-            if( $page['id'] !== $page['parent-id'] ) {
+            if( ! empty( $page['parent-id'] ) && $page['id'] !== $page['parent-id'] ) {
                 $this->admin_bar->add_node( $pageArgs );
             }
         }

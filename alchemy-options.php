@@ -422,7 +422,7 @@ class Options {
 
             //todo: check for valid ID with underscores
 
-            if( ! empty( $parsedOptions[$option['id']] ) ) {
+            if( isset( $option['id'] ) && ! empty( $parsedOptions[$option['id']] ) ) {
                 //todo: if it's a section - need to check its children
 
                 trigger_error( sprintf( 'The \'%s\' option ID is already present. Please use a different one.',
@@ -453,8 +453,9 @@ class Options {
             global $wp_filter;
 
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
+            $optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = alch_admin_get_saved_option( $option['id'], $option['default'] );
+            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_option( $option['id'], $optionDefault ) : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -530,8 +531,9 @@ class Options {
             global $wp_filter;
 
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
+			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = alch_admin_get_saved_network_option( $option['id'], $option['default'] );
+            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_network_option( $option['id'], $optionDefault ) : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -607,8 +609,9 @@ class Options {
             global $wp_filter;
 
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
+			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = alch_admin_get_saved_meta( $postID, $option['id'], $option['default'] );
+            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_meta( $postID, $option['id'], $optionDefault ) : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
