@@ -1,0 +1,64 @@
+.alchemy {
+    &__field {
+        transition: background-color .3s;
+
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &--invalid {
+            background: rgba(red, .2);
+        }
+
+        li {
+            margin-bottom: 0;
+        }
+    }
+
+    &__spinner {
+        transition: opacity .3s;
+        opacity: 1;
+        margin: .3em 0 0 .5em;
+
+        &--alch {
+            animation: spin 1.7s linear infinite;
+
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+
+            svg {
+                max-width: 100%;
+            }
+        }
+
+		&--hidden {
+			opacity: 0;
+			animation: none;
+		}
+    }
+
+    &__items {
+        padding: 2em 0;
+    }
+}
+
+.select2-search--dropdown {
+    .select2-search__field {
+        line-height: 1;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

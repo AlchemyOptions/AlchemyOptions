@@ -1,0 +1,16 @@
+.field--password {
+    .field__content {
+        white-space: nowrap;
+    }
+
+    input {
+        max-width: 250px;
+    }
+
+    .button {
+        margin-left: 4px;
+        min-height: 32px;
+
+        vertical-align: top;
+    }
+}

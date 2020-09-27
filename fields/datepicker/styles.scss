@@ -1,0 +1,29 @@
+@import "vendor/jquery-ui-datepicker";
+
+.field--datepicker {
+    .field__content {
+        input {
+            width: 100%;
+            max-width: 200px;
+
+            position: relative;
+            z-index: 0;
+        }
+    }
+
+    .dashicons {
+        pointer-events: none;
+
+        margin-left: -29px;
+        margin-top: 1px;
+
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.ui-datepicker .ui-datepicker-header {
+    a {
+        transition: none;
+    }
+}

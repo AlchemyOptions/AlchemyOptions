@@ -1,0 +1,114 @@
+.field {
+    max-width: 900px;
+
+    &__label {
+        display: block;
+        margin: 0 0 .3em;
+
+        font-size: 14px;
+        font-weight: 600;
+        color: #23282d;
+    }
+
+    &__description {
+        padding-top: .4em;
+
+        color: #666;
+        font-style: italic;
+        font-size: 14px;
+
+        p {
+            padding-top: 0;
+            margin-top:0;
+            margin-bottom: 0;
+        }
+    }
+
+    &__sidebar {
+        float: left;
+        padding-top: 7px;
+        width: 100%;
+        max-width: 200px;
+
+        .field--sections &,
+        .repeatee & {
+            padding-top: 0;
+            float: none;
+            max-width: none;
+            margin-bottom: 1.3em;
+
+            .field__description {
+                margin-bottom: 2em;
+            }
+        }
+
+        @media all and ( max-width: 1024px ) {
+            padding-top: 0;
+            margin-bottom: 1.3em;
+            float: none;
+        }
+    }
+
+    &__content {
+        padding-left: 220px;
+
+        .repeatee & {
+            padding-top: 0;
+            padding-left: 0;
+        }
+
+        .field--sections & {
+            padding-left: 0;
+        }
+
+        @media all and ( max-width: 1024px ) {
+            padding-top: 0;
+            padding-left: 0;
+        }
+
+        input[type=text],
+        input[type=search],
+        input[type=tel],
+        input[type=url],
+        input[type=password],
+        input[type=email],
+        input[type=number],
+        textarea,
+        select {
+            box-sizing: border-box;
+            width: 100%;
+
+            font-size: 15px;
+        }
+
+        .wp-media-buttons {
+            float: none;
+        }
+
+        .wp-editor-container {
+            clear: none;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    &--field_group,
+    &--repeater,
+    &--sections {
+        .field {
+            margin-left: -15px;
+            margin-right: -15px;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .dashicons {
+        line-height: 28px;
+
+        @media screen and (max-width: 782px) {
+            line-height: 35px;
+        }
+    }
+}

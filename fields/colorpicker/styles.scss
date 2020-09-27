@@ -1,0 +1,55 @@
+.field--colorpicker {
+    position: relative;
+    z-index: 2;
+
+    ~ .alchemy__field {
+        z-index: 0;
+    }
+
+    ~ .field--colorpicker {
+        z-index: 1;
+    }
+
+    .field__content {
+        input {
+            max-width: 80px;
+            position: relative;
+            top: -1px;
+
+            @media all and (max-width: 782px) {
+                top: 0;
+                padding: 5px 6px 8px;
+            }
+        }
+    }
+}
+
+.colorpicker {
+    &__sample {
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        width: 40px;
+        height: 26px;
+        box-shadow: 0 1px 0 #ccc;
+
+        vertical-align: top;
+
+        @media all and (max-width: 782px) {
+            margin-top: 1px;
+            height: 32px;
+        }
+    }
+
+    &__toolbar {
+        position: relative;
+        z-index: 0;
+    }
+
+    .iris-picker {
+        position: absolute;
+        left: 0;
+        top: 30px;
+        z-index: 1;
+    }
+}

@@ -8,140 +8,56 @@
 /**
  * Sample test case.
  */
-class Test_Alchemy_Text_Field extends WP_Ajax_UnitTestCase {
-    private $id = 'my-text-option';
+class Test_Alchemy_Text_Field extends Test_Field_Class {
+    private $field = array(
+		'type'=>'text',
+		'id'=>'id',
+		'value'=>'Some value'
+	);
 
     function setUp() {
         parent::setUp();
 
-        $_POST['fields'] = array(
-            $this->id => array(
-                'type' => 'text',
-                'value' => 'lorem ipsum'
-            ),
-        );
-    }
-
-    function test_class_exists() {
-        $this->assertTrue( class_exists( 'Alchemy_Options\Includes\Fields\Text' ) );
-    }
-
-    function add_nonce() {
-        $_POST['nonce'] = wp_create_nonce( 'alchemy_ajax_nonce' );
-    }
-
-    function test_nonce_is_required() {
-        try {
-            $this->_handleAjax( 'alchemy_options_save_options' );
-        } catch ( WPAjaxDieStopException $e ) {
-            $this->assertEquals( $e->getMessage(), 'Failed to check the nonce' );
-
-            unset( $e );
-        }
-    }
-
-    function test_slashes_are_stripped_from_value() {
-        $this->add_nonce();
-
-        $_POST['fields'] = array(
-            $this->id => array(
-                'type' => 'text',
-                'value' => 'lorem \" \' ipsum'
-            ),
-        );
-
-        try {
-            $this->_handleAjax( 'alchemy_options_save_options' );
-        } catch ( WPAjaxDieContinueException $e ) {
-            unset( $e );
-        }
-
-        $this->assertEquals( alch_get_option( $this->id ), sprintf('lorem %1$s %2$s ipsum', '"', "'") );
-    }
-
-    function test_value_is_sanitised() {
-        $this->add_nonce();
-
-        $_POST['fields'] = array(
-            $this->id => array(
-                'type' => 'text',
-                'value' => 'lorem <p>ipsum</p> <script>alert("hi");</script>'
-            ),
-        );
-
-        try {
-            $this->_handleAjax( 'alchemy_options_save_options' );
-        } catch ( WPAjaxDieContinueException $e ) {
-            unset( $e );
-        }
-
-        $this->assertEquals( alch_get_option( $this->id ), 'lorem ipsum' );
-
-        $_POST['fields'] = array(
-            $this->id => array(
-                'type' => 'email',
-                'value' => 'test'
-            ),
-        );
-
-        try {
-            $this->_handleAjax( 'alchemy_options_save_options' );
-        } catch ( WPAjaxDieContinueException $e ) {
-            unset( $e );
-        }
-
-        $this->assertEquals( alch_get_option( $this->id ), '' );
-
-        $_POST['fields'] = array(
-            $this->id => array(
-                'type' => 'email',
-                'value' => 'a@bc.d'
-            ),
-        );
-
-        try {
-            $this->_handleAjax( 'alchemy_options_save_options' );
-        } catch ( WPAjaxDieContinueException $e ) {
-            unset( $e );
-        }
-
-        $this->assertEquals( alch_get_option( $this->id ), 'a@bc.d' );
-    }
-
-    function test_value_is_saved() {
-        $this->add_nonce();
-
-        try {
-            $this->_handleAjax( 'alchemy_options_save_options' );
-        } catch ( WPAjaxDieContinueException $e ) {
-            unset( $e );
-        }
-
-        $response = json_decode( $this->_last_response, true );
-
-        $this->assertNotNull( $response );
-        $this->assertTrue( $response['success'] );
-        $this->assertEquals( $response['data'], 'Options saved' );
+		wp_set_current_user( $this->administrator );
+		$this->set_valid_alchemy_save_options_request( $this->field );
     }
 
     function test_value_is_retrieved() {
-        $this->add_nonce();
+		$this->server->dispatch( $this->request );
 
-        try {
-            $this->_handleAjax( 'alchemy_options_save_options' );
-        } catch ( WPAjaxDieContinueException $e ) {
-            unset( $e );
-        }
+		$this->assertEquals( $this->field['value'], alch_get_option( $this->field['id'] ) );
+	}
 
-        $this->assertEquals( alch_get_option( $this->id ), 'lorem ipsum' );
-    }
+    function test_value_is_sanitised() {
+		$this->field['value'] = 'Some value<script>alert(1);</script>';
 
-    function test_default_value_is_returned() {
-        $this->assertEquals( alch_get_option( $this->id, 'default value' ), 'default value' );
+		$this->server->dispatch( $this->request );
+
+		$this->assertEquals( 'Some value', alch_get_option( $this->field['id'] ) );
+	}
+
+    function test_value_is_validated() {
+		add_filter( 'alch_do_validate_text_value', function( $error, $value ) {
+			if( 'Some value' === $value ) {
+				$error = 'Error message for text';
+			}
+
+			return $error;
+		}, 10, 2 );
+
+		$response = $this->server->dispatch( $this->request );
+
+		$this->assertNotEmpty( $response->data['data']['invalid-fields'] );
+		$this->assertEquals( 'Error message for text', $response->data['data']['invalid-fields'][$this->field['id']] );
+	}
+
+
+    function test_class_exists() {
+        $this->assertTrue( class_exists( 'Alchemy\Fields\Text\Field' ) );
     }
 
     function tearDown() {
-        alch_delete_value( $this->id );
+		alch_admin_delete_option( $this->id );
 
         parent::tearDown();
     }

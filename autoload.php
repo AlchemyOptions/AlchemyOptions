@@ -9,7 +9,7 @@
 spl_autoload_register( 'alchemy_options_autoload' );
 
 function alchemy_options_autoload( $class_name ) {
-    if ( false === strpos( $class_name, 'Alchemy_Options' ) ) {
+    if ( false === strpos( $class_name, 'Alchemy' ) ) {
         return;
     }
 
@@ -33,13 +33,13 @@ function alchemy_options_autoload( $class_name ) {
         }
     }
 
-    $filepath = trailingslashit( untrailingslashit( ALCHEMY_OPTIONS_DIR ) . $namespace ) . $file_name;
+    $filepath = trailingslashit( untrailingslashit( AlCHEMY_DIR_PATH ) . $namespace ) . $file_name;
 
     if ( file_exists( $filepath ) ) {
         include_once( $filepath );
     } else {
         wp_die(
-            esc_html__( sprintf( "The file attempting to be loaded at %s does not exist.", $filepath ), 'alchemy-options' )
+            esc_html__( sprintf( "The file attempting to be loaded at %s does not exist.", $filepath ), 'alchemy' )
         );
     }
 }

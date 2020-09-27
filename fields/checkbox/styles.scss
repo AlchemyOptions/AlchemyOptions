@@ -1,0 +1,14 @@
+.field--checkbox {
+    .field__content {
+        padding-top: 7px;
+    }
+
+    .checkbox__label {
+        display: inline-block;
+        margin-bottom: .7em;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

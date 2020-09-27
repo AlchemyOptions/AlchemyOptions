@@ -1,0 +1,33 @@
+.field--upload {
+    .button {
+        margin-right: 4px;
+    }
+
+    .field__results {
+        padding-top: 1em;
+
+        .field__image {
+            img {
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                max-width: 100%;
+                height: auto;
+
+                transform-origin: 0 0 0;
+
+                background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0), -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0), white;
+                background: -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0), -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0), white;
+                background: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0), linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 0), white;
+
+                background: {
+                    repeat: repeat;
+                    position: 0 0, 5px 5px;
+                    origin: padding-box;
+                    clip: border-box;
+                    size: 10px 10px;
+                };
+            }
+        }
+    }
+}

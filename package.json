@@ -1,40 +1,24 @@
 {
   "name": "alchemy-options",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development gulp",
-    "build": "cross-env NODE_ENV=production gulp build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Alex Bondarev",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "@babel/preset-stage-2": "^7.8.3",
-    "@babel/register": "^7.8.3",
-    "babel-loader": "^8.0.6",
-    "cross-env": "^6.0.3",
-    "del": "^5.1.0",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/register": "^7.9.0",
+    "chalk": "^4.0.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
-    "gulp-load-plugins": "^2.0.2",
     "gulp-rename": "^2.0.0",
-    "gulp-replace": "^1.0.0",
-    "gulp-rev": "^9.0.0",
-    "gulp-rev-replace": "^0.4.4",
-    "gulp-sass": "^4.0.2",
-    "gulp-zip": "^5.0.1",
-    "gulp4-run-sequence": "^1.0.0",
-    "pump": "^3.0.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.41.5",
-    "webpack-stream": "^5.2.1",
-    "yargs": "^15.1.0"
-  },
-  "dependencies": {
-    "kew": "^0.7.0"
+    "gulp-sass": "^4.1.0",
+    "gulp-uglify": "^3.0.2",
+    "gulplog": "^1.0.0",
+    "sass": "^1.26.5"
   }
 }
