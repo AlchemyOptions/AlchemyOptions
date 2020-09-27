@@ -369,7 +369,7 @@ class Field implements Field_Interface {
         $settings = $registeredRepeaters[$data['repeater']['repeater-id']];
         $modifiedValues = [];
 
-        $neededFields = $settings['fields'];
+        $neededFields = isset( $settings['fields'] ) ? $settings['fields'] : [];
 
         if( isset( $settings['field-types'] ) ) {
             $repeateeType = isset( $data['repeatee']['meta']['id'] ) ? $data['repeatee']['meta']['id'] : null;
@@ -554,6 +554,7 @@ class Field implements Field_Interface {
         );
 
         $repeateeVisible = isset( $meta['visible'] ) ? $meta['visible'] : true;
+		$meta['label'] = isset( $meta['label'] ) ? $meta['label'] : '';
 
         $visibilityIcon = 'dashicons';
         $visibilityIconClasses = ['repeatee__btn', 'button', 'button-secondary', 'jsAlchemyRepeateeAction'];
