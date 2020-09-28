@@ -273,7 +273,10 @@ class Field implements Field_Interface {
             ) );
         }
 
-        wp_send_json_success( $response );
+        return rest_ensure_response( array(
+            'success' => true,
+            'data' => $response
+        ) );
     }
 
     function handle_clone_repeatee( WP_REST_Request $request ) {
@@ -297,7 +300,10 @@ class Field implements Field_Interface {
             ) );
         }
 
-        wp_send_json_success( $response );
+        return rest_ensure_response( array(
+            'success' => true,
+            'data' => $response
+        ) );
     }
 
     private function get_repeatees( $data ) {
@@ -336,6 +342,9 @@ class Field implements Field_Interface {
             'index' => $data['index']
         ) );
         $fieldsHTML = '';
+        $colorCode = isset( $data['colorcode'] )
+            ? $data['colorcode']
+            : array( 'enabled' => false, 'colors' => [] );
 
         if( ! empty( $data['renderOpen'] ) ) {
             $classes[] = 'repeatee--expanded';
@@ -366,10 +375,7 @@ class Field implements Field_Interface {
             break;
         }
 
-        $html .= $this->generate_actions_group( $meta, array(
-            'enabled' => $data['colorcode']['enabled'],
-            'colors' => $data['colorcode']['colors'],
-        ) );
+        $html .= $this->generate_actions_group( $meta, $colorCode );
         $html .= sprintf( '<div class="repeatee__fields">%s</div>', $fieldsHTML );
 
         $html .= alch_get_validation_tooltip();
@@ -397,9 +403,11 @@ class Field implements Field_Interface {
         }
 
         foreach ( $neededFields as $fieldIndex => $field ) {
-            $savedField = array_values( array_filter( $data['repeatee']['values'], function( $savedField ) use( $field ) {
-                return $savedField['id'] === $field['id'];
-            } ) );
+            $savedField = isset( $data['repeatee']['values'] )
+                ? array_values( array_filter( $data['repeatee']['values'], function( $savedField ) use( $field ) {
+                    return $savedField['id'] === $field['id'];
+                } ) )
+                : null;
 
             if( ! empty( $savedField ) ) {
                 $field['value'] = $savedField[0]['value'];
