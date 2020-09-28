@@ -5,6 +5,7 @@ namespace Alchemy\Fields\Repeater;
 use Alchemy\Fields\Field_Interface;
 use Alchemy\Includes\Options_Page;
 use Alchemy\Options;
+use WP_Error;
 use WP_REST_Request;
 
 if( ! defined( 'ABSPATH' ) ) {
@@ -222,12 +223,26 @@ class Field implements Field_Interface {
         register_rest_route( 'alchemy/v1', '/add-repeatee/', array(
             'methods' => \WP_REST_Server::CREATABLE,
             'callback' => array( $this, 'handle_add_repeatee' ),
+            'permission_callback' => array( $this, 'permission_callback' ),
         ) );
 
         register_rest_route( 'alchemy/v1', '/clone-repeatee/', array(
             'methods' => \WP_REST_Server::CREATABLE,
             'callback' => array( $this, 'handle_clone_repeatee' ),
+            'permission_callback' => array( $this, 'permission_callback' ),
         ) );
+    }
+
+    function permission_callback() {
+        $pageID = isset( $_POST['page-id'] ) ? $_POST['page-id'] : null;
+
+        if( ! empty( $pageID ) ) {
+            $pageCap = \Alchemy\Includes\Options_Page::get_page_capabilities( $pageID );
+
+            return current_user_can( $pageCap );
+        }
+
+        return false;
     }
 
     function handle_add_repeatee( WP_REST_Request $request ) {
@@ -502,13 +517,11 @@ class Field implements Field_Interface {
 
     private function security_checks( $body_params ) {
         if( empty( $body_params['_wpnonce'] ) || ! wp_verify_nonce( $body_params['_wpnonce'], 'wp_rest' ) ) {
-            wp_send_json_error( __( 'Nonce check failed', 'alchemy' ), 401 );
-        }
-
-        $pageCap = Options_Page::get_page_capabilities( $body_params['page-id'] );
-
-        if( ! current_user_can( $pageCap ) ) {
-            wp_send_json_error( __( 'Sorry, you are not allowed to do that', 'alchemy' ), 403 );
+            return rest_ensure_response( new WP_Error(
+                'alch-repeater-nonce-failure',
+                __( 'Nonce check failed', 'alchemy' ),
+                array( 'status' => 401 )
+            ) );
         }
     }
 

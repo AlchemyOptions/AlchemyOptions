@@ -3,6 +3,7 @@
 namespace Alchemy\Fields\Taxonomy_Select;
 
 use Alchemy\Fields\Field_Interface;
+use WP_Error;
 
 if( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -100,6 +101,17 @@ class Field implements Field_Interface {
         register_rest_route( 'alchemy/v1', '/taxonomy-search/', array(
             'methods' => \WP_REST_Server::READABLE,
             'callback' => array( $this, 'handle_taxonomy_search' ),
+            'permission_callback' => function() {
+                $pageID = isset( $_GET['page-id'] ) ? $_GET['page-id'] : null;
+
+                if( ! empty( $pageID ) ) {
+                    $pageCap = \Alchemy\Includes\Options_Page::get_page_capabilities( $pageID );
+
+                    return current_user_can( $pageCap );
+                }
+
+                return false;
+            },
         ) );
     }
 
@@ -107,13 +119,11 @@ class Field implements Field_Interface {
         $params = $request->get_params();
 
         if( empty( $params['_wpnonce'] ) || ! wp_verify_nonce( $params['_wpnonce'], 'wp_rest' ) ) {
-            wp_send_json_error( __( 'Nonce check failed', 'alchemy' ), 401 );
-        }
-
-        $pageCap = \Alchemy\Includes\Options_Page::get_page_capabilities( $params['page-id'] );
-
-        if( ! current_user_can( $pageCap ) ) {
-            wp_send_json_error( __( 'Sorry, you are not allowed to do that', 'alchemy' ), 403 );
+            return rest_ensure_response( new WP_Error(
+                'alch-taxonomy-search-nonce-failure',
+                __( 'Nonce check failed', 'alchemy' ),
+                array( 'status' => 401 )
+            ) );
         }
 
         $gotTaxonomies = get_terms( array(
@@ -121,14 +131,17 @@ class Field implements Field_Interface {
             'taxonomy' => $params['taxonomy']
         ) );
 
-        $result = array_map(function( $taxonomy ) {
+        $result = array_map( function( $taxonomy ) {
             return array(
                 'text' => $taxonomy->name,
                 'id' => $taxonomy->term_taxonomy_id
             );
-        }, $gotTaxonomies);
+        }, $gotTaxonomies );
 
-        wp_send_json_success( $result );
+        return rest_ensure_response( array(
+            'success' => true,
+            'data' => $result
+        ) );
     }
 
     function get_option_html( $data, $savedValue, $type ) {

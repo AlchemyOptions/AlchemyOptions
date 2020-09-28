@@ -119,6 +119,18 @@ class Options {
         $adminBarMenu->create_menu( self::$optionPages );
     }
 
+    function permission_callback() {
+        $pageID = isset( $_POST['page-id'] ) ? $_POST['page-id'] : null;
+
+        if( ! empty( $pageID ) ) {
+            $pageCap = Includes\Options_Page::get_page_capabilities( $pageID );
+
+            return current_user_can( $pageCap );
+        }
+
+        return false;
+    }
+
     function handle_save_options( WP_REST_Request $request ) {
         $bodyParams = $request->get_body_params();
 
@@ -127,16 +139,6 @@ class Options {
 				'alch-save-unauthenticated',
 				__( 'Nonce check failed', 'alchemy' ),
 				array( 'status' => 401 )
-			) );
-        }
-
-        $pageCap = Includes\Options_Page::get_page_capabilities( $bodyParams['page-id'] );
-
-        if( ! current_user_can( $pageCap ) ) {
-			return rest_ensure_response( new WP_Error(
-				'alch-save-unauthorised',
-				__( 'Sorry, you are not allowed to do that', 'alchemy' ),
-				array( 'status' => 403 )
 			) );
         }
 
@@ -180,16 +182,6 @@ class Options {
 			) );
         }
 
-        $pageCap = Includes\Options_Page::get_page_capabilities( $bodyParams['page-id'] );
-
-        if( ! current_user_can( $pageCap ) ) {
-			return rest_ensure_response( new WP_Error(
-				'alch-save-unauthorised',
-				__( 'Sorry, you are not allowed to do that', 'alchemy' ),
-				array( 'status' => 403 )
-			) );
-        }
-
         if( ! empty( $bodyParams['values'] ) ) {
             $decodedValues = json_decode( $bodyParams['values'] );
 
@@ -227,16 +219,6 @@ class Options {
 				'alch-save-unauthenticated',
 				__( 'Nonce check failed', 'alchemy' ),
 				array( 'status' => 401 )
-			) );
-        }
-
-        $pageCap = apply_filters( 'alch_save_metaboxes_capabilities', 'edit_posts' );
-
-        if( ! current_user_can( $pageCap ) ) {
-			return rest_ensure_response( new WP_Error(
-				'alch-save-unauthorised',
-				__( 'Sorry, you are not allowed to do that', 'alchemy' ),
-				array( 'status' => 403 )
 			) );
         }
 
@@ -281,15 +263,20 @@ class Options {
         register_rest_route( 'alchemy/v1', '/save-options/', array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => array( $this, 'handle_save_options' ),
+            'permission_callback' => array( $this, 'permission_callback' ),
         ) );
         register_rest_route( 'alchemy/v1', '/save-network-options/', array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => array( $this, 'handle_save_network_options' ),
+            'permission_callback' => array( $this, 'permission_callback' ),
         ) );
 
         register_rest_route( 'alchemy/v1', '/save-metaboxes/', array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => array( $this, 'handle_save_meta' ),
+            'permission_callback' => function() {
+                return current_user_can( apply_filters( 'alch_save_metaboxes_capabilities', 'edit_posts' ) );
+            }
         ) );
     }
 
@@ -418,6 +405,8 @@ class Options {
 
             if( empty( $option['id'] ) && ! in_array( $optionType, self::$okWithoutID ) ) {
                 trigger_error( 'Option \'id\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
+            } else if( empty( $option['id'] ) && in_array( $optionType, self::$okWithoutID ) ) {
+                continue;
             }
 
             //todo: check for valid ID with underscores
@@ -496,11 +485,13 @@ class Options {
 
             if( empty( $option['id'] ) && ! in_array( $optionType, self::$okWithoutID ) ) {
                 trigger_error( 'Option \'id\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
+            } else if( empty( $option['id'] ) && in_array( $optionType, self::$okWithoutID ) ) {
+                continue;
             }
 
             //todo: check for valid ID with underscores
 
-            if( ! empty( $parsedOptions[$option['id']] ) ) {
+            if( isset( $option['id'] ) && ! empty( $parsedOptions[$option['id']] ) ) {
                 //todo: if it's a section - need to check its children
 
                 trigger_error( sprintf( 'The \'%s\' option ID is already present. Please use a different one.',
@@ -574,9 +565,11 @@ class Options {
 
             if( empty( $option['id'] ) && ! in_array( $optionType, self::$okWithoutID ) ) {
                 trigger_error( 'Option \'id\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
+            } else if( empty( $option['id'] ) && in_array( $optionType, self::$okWithoutID ) ) {
+                continue;
             }
 
-            if( ! empty( $parsedOptions[$option['id']] ) ) {
+            if( isset( $option['id'] ) && ! empty( $parsedOptions[$option['id']] ) ) {
                 //if it's a section - need to check its children
 
                 trigger_error( sprintf( 'The \'%s\' option ID is already present in this metabox. Please use a different ID.',
@@ -680,9 +673,11 @@ class Options {
             $repeater = Options::get_repeater_id_details( $passed->type );
             $valueType = $repeater ? 'repeater' : $passed->type;
 
-            $check = apply_filters( "alch_validate_{$valueType}_value", $passed->id, $passed->value );
+            $check = isset( $passed->value )
+                ? apply_filters( "alch_validate_{$valueType}_value", $passed->id, $passed->value )
+                : null;
 
-            if( ! empty( $check ) && ! $check['is_valid'] ) {
+            if( ! empty( $check ) && isset( $check['is_valid'] ) && ! $check['is_valid'] ) {
                 $checks[$passed->id] = $check['message'];
             }
         }
@@ -715,7 +710,9 @@ class Options {
                 $valueType = 'repeater';
             }
 
-            $sanitisedValue = apply_filters( "alch_sanitize_{$valueType}_value", $value->value );
+            $sanitisedValue = isset( $value->value )
+                ? apply_filters( "alch_sanitize_{$valueType}_value", $value->value )
+                : null;
 
             try {
                 update_option( $value->id, array(
@@ -744,7 +741,9 @@ class Options {
                 $valueType = 'repeater';
             }
 
-            $sanitisedValue = apply_filters( "alch_sanitize_{$valueType}_value", $value->value );
+            $sanitisedValue = isset( $value->value )
+                ? apply_filters( "alch_sanitize_{$valueType}_value", $value->value )
+                : null;
 
             try {
                 update_site_option( $value->id, array(
@@ -773,7 +772,9 @@ class Options {
                 $valueType = 'repeater';
             }
 
-            $sanitisedValue = apply_filters( "alch_sanitize_{$valueType}_value", $value->value );
+            $sanitisedValue = isset( $value->value )
+                ? apply_filters( "alch_sanitize_{$valueType}_value", $value->value )
+                : null;
 
             try {
                 update_post_meta( $postID, $value->id, array(
