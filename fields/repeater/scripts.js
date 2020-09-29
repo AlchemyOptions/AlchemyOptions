@@ -143,7 +143,7 @@
                             Promise.all(repeateeFields).then(values => {
                                 const meta = $.extend({}, $repeatee.data('meta'));
 
-                                meta.label = meta.label + ' copy';
+                                meta.label = meta.label ? `${meta.label} copy` : '';
 
                                 if( meta['title'] && meta['id'] ) {
                                     data.append('type-id', meta['id']);
