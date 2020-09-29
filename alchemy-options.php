@@ -405,8 +405,6 @@ class Options {
 
             if( empty( $option['id'] ) && ! in_array( $optionType, self::$okWithoutID ) ) {
                 trigger_error( 'Option \'id\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
-            } else if( empty( $option['id'] ) && in_array( $optionType, self::$okWithoutID ) ) {
-                continue;
             }
 
             //todo: check for valid ID with underscores
@@ -485,8 +483,6 @@ class Options {
 
             if( empty( $option['id'] ) && ! in_array( $optionType, self::$okWithoutID ) ) {
                 trigger_error( 'Option \'id\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
-            } else if( empty( $option['id'] ) && in_array( $optionType, self::$okWithoutID ) ) {
-                continue;
             }
 
             //todo: check for valid ID with underscores
@@ -565,8 +561,6 @@ class Options {
 
             if( empty( $option['id'] ) && ! in_array( $optionType, self::$okWithoutID ) ) {
                 trigger_error( 'Option \'id\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
-            } else if( empty( $option['id'] ) && in_array( $optionType, self::$okWithoutID ) ) {
-                continue;
             }
 
             if( isset( $option['id'] ) && ! empty( $parsedOptions[$option['id']] ) ) {
@@ -620,7 +614,9 @@ class Options {
                 trigger_error( 'No alch_get_'. $optionType . '_option_html callback registered.', E_USER_WARNING );
             }
 
-            $parsedOptions[$option['id']] = $option;
+            if( isset( $option['id'] ) ) {
+                $parsedOptions[$option['id']] = $option;
+            }
         }
 
         return $html;
