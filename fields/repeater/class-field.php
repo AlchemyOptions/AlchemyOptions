@@ -252,7 +252,6 @@ class Field implements Field_Interface {
 
         $repeateeType = isset( $body_params['type-id'] ) ? $body_params['type-id'] : '';
         $repeateeTypeHuman = isset( $body_params['type-title'] ) ? $body_params['type-title'] : '';
-        $response = '';
 
         if( isset( $body_params['repeater-id'] ) && isset( $body_params['repeatees-number'] ) ) {
             $response = $this->get_repeatee_html( array(
@@ -271,11 +270,16 @@ class Field implements Field_Interface {
                 'type' => 'options',
                 'renderOpen' => true
             ) );
+
+            return rest_ensure_response( array(
+                'success' => true,
+                'data' => $response
+            ) );
         }
 
         return rest_ensure_response( array(
-            'success' => true,
-            'data' => $response
+            'success' => false,
+            'data' => __( 'Adding a repeatee failed', 'alchemy' )
         ) );
     }
 
@@ -285,7 +289,6 @@ class Field implements Field_Interface {
         $this->security_checks( $body_params );
 
         $repeateeData = isset( $body_params['values'] ) ? json_decode( $body_params['values'], true ) : [];
-        $response = '';
 
         if( isset( $body_params['repeater-id'] ) && isset( $body_params['repeatees-number'] ) ) {
             $response = $this->get_repeatee_html( array(
@@ -298,11 +301,16 @@ class Field implements Field_Interface {
                 'type' => 'options',
                 'renderOpen' => true
             ) );
+
+            return rest_ensure_response( array(
+                'success' => true,
+                'data' => $response
+            ) );
         }
 
         return rest_ensure_response( array(
-            'success' => true,
-            'data' => $response
+            'success' => false,
+            'data' => __( 'Cloning a repeatee failed', 'alchemy' )
         ) );
     }
 
