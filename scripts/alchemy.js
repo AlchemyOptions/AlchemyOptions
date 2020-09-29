@@ -141,8 +141,13 @@
 
         if( $metaboxes[0] ) {
             const $postForm = $('#post');
+            const $postBox = $metaboxes.closest('.postbox');
 
-            $metaboxes.closest('.postbox').find('.hndle').removeClass('hndle'); // this removes dnd for metaboxes
+            $postBox.find('.hndle').removeClass('hndle'); // this removes dnd for metaboxes
+
+            // this removes metaboxes sorting buttons (WP 5.5). It is needed not to break WYSIWYGs
+            $postBox.find('.handle-order-higher').remove();
+            $postBox.find('.handle-order-lower').remove();
 
             if( $postForm[0] ) {
                 $('#publish').on('click', function(e) {
