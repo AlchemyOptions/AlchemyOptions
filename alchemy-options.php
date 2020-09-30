@@ -91,6 +91,7 @@ class Options {
     private static $networkOptionPages = [];
     private static $processedNetworkPages = [];
     private static $okWithoutID;
+    private static $prefix = '_alchemy_options_';
 
     function __construct() {
         if( is_multisite() ) {
@@ -442,7 +443,7 @@ class Options {
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
             $optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_option( $option['id'], $optionDefault ) : '';
+            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_option( Options::$prefix . $option['id'], $optionDefault ) : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -520,7 +521,7 @@ class Options {
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
 			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_network_option( $option['id'], $optionDefault ) : '';
+            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_network_option( Options::$prefix . $option['id'], $optionDefault ) : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -598,7 +599,7 @@ class Options {
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
 			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_meta( $postID, $option['id'], $optionDefault ) : '';
+            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_meta( $postID, Options::$prefix . $option['id'], $optionDefault ) : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -711,7 +712,7 @@ class Options {
                 : null;
 
             try {
-                update_option( $value->id, array(
+                update_option( Options::$prefix . $value->id, array(
                     'type' => $value->type,
                     'value' => $sanitisedValue,
                 ) );
@@ -742,7 +743,7 @@ class Options {
                 : null;
 
             try {
-                update_site_option( $value->id, array(
+                update_site_option( Options::$prefix . $value->id, array(
                     'type' => $value->type,
                     'value' => $sanitisedValue,
                 ) );
@@ -773,7 +774,7 @@ class Options {
                 : null;
 
             try {
-                update_post_meta( $postID, $value->id, array(
+                update_post_meta( $postID, Options::$prefix . $value->id, array(
                     'type' => $value->type,
                     'value' => wp_slash( $sanitisedValue ) // wp does wp_unslash before saving
                 ) );
