@@ -139,12 +139,25 @@ class Field implements Field_Interface {
             $found_posts = $the_query->get_posts();
         }
 
-        $result = array_map(function( $post ) {
+        $result = array_map( function( $post ) {
+            $ancestors = get_post_ancestors( $post );
+            $title = $post->post_title;
+
+            if( ! empty( $ancestors ) ) {
+                $title = '';
+
+                foreach ( $ancestors as $ancestor ) {
+                    $title .= get_the_title( $ancestor ) . ' / ';
+                }
+
+                $title .= $post->post_title;
+            }
+
             return array(
-                'text' => $post->post_title,
+                'text' => $title,
                 'id' => $post->ID
             );
-        }, $found_posts);
+        }, $found_posts );
 
         return rest_ensure_response( array(
             'success' => true,
@@ -265,9 +278,22 @@ class Field implements Field_Interface {
             } );
         }
 
-        $optionsHTML .= join('',  array_map(function( $post ) {
-            return sprintf( '<option selected="selected" value="%1$s">%2$s</option>', $post->ID, $post->post_title );
-        }, $found_posts) );
+        $optionsHTML .= join('',  array_map( function( $post ) {
+            $ancestors = get_post_ancestors( $post );
+            $title = $post->post_title;
+
+            if( ! empty( $ancestors ) ) {
+                $title = '';
+
+                foreach ( $ancestors as $ancestor ) {
+                    $title .= get_the_title( $ancestor ) . ' / ';
+                }
+
+                $title .= $post->post_title;
+            }
+
+            return sprintf( '<option selected="selected" value="%1$s">%2$s</option>', $post->ID, $title );
+        }, $found_posts ) );
 
         return $optionsHTML;
     }
