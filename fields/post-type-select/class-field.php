@@ -146,7 +146,7 @@ class Field implements Field_Interface {
             if( ! empty( $ancestors ) ) {
                 $title = '';
 
-                foreach ( $ancestors as $ancestor ) {
+                foreach ( array_reverse( $ancestors ) as $ancestor ) {
                     $title .= get_the_title( $ancestor ) . ' / ';
                 }
 
@@ -285,7 +285,7 @@ class Field implements Field_Interface {
             if( ! empty( $ancestors ) ) {
                 $title = '';
 
-                foreach ( $ancestors as $ancestor ) {
+                foreach ( array_reverse( $ancestors ) as $ancestor ) {
                     $title .= get_the_title( $ancestor ) . ' / ';
                 }
 
