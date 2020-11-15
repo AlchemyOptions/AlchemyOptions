@@ -113,7 +113,7 @@ class Options {
         add_action( 'edit_user_profile', array( $this, 'add_user_meta_fields' ) );
         add_action( 'edit_user_profile', array( $this, 'append_temp_editor' ) );
 
-        $this::$okWithoutID = apply_filters( 'alch_ok_without_id_types', ['sections', 'textblock'] ); // todo: move addition to respective classes
+        $this::$okWithoutID = apply_filters( 'alch_ok_without_id_types', [] );
         $this->add_metaboxes();
     }
 

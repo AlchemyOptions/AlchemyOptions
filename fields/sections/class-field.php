@@ -15,6 +15,7 @@ if( class_exists( __NAMESPACE__ . '\Field' ) ) {
 class Field {
     function __construct() {
         add_filter( 'alch_register_field_type', array( $this, 'register_type' ) );
+        add_filter( 'alch_ok_without_id_types', array( $this, 'add_as_ok_if_no_id' ) );
         add_filter( 'alch_get_sections_option_html', array( $this, 'get_option_html' ), 10, 3 );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
     }
@@ -37,6 +38,10 @@ class Field {
 
         wp_enqueue_script( 'alch_sections_field' );
         wp_enqueue_style( 'alch_sections_field' );
+    }
+
+    function add_as_ok_if_no_id( $types ) {
+        return array_merge( $types, ['sections'] );
     }
 
     function register_type( $types ) {
