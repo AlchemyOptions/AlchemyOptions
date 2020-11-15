@@ -86,6 +86,7 @@ class Options {
     private static $options;
     private static $networkOptions;
     private static $metaBoxes;
+    private static $userMetaFields;
     private static $optionPages = [];
     private static $processedPages = [];
     private static $networkOptionPages = [];
@@ -106,6 +107,11 @@ class Options {
         add_action( 'block_editor_meta_box_hidden_fields', array( $this, 'append_temp_editor' ) ); // Gutenberg
         add_action( 'edit_form_advanced', array( $this, 'append_temp_editor' ) ); // pre-Gutenberg metabox
         add_action( 'alch_output_after_options', array( $this, 'append_temp_editor' ) );
+
+        add_action( 'show_user_profile', array( $this, 'add_user_meta_fields' ) );
+        add_action( 'show_user_profile', array( $this, 'append_temp_editor' ) );
+        add_action( 'edit_user_profile', array( $this, 'add_user_meta_fields' ) );
+        add_action( 'edit_user_profile', array( $this, 'append_temp_editor' ) );
 
         $this::$okWithoutID = apply_filters( 'alch_ok_without_id_types', ['sections', 'textblock'] ); // todo: move addition to respective classes
         $this->add_metaboxes();
@@ -252,6 +258,46 @@ class Options {
 		) );
     }
 
+    function handle_save_user_profile( WP_REST_Request $request ) {
+        $bodyParams = $request->get_body_params();
+
+        if( empty( $bodyParams['_wpnonce'] ) || ! wp_verify_nonce( $bodyParams['_wpnonce'], 'wp_rest' ) ) {
+			return rest_ensure_response( new WP_Error(
+				'alch-save-unauthenticated',
+				__( 'Nonce check failed', 'alchemy' ),
+				array( 'status' => 401 )
+			) );
+        }
+
+        if( ! empty( $bodyParams['values'] ) ) {
+            $decodedValues = json_decode( $bodyParams['values'] );
+
+            $checks = $this->check_values( $decodedValues );
+
+            if( ! empty( $checks ) ) {
+				return rest_ensure_response( new WP_Error(
+					'alch-save-validation-errors',
+					__( 'User profile values not saved', 'alchemy' ),
+					array(
+						'success' => false,
+						'status' => 422,
+						'invalid-fields' => $checks
+					)
+				) );
+            }
+
+            if( $this->save_user_profile_values( $bodyParams['user-id'], $decodedValues ) ) {
+				return rest_ensure_response( array( 'success' => true ) );
+            }
+        }
+
+		return rest_ensure_response( new WP_Error(
+			'alch-save-userprofile-error',
+			__( 'User profile values not saved', 'alchemy' ),
+			array( 'status' => 400 )
+		) );
+    }
+
     function append_temp_editor() {
         //hack to include editor assets. Will be removed when there's a way to get the full tinyMCE settings and assets
 
@@ -277,6 +323,16 @@ class Options {
             'callback' => array( $this, 'handle_save_meta' ),
             'permission_callback' => function() {
                 return current_user_can( apply_filters( 'alch_save_metaboxes_capabilities', 'edit_posts' ) );
+            }
+        ) );
+
+        register_rest_route( 'alchemy/v1', '/save-user-profile/', array(
+            'methods' => WP_REST_Server::CREATABLE,
+            'callback' => array( $this, 'handle_save_user_profile' ),
+            'permission_callback' => function() {
+                $capability = current_user_can( 'edit_users' ) ? 'edit_users' : 'read';
+
+                return current_user_can( $capability );
             }
         ) );
     }
@@ -318,10 +374,25 @@ class Options {
                 'nonce' => wp_create_nonce( 'wp_rest' ),
                 'url' => get_rest_url( null, '/alchemy/v1/save-metaboxes/' ),
             ),
+            'save-user-profile' => array(
+                'userID' => $this->get_user_ID(),
+                'nonce' => wp_create_nonce( 'wp_rest' ),
+                'url' => get_rest_url( null, '/alchemy/v1/save-user-profile/' ),
+            ),
         ) );
 
         wp_enqueue_script( 'alch_admin_scripts' );
         wp_enqueue_style( 'alch_admin_styles' );
+    }
+
+    function add_user_meta_fields( $user ) {
+        $userMetaFields = self::get_user_meta_fields();
+
+        if( empty( $userMetaFields ) || wp_doing_ajax() ) {
+            return;
+        }
+
+        printf( '<div class="alchemy alchemy--profile jsAlchemy jsAlchemyUserProfile">%s</div>', $this->get_user_meta_html( $user->ID, $userMetaFields ) );
     }
 
     static function get_registered_field_types() {
@@ -364,6 +435,14 @@ class Options {
         return self::$metaBoxes;
     }
 
+    static function get_user_meta_fields() {
+        if( empty( self::$userMetaFields ) ) {
+            self::$userMetaFields = apply_filters( 'alch_user_meta_fields', [] );
+        }
+
+        return self::$userMetaFields;
+    }
+
     static function get_field_type_settings( $type ) {
         $fieldTypes = self::get_registered_field_types();
         $fieldTypeSettings = $fieldTypes[$type]['available-for'];
@@ -373,6 +452,7 @@ class Options {
                 'options' => true,
                 'repeaters' => true,
                 'metaboxes' => true,
+                'userprofile' => true,
             );
         }
 
@@ -434,7 +514,7 @@ class Options {
 
             $typeSettings = self::get_field_type_settings( $optionType );
 
-            if( ! $typeSettings['options'] ) {
+            if( ! isset( $typeSettings['options'] ) || ! $typeSettings['options'] ) {
                 continue;
             }
 
@@ -512,7 +592,7 @@ class Options {
 
             $typeSettings = self::get_field_type_settings( $optionType );
 
-            if( ! $typeSettings['options'] ) {
+            if( ! isset( $typeSettings['options'] ) || ! $typeSettings['options'] ) {
                 continue;
             }
 
@@ -588,7 +668,7 @@ class Options {
 
             $typeSettings = self::get_field_type_settings( $optionType );
 
-            if( ! $typeSettings['metaboxes'] ) {
+            if( ! isset( $typeSettings['metaboxes'] ) || ! $typeSettings['metaboxes'] ) {
                 trigger_error( 'Option type \''. $optionType .'\' is not available for meta boxes.', E_USER_WARNING );
 
                 continue;
@@ -600,6 +680,84 @@ class Options {
 			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
             $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_meta( $postID, Options::$prefix . $option['id'], $optionDefault ) : '';
+
+            if( isset( $option['value'] ) ) {
+                $savedValue = $option['value'];
+            }
+
+            if( isset( $htmlFilter ) && ! empty( $htmlFilter->callbacks ) ) {
+                $optionHtml = apply_filters( "alch_get_{$optionType}_option_html", $option, $savedValue, 'metabox' );
+
+                if( ! empty( $optionHtml ) ) {
+                    $html .= $optionHtml;
+                }
+            } else {
+                trigger_error( 'No alch_get_'. $optionType . '_option_html callback registered.', E_USER_WARNING );
+            }
+
+            if( isset( $option['id'] ) ) {
+                $parsedOptions[$option['id']] = $option;
+            }
+        }
+
+        return $html;
+    }
+
+    static function get_user_meta_html( $userID, $fields ) {
+        $html = '';
+        $parsedOptions = [];
+        $registeredTypes = self::get_registered_field_types();
+        $registeredRepeaters = self::get_registered_repeaters();
+
+        foreach ( $fields as $option ) {
+            $optionType = $option['type'];
+
+            $repeater = self::get_repeater_id_details( $optionType );
+
+            if( empty( $optionType ) ) {
+                trigger_error( 'Option \'type\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
+            }
+
+            if( empty( $option['id'] ) && ! in_array( $optionType, self::$okWithoutID ) ) {
+                trigger_error( 'Option \'id\' is missing. ' . print_r( $option, true ), E_USER_ERROR );
+            }
+
+            if( isset( $option['id'] ) && ! empty( $parsedOptions[$option['id']] ) ) {
+                //if it's a section - need to check its children
+
+                trigger_error( sprintf( 'The \'%s\' option ID is already present in user fields. Please use a different ID.',
+                    $option['id']
+                ), E_USER_ERROR );
+            }
+
+            if( ! empty( $repeater ) ) {
+                $optionType = $repeater['type'];
+
+                if( empty( $registeredRepeaters[$repeater['id']] ) ) {
+                    trigger_error( 'Repeater type \''. $repeater['id'] .'\' is not registered. Please use the \'alch_repeaters\' filter to do that.', E_USER_WARNING );
+                }
+            }
+
+            if( empty( $registeredTypes[$optionType] ) ) {
+                trigger_error( 'Option type \''. $optionType .'\' is not registered. Please use the \'alch_register_field_type\' filter to do that.', E_USER_WARNING );
+
+                continue;
+            }
+
+            $typeSettings = self::get_field_type_settings( $optionType );
+
+            if( ! isset( $typeSettings['userprofile'] ) || ! $typeSettings['userprofile'] ) {
+                trigger_error( 'Option type \''. $optionType .'\' is not available for user fields.', E_USER_WARNING );
+
+                continue;
+            }
+
+            global $wp_filter;
+
+            $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
+			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
+
+            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_user_meta( Options::$prefix . $option['id'], $userID, $optionDefault ) : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -661,6 +819,16 @@ class Options {
             self::$networkOptionPages[] = $page;
             self::$processedNetworkPages[] = $page['id'];
         }
+    }
+
+    private function get_user_ID() {
+        if ( defined('IS_PROFILE_PAGE') && IS_PROFILE_PAGE ) {
+            return get_current_user_id();
+        } else if ( ! empty( $_GET['user_id'] ) && is_numeric( $_GET['user_id'] ) ) {
+            return $_GET['user_id'];
+        }
+
+        return '';
     }
 
     private function check_values( $values ) {
@@ -784,6 +952,37 @@ class Options {
         }
 
         do_action( $saved ? 'alchemy_metaboxes_saved' : 'alchemy_metaboxes_save_failed' );
+
+        return $saved;
+    }
+
+    private function save_user_profile_values( $userID, $values ) {
+        do_action( 'alchemy_userprofile_before_save', $values );
+
+        $saved = true;
+
+        foreach ( $values as $value ) {
+            $valueType = $value->type;
+
+            if( Options::get_repeater_id_details( $valueType ) ) {
+                $valueType = 'repeater';
+            }
+
+            $sanitisedValue = isset( $value->value )
+                ? apply_filters( "alch_sanitize_{$valueType}_value", $value->value )
+                : null;
+
+            try {
+                update_user_meta( $userID, Options::$prefix . $value->id, array(
+                    'type' => $value->type,
+                    'value' => wp_slash( $sanitisedValue ) // wp does wp_unslash before saving
+                ) );
+            } catch ( \Exception $e ) {
+                $saved = false;
+            }
+        }
+
+        do_action( $saved ? 'alchemy_userprofile_saved' : 'alchemy_userprofile_save_failed' );
 
         return $saved;
     }

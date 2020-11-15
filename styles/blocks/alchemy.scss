@@ -45,6 +45,13 @@
     &__items {
         padding: 2em 0;
     }
+
+    &--profile {
+        .alchemy__field {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
 }
 
 .select2-search--dropdown {

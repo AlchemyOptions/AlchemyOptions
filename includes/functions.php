@@ -16,6 +16,14 @@ if ( ! function_exists( 'alch_get_post_meta' ) ) {
     }
 }
 
+if ( ! function_exists( 'alch_get_user_meta' ) ) {
+    function alch_get_user_meta( $metaID, $userID, $default = '' ) {
+        return alch_get_prepared_value(
+            get_the_author_meta( $metaID, $userID ), $metaID, $default
+        );
+    }
+}
+
 if( ! function_exists( 'alch_get_prepared_value' ) ) {
     function alch_get_prepared_value( $saved, $id, $default ) {
         if( empty( $saved ) ) {
@@ -64,6 +72,19 @@ if( ! function_exists( 'alch_admin_get_saved_network_option' ) ) {
 if( ! function_exists( 'alch_admin_get_saved_meta' ) ) {
     function alch_admin_get_saved_meta( $postID, $id, $default = '' ) {
         $savedValue = get_post_meta( $postID, $id, true );
+        $value = $default;
+
+        if( ! empty( $savedValue ) ) {
+            $value = $savedValue['value'];
+        }
+
+        return $value;
+    }
+}
+
+if( ! function_exists( 'alch_admin_get_saved_user_meta' ) ) {
+    function alch_admin_get_saved_user_meta( $id, $userID, $default = '' ) {
+        $savedValue = get_the_author_meta( $id, $userID );
         $value = $default;
 
         if( ! empty( $savedValue ) ) {

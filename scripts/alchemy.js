@@ -11,6 +11,7 @@
     $(() => {
         const $alchemy = $('.jsAlchemy');
         const $metaboxes = $('.jsAlchemyMetaBox');
+        const $userProfileContainer = $('.jsAlchemyUserProfile');
 
         if( ! $alchemy ) {
             return;
@@ -168,6 +169,71 @@
 
                         saved = true;
                     }
+                });
+            }
+        }
+
+        if( $userProfileContainer[0] ) {
+            const $profileForm = $('#your-profile');
+
+            let saved = false;
+
+            if( $profileForm[0] ) {
+                $profileForm.on('submit', e => {
+                    if( ! saved ) {
+                        const $fields = $userProfileContainer.children('.jsAlchemyField');
+                        const constrFields = [];
+
+                        $profileForm.find('[type="submit"]').attr('disabled', true)
+
+                        $fields.each((i, field) => {
+                            const $field = $(field);
+
+                            if( 'sections' === $field.data('alchemy').type ) {
+                                const $children = $field.find('.jsAlchemySectionsTab').children('.jsAlchemyField');
+
+                                if( $children[0] ) {
+                                    $children.each((i, child) => {
+                                        constrFields.push($(child));
+                                    });
+                                }
+                            } else {
+                                constrFields.push($field);
+                            }
+                        });
+
+                        const fieldsPromises = $(constrFields).map((i, field) => {
+                            const alchemy = $(field).data('alchemy');
+
+                            return new Function( `return AO['get_${alchemy.type}_value']('${alchemy.id}');` )(alchemy.id)
+                        }).get();
+
+                        const userProfileData = AlchemyData['save-user-profile'];
+
+                        Promise.all(fieldsPromises).then(values => {
+                            data.append('_wpnonce', userProfileData.nonce);
+                            data.append('user-id', userProfileData.userID);
+                            data.append('values', JSON.stringify(values));
+
+                            $.ajax({
+                                method: "POST",
+                                url: userProfileData.url,
+                                dataType: 'json',
+                                processData: false,
+                                contentType: false,
+                                data: data,
+                                success: () => {
+                                    $profileForm.submit();
+                                }
+                            });
+                        });
+
+                        e.preventDefault();
+                    } else {
+                        $profileForm.find('[type="submit"]').removeAttr('disabled').addClass('disabled').click();
+                    }
+
+                    saved = true;
                 });
             }
         }
