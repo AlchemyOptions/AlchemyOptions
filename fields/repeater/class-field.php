@@ -67,6 +67,7 @@ class Field implements Field_Interface {
             'available-for' => array(
                 'options' => true,
                 'metaboxes' => true,
+                'userprofile' => true,
             ),
         );
 

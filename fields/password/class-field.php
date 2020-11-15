@@ -50,6 +50,7 @@ class Field implements Field_Interface {
                     'options' => true,
                     'repeaters' => true,
                     'metaboxes' => true,
+                    'userprofile' => true,
                 ),
             ),
         );

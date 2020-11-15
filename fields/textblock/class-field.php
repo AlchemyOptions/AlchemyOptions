@@ -29,6 +29,7 @@ class Field {
                     'options' => true,
                     'repeaters' => true,
                     'metaboxes' => true,
+                    'userprofile' => true,
                 ),
             ),
         );
