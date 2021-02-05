@@ -94,7 +94,7 @@ class Options {
     private static $networkOptionPages = [];
     private static $processedNetworkPages = [];
     private static $okWithoutID;
-    private static $prefix = '_alchemy_options_';
+    private static $prefix;
 
     function __construct() {
         if( is_multisite() ) {
@@ -115,7 +115,9 @@ class Options {
         add_action( 'edit_user_profile', array( $this, 'add_user_meta_fields' ) );
         add_action( 'edit_user_profile', array( $this, 'append_temp_editor' ) );
 
+        $this::$prefix = apply_filters( 'alch_db_prefix', '_alchemy_options_' );
         $this::$okWithoutID = apply_filters( 'alch_ok_without_id_types', [] );
+
         $this->add_metaboxes();
     }
 
