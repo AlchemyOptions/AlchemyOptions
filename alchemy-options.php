@@ -115,7 +115,7 @@ class Options {
         add_action( 'edit_user_profile', array( $this, 'add_user_meta_fields' ) );
         add_action( 'edit_user_profile', array( $this, 'append_temp_editor' ) );
 
-        $this::$prefix = apply_filters( 'alch_db_prefix', '_alchemy_options_' );
+        $this::$prefix = alch_get_db_prefix();
         $this::$okWithoutID = apply_filters( 'alch_ok_without_id_types', [] );
 
         $this->add_metaboxes();

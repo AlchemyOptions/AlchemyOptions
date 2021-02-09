@@ -2,6 +2,8 @@
 
 if( ! function_exists( 'alch_get_option' ) ) {
     function alch_get_option( $id, $default = '' ) {
+        $id = alch_get_db_prefix() . $id;
+
         return alch_get_prepared_value(
             get_option( $id ), $id, $default
         );
@@ -10,6 +12,8 @@ if( ! function_exists( 'alch_get_option' ) ) {
 
 if ( ! function_exists( 'alch_get_post_meta' ) ) {
     function alch_get_post_meta( $postID, $metaID, $default = '' ) {
+        $metaID = alch_get_db_prefix() . $metaID;
+
         return alch_get_prepared_value(
             get_post_meta( $postID, $metaID, true ), $metaID, $default
         );
@@ -18,6 +22,8 @@ if ( ! function_exists( 'alch_get_post_meta' ) ) {
 
 if ( ! function_exists( 'alch_get_user_meta' ) ) {
     function alch_get_user_meta( $metaID, $userID, $default = '' ) {
+        $metaID = alch_get_db_prefix() . $metaID;
+
         return alch_get_prepared_value(
             get_the_author_meta( $metaID, $userID ), $metaID, $default
         );
@@ -142,5 +148,11 @@ if( ! function_exists( 'alch_admin_get_field_sidebar' ) ) {
 if( ! function_exists( 'alch_get_validation_tooltip' ) ) {
     function alch_get_validation_tooltip() {
         return '<span class="tooltip jsAlchemyValidationTooltip" role="tooltip"><span class="jsAlchemyTooltipText"></span><span class="tooltip__arrow" data-popper-arrow></span></span>';
+    }
+}
+
+if( ! function_exists( 'alch_get_db_prefix' ) ) {
+    function alch_get_db_prefix() {
+        return apply_filters( 'alch_db_prefix', '_alchemy_options_' );
     }
 }
