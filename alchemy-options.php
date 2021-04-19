@@ -94,7 +94,6 @@ class Options {
     private static $networkOptionPages = [];
     private static $processedNetworkPages = [];
     private static $okWithoutID;
-    private static $prefix;
 
     function __construct() {
         if( is_multisite() ) {
@@ -115,7 +114,6 @@ class Options {
         add_action( 'edit_user_profile', array( $this, 'add_user_meta_fields' ) );
         add_action( 'edit_user_profile', array( $this, 'append_temp_editor' ) );
 
-        $this::$prefix = alch_get_db_prefix();
         $this::$okWithoutID = apply_filters( 'alch_ok_without_id_types', [] );
 
         $this->add_metaboxes();
@@ -527,7 +525,9 @@ class Options {
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
             $optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_option( Options::$prefix . $option['id'], $optionDefault ) : '';
+            $savedValue = isset( $option['id'] )
+                ? alch_admin_get_saved_option( alch_modify_alchemy_id( $option['id'] ), $optionDefault )
+                : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -605,7 +605,9 @@ class Options {
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
 			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_network_option( Options::$prefix . $option['id'], $optionDefault ) : '';
+            $savedValue = isset( $option['id'] )
+                ? alch_admin_get_saved_network_option( alch_modify_alchemy_id( $option['id'] ), $optionDefault )
+                : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -683,7 +685,9 @@ class Options {
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
 			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_meta( $postID, Options::$prefix . $option['id'], $optionDefault ) : '';
+            $savedValue = isset( $option['id'] )
+                ? alch_admin_get_saved_meta( $postID, alch_modify_alchemy_id( $option['id'] ), $optionDefault )
+                : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -761,7 +765,9 @@ class Options {
             $htmlFilter = $wp_filter["alch_get_{$optionType}_option_html"];
 			$optionDefault = isset( $option['default'] ) ? $option['default'] : '';
 
-            $savedValue = isset( $option['id'] ) ? alch_admin_get_saved_user_meta( Options::$prefix . $option['id'], $userID, $optionDefault ) : '';
+            $savedValue = isset( $option['id'] )
+                ? alch_admin_get_saved_user_meta( alch_modify_alchemy_id( $option['id'] ), $userID, $optionDefault )
+                : '';
 
             if( isset( $option['value'] ) ) {
                 $savedValue = $option['value'];
@@ -884,7 +890,7 @@ class Options {
                 : null;
 
             try {
-                update_option( Options::$prefix . $value->id, array(
+                update_option( alch_modify_alchemy_id( $value->id ), array(
                     'type' => $value->type,
                     'value' => $sanitisedValue,
                 ) );
@@ -915,7 +921,7 @@ class Options {
                 : null;
 
             try {
-                update_site_option( Options::$prefix . $value->id, array(
+                update_site_option( alch_modify_alchemy_id( $value->id ), array(
                     'type' => $value->type,
                     'value' => $sanitisedValue,
                 ) );
@@ -946,7 +952,7 @@ class Options {
                 : null;
 
             try {
-                update_post_meta( $postID, Options::$prefix . $value->id, array(
+                update_post_meta( $postID, alch_modify_alchemy_id( $value->id ), array(
                     'type' => $value->type,
                     'value' => wp_slash( $sanitisedValue ) // wp does wp_unslash before saving
                 ) );
@@ -977,7 +983,7 @@ class Options {
                 : null;
 
             try {
-                update_user_meta( $userID, Options::$prefix . $value->id, array(
+                update_user_meta( $userID, alch_modify_alchemy_id( $value->id ), array(
                     'type' => $value->type,
                     'value' => wp_slash( $sanitisedValue ) // wp does wp_unslash before saving
                 ) );

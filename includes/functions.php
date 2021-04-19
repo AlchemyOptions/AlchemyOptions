@@ -2,7 +2,17 @@
 
 if( ! function_exists( 'alch_get_option' ) ) {
     function alch_get_option( $id, $default = '' ) {
-        $id = alch_get_db_prefix() . $id;
+        $id = alch_modify_alchemy_id( $id );
+
+        return alch_get_prepared_value(
+            get_option( $id ), $id, $default
+        );
+    }
+}
+
+if( ! function_exists( 'alch_get_i18n_option' ) ) {
+    function alch_get_i18n_option( $id, $icl_language_code, $default = '' ) {
+        $id = alch_get_db_prefix() . $id . "_{$icl_language_code}";
 
         return alch_get_prepared_value(
             get_option( $id ), $id, $default
@@ -12,7 +22,17 @@ if( ! function_exists( 'alch_get_option' ) ) {
 
 if ( ! function_exists( 'alch_get_post_meta' ) ) {
     function alch_get_post_meta( $postID, $metaID, $default = '' ) {
-        $metaID = alch_get_db_prefix() . $metaID;
+        $metaID = alch_modify_alchemy_id( $metaID );
+
+        return alch_get_prepared_value(
+            get_post_meta( $postID, $metaID, true ), $metaID, $default
+        );
+    }
+}
+
+if ( ! function_exists( 'alch_get_i18n_post_meta' ) ) {
+    function alch_get_i18n_post_meta( $postID, $metaID, $icl_language_code, $default = '' ) {
+        $metaID = alch_get_db_prefix() . $metaID . "_{$icl_language_code}";
 
         return alch_get_prepared_value(
             get_post_meta( $postID, $metaID, true ), $metaID, $default
@@ -22,7 +42,17 @@ if ( ! function_exists( 'alch_get_post_meta' ) ) {
 
 if ( ! function_exists( 'alch_get_user_meta' ) ) {
     function alch_get_user_meta( $metaID, $userID, $default = '' ) {
-        $metaID = alch_get_db_prefix() . $metaID;
+        $metaID = alch_modify_alchemy_id( $metaID );
+
+        return alch_get_prepared_value(
+            get_the_author_meta( $metaID, $userID ), $metaID, $default
+        );
+    }
+}
+
+if ( ! function_exists( 'alch_get_i18n_user_meta' ) ) {
+    function alch_get_i18n_user_meta( $metaID, $userID, $icl_language_code, $default = '' ) {
+        $metaID = alch_get_db_prefix() . $metaID . "_{$icl_language_code}";
 
         return alch_get_prepared_value(
             get_the_author_meta( $metaID, $userID ), $metaID, $default
@@ -154,5 +184,29 @@ if( ! function_exists( 'alch_get_validation_tooltip' ) ) {
 if( ! function_exists( 'alch_get_db_prefix' ) ) {
     function alch_get_db_prefix() {
         return apply_filters( 'alch_db_prefix', '_alchemy_options_' );
+    }
+}
+
+if( ! function_exists( 'alch_get_db_suffix' ) ) {
+    function alch_get_db_suffix() {
+        $suffix = apply_filters( 'alch_db_default_suffix', '' );
+        $languageCode = defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : '';
+
+        if ( ! empty( $languageCode ) && is_string( $languageCode ) ) {
+            $languageCode = strtolower( $languageCode );
+
+            $suffix = apply_filters( "alch_db_i18n_{$languageCode}_suffix",
+                apply_filters( 'alch_db_i18n_suffix', "_{$languageCode}" )
+            );
+        }
+
+        return apply_filters( 'alch_db_suffix', $suffix );
+    }
+}
+
+
+if( ! function_exists( 'alch_modify_alchemy_id' ) ) {
+    function alch_modify_alchemy_id( $id ) {
+        return alch_get_db_prefix() . $id . alch_get_db_suffix();
     }
 }
