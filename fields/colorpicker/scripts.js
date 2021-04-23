@@ -4,35 +4,49 @@
     window.AO = window.AO || {};
 
     const $colorpickers = $('.jsAlchemyColorpicker');
+    const $document = $(document);
 
     if( $colorpickers[0] ) {
-        const $document = $(document);
-
         $colorpickers.each((i, el) => {
-            const $colorpicker = $(el);
-            const $pickerInput = $colorpicker.find('input').on('click.alchemyColorpicker', e => { e.stopPropagation() });
-            const $sampleBlock = $colorpicker.find('.jsAlchemyColorpickerSample');
+            initialise_colorpicker(el);
+        });
+    }
 
-            $pickerInput.iris( {
-                palettes: true,
-                change: (event, ui) => {
-                    $sampleBlock.css('backgroundColor', ui.color.toString());
-                }
-            } );
+    $document.on('alch_repeatee_added', function(e, data) {
+        const $repeatee = data.repeatee;
+        const $colorpickers = $repeatee.find('.jsAlchemyColorpicker');
 
-            $colorpicker.find( '.iris-picker' ).on('click.alchemyColorpicker', e => { e.stopPropagation() });
-
-            $colorpicker.on('click.alchemyColorpickerDelete', '.jsAlchemyColorpickerClear', () => {
-                $pickerInput.val("");
-                $sampleBlock.css('backgroundColor', 'transparent');
+        if( $colorpickers[0] ) {
+            $colorpickers.each((i, el) => {
+                initialise_colorpicker(el);
             });
+        }
+    });
 
-            $pickerInput.on('focus', function(){
-                $pickerInput.iris('show');
+    function initialise_colorpicker(colorpicker) {
+        const $colorpicker = $(colorpicker);
+        const $pickerInput = $colorpicker.find('input').on('click.alchemyColorpicker', e => { e.stopPropagation() });
+        const $sampleBlock = $colorpicker.find('.jsAlchemyColorpickerSample');
 
-                $document.one('click.alchemyColorpicker', () => {
-                    $pickerInput.iris('hide');
-                });
+        $pickerInput.iris( {
+            palettes: true,
+            change: (event, ui) => {
+                $sampleBlock.css('backgroundColor', ui.color.toString());
+            }
+        } );
+
+        $colorpicker.find( '.iris-picker' ).on('click.alchemyColorpicker', e => { e.stopPropagation() });
+
+        $colorpicker.on('click.alchemyColorpickerDelete', '.jsAlchemyColorpickerClear', () => {
+            $pickerInput.val("");
+            $sampleBlock.css('backgroundColor', 'transparent');
+        });
+
+        $pickerInput.on('focus', function(){
+            $pickerInput.iris('show');
+
+            $document.one('click.alchemyColorpicker', () => {
+                $pickerInput.iris('hide');
             });
         });
     }

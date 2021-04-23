@@ -1,12 +1,29 @@
 "use strict";
 
-(function(window, $) {
+(function(window, document, $) {
     window.AO = window.AO || {};
 
     const $passwordToggles = $('.jsAlchemyTogglePassword');
 
     if( $passwordToggles[0] ) {
-        $passwordToggles.on('click', function() {
+        $passwordToggles.each((i, el) => {
+            initialise_password_toggle($(el));
+        });
+    }
+
+    $(document).on('alch_repeatee_added', function(e, data) {
+        const $repeatee = data.repeatee;
+        const $passwordToggles = $repeatee.find('.jsAlchemyTogglePassword');
+
+        if( $passwordToggles[0] ) {
+            $passwordToggles.each((i, el) => {
+                initialise_password_toggle($(el));
+            });
+        }
+    });
+
+    function initialise_password_toggle($passwordToggle) {
+        $passwordToggle.on('click', function() {
             const $toggle = $(this);
             const $target = $toggle.prev('input');
 
@@ -22,4 +39,4 @@
             'value': $(`#${id}`).val()
         } );
     };
-})(window, jQuery);
+})(window, document, jQuery);

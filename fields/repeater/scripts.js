@@ -61,13 +61,13 @@
                     success: response => {
                         if( response.success && response.data ) {
                             const $response = $(response.data);
-                            const $editors = $response.children('.repeatee__fields').children('.field--editor').find('.jsAlchemyEditor');
 
                             $repeateesContainer.append($response);
 
-                            if( $editors[0] ) {
-                                AO.tinymce.create_editors( $editors );
-                            }
+                            $document.trigger('alch_repeatee_added', {
+                                repeater: $repeater,
+                                repeatee: $response,
+                            });
                         }
                     },
                     complete: () => {
@@ -84,17 +84,21 @@
 
                 const $toolbar = $(this);
                 const $repeatee = $toolbar.closest( '.repeatee' );
-                const $editorFields = $repeatee.children('.repeatee__fields').children('.field--editor');
 
                 if( $repeatee.hasClass('repeatee--expanded') ) {
-                    AO.tinymce.destroy_editors( $editorFields.find('.jsAlchemyEditor') );
-
                     $repeatee.removeClass('repeatee--expanded');
-                    $editorFields.find('.wp-editor-tools').remove();
-                } else {
-                    AO.tinymce.create_editors( $editorFields.find('.jsAlchemyEditor') );
 
+                    $document.trigger('alch_repeatee_closed', {
+                        repeater: $repeater,
+                        repeatee: $repeatee,
+                    });
+                } else {
                     $repeatee.addClass('repeatee--expanded');
+
+                    $document.trigger('alch_repeatee_opened', {
+                        repeater: $repeater,
+                        repeatee: $repeatee,
+                    });
                 }
             });
 
@@ -167,13 +171,13 @@
                                     success: response => {
                                         if( response.success && response.data ) {
                                             const $response = $(response.data);
-                                            const $editors = $response.children('.repeatee__fields').children('.field--editor').find('.jsAlchemyEditor');
 
                                             $repeatee.after($response);
 
-                                            if( $editors[0] ) {
-                                                AO.tinymce.create_editors( $editors );
-                                            }
+                                            $document.trigger('alch_repeatee_added', {
+                                                repeater: $repeater,
+                                                repeatee: $response,
+                                            });
                                         }
                                     },
                                     complete: () => {
@@ -279,13 +283,13 @@
 					success: response => {
 						if( response.success && response.data ) {
 							const $response = $(response.data);
-							const $editors = $response.children('.repeatee__fields').children('.field--editor').find('.jsAlchemyEditor');
 
 							$repeateesContainer.append($response);
 
-							if( $editors[0] ) {
-								AO.tinymce.create_editors( $editors );
-							}
+                            $document.trigger('alch_repeatee_added', {
+                                repeater: $repeater,
+                                repeatee: $response,
+                            });
 						}
 					},
 					complete: () => {

@@ -1,27 +1,42 @@
 "use strict";
 
-(function(window, $) {
+(function(window, document, $) {
     window.AO = window.AO || {};
 
     const $datepickers = $('.jsAlchemyDatepickerInput');
 
     if( $datepickers[0] ) {
         $datepickers.each((i, el) => {
-            const $datepicker = $(el);
-            const defaultSettings = {
-                dateFormat: 'yy-mm-dd',
-            }
-
-            let datepickerSettings = {};
-
-            if( AlchemyDatepickersData && AlchemyDatepickersData[$datepicker.attr('id')] ) {
-                datepickerSettings = AlchemyDatepickersData[$datepicker.attr('id')];
-            }
-
-            const settings = $.extend({}, defaultSettings, datepickerSettings);
-
-            $datepicker.datepicker(settings);
+            initialise_datepicker(el);
         });
+    }
+
+    $(document).on('alch_repeatee_added', function(e, data) {
+        const $repeatee = data.repeatee;
+        const $datepickers = $repeatee.find('.jsAlchemyDatepickerInput');
+
+        if( $datepickers[0] ) {
+            $datepickers.each((i, el) => {
+                initialise_datepicker(el);
+            });
+        }
+    });
+
+    function initialise_datepicker(datepicker) {
+        const $datepicker = $(datepicker);
+        const defaultSettings = {
+            dateFormat: 'yy-mm-dd',
+        }
+
+        let datepickerSettings = {};
+
+        if( AlchemyDatepickersData && AlchemyDatepickersData[$datepicker.attr('id')] ) {
+            datepickerSettings = AlchemyDatepickersData[$datepicker.attr('id')];
+        }
+
+        const settings = $.extend({}, defaultSettings, datepickerSettings);
+
+        $datepicker.datepicker(settings);
     }
 
     AO.get_datepicker_value = id => {
@@ -31,4 +46,4 @@
             'value': $(`#${id}`).val()
         } );
     };
-})(window, jQuery);
+})(window, document, jQuery);

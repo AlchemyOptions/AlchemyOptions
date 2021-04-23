@@ -3,6 +3,8 @@
 (function(window, document, $){
     window.AO = window.AO || {};
 
+    const $document = $(document);
+
     AO.tinymce = {
         create_editors: $editors => {
             $editors.each((i, el) => {
@@ -108,9 +110,38 @@
                 return $(el).closest('.repeatee').length === 0
             });
 
-            $(document).on('tinymce-editor-init', () => {
+            $document.on('tinymce-editor-init', () => {
                 AO.tinymce.create_editors($editors);
             });
+        }
+    });
+
+    $document.on('alch_repeatee_added', (e, data) => {
+        const $repeatee = data.repeatee;
+        const $editors = $repeatee.children('.repeatee__fields').children('.field--editor').find('.jsAlchemyEditor');
+
+        if( $editors[0] ) {
+            AO.tinymce.create_editors( $editors );
+        }
+    });
+
+    $document.on('alch_repeatee_closed', (e, data) => {
+        const $repeatee = data.repeatee;
+        const $editors = $repeatee.children('.repeatee__fields').children('.field--editor');
+
+        if( $editors[0] ) {
+            $editors.find('.wp-editor-tools').remove();
+
+            AO.tinymce.destroy_editors( $editors.find('.jsAlchemyEditor') );
+        }
+    });
+
+    $document.on('alch_repeatee_opened', (e, data) => {
+        const $repeatee = data.repeatee;
+        const $editors = $repeatee.children('.repeatee__fields').children('.field--editor');
+
+        if( $editors[0] ) {
+            AO.tinymce.create_editors( $editors.find('.jsAlchemyEditor') );
         }
     });
 

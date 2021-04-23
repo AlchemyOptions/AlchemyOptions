@@ -1,75 +1,90 @@
 "use strict";
 
-(function(window, $) {
+(function(window, document, $) {
     window.AO = window.AO || {};
 
     const $uploaders = $('.jsAlchemyUploader');
 
     if( $uploaders[0] ) {
         $uploaders.each((i, el) => {
-            const $uploader = $(el);
-            const $results = $('.jsAlchemyUploaderResults', $uploader);
-            const $input = $('.jsAlchemyUploaderInput', $uploader);
-            const $uploadButton = $('.jsAlchemyUploadTrigger', $uploader);
-            const uploadStrings = $uploadButton.data('strings');
+            initialise_uploader(el);
+        });
+    }
 
-            let file_frame;
-            let json;
+    $(document).on('alch_repeatee_added', function(e, data) {
+        const $repeatee = data.repeatee;
+        const $uploaders = $repeatee.find('.jsAlchemyUploader');
 
-            $uploader.on('click', '.jsAlchemyUploadTrigger', () => {
-                if ( file_frame ) {
-                    file_frame.open();
+        if( $uploaders[0] ) {
+            $uploaders.each((i, el) => {
+                initialise_uploader(el);
+            });
+        }
+    });
 
+    function initialise_uploader( uploader ) {
+        const $uploader = $(uploader);
+        const $results = $('.jsAlchemyUploaderResults', $uploader);
+        const $input = $('.jsAlchemyUploaderInput', $uploader);
+        const $uploadButton = $('.jsAlchemyUploadTrigger', $uploader);
+        const uploadStrings = $uploadButton.data('strings');
+
+        let file_frame;
+        let json;
+
+        $uploader.on('click', '.jsAlchemyUploadTrigger', () => {
+            if ( file_frame ) {
+                file_frame.open();
+
+                return;
+            }
+
+            file_frame = wp.media.frames.file_frame = wp.media({
+                title: uploadStrings.title,
+                button: {
+                    text: uploadStrings.text
+                },
+                frame: 'select',
+                multiple: true
+            });
+
+            file_frame.on( 'select', () => {
+                json = file_frame.state().get('selection').first().toJSON();
+
+                if ( 0 > $.trim( json.url.length ) ) {
                     return;
                 }
 
-                file_frame = wp.media.frames.file_frame = wp.media({
-                    title: uploadStrings.title,
-                    button: {
-                        text: uploadStrings.text
-                    },
-                    frame: 'select',
-                    multiple: false
-                });
+                if( 'image' === json.type ) {
+                    $results.html($('<img />', {
+                        src: json.sizes.thumbnail ? json.sizes.thumbnail.url : json.sizes.full.url,
+                        alt: json.caption,
+                        title: json.title
+                    }));
 
-                file_frame.on( 'select', () => {
-                    json = file_frame.state().get('selection').first().toJSON();
+                    $input.val(json.id);
+                } else if ( 'video' === json.type || 'audio' === json.type ) {
+                    const results = [
+                        $('<img />', {
+                            src: json.icon,
+                            title: json.filename
+                        }),
+                        $('<div />', {
+                            html: `${json.filename} <span class="alchemy__filesize">(${json.filesizeHumanReadable})</span>`
+                        })
+                    ];
 
-                    if ( 0 > $.trim( json.url.length ) ) {
-                        return;
-                    }
-
-                    if( 'image' === json.type ) {
-                        $results.html($('<img />', {
-                            src: json.sizes.thumbnail ? json.sizes.thumbnail.url : json.sizes.full.url,
-                            alt: json.caption,
-                            title: json.title
-                        }));
-
-                        $input.val(json.id);
-                    } else if ( 'video' === json.type || 'audio' === json.type ) {
-                        const results = [
-                            $('<img />', {
-                                src: json.icon,
-                                title: json.filename
-                            }),
-                            $('<div />', {
-                                html: `${json.filename} <span class="alchemy__filesize">(${json.filesizeHumanReadable})</span>`
-                            })
-                        ];
-
-                        $results.addClass('field__results--visible').html(results);
-                        $input.val(json.id);
-                    }
-                });
-
-                file_frame.open();
+                    $results.addClass('field__results--visible').html(results);
+                    $input.val(json.id);
+                }
             });
 
-            $uploader.on('click', '.jsAlchemyUploadRemove', () => {
-                $input.val('');
-                $results.removeClass('field__results--visible').html('');
-            });
+            file_frame.open();
+        });
+
+        $uploader.on('click', '.jsAlchemyUploadRemove', () => {
+            $input.val('');
+            $results.removeClass('field__results--visible').html('');
         });
     }
 
@@ -80,4 +95,4 @@
             'value': $(`#${id}`).val()
         } );
     };
-})(window, jQuery);
+})(window, document, jQuery);
