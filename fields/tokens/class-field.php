@@ -104,7 +104,7 @@ class Field implements Field_Interface {
 
         $html .= alch_admin_get_field_sidebar( $data );
 
-        $savedValue = is_null( $savedValue ) ? [] : $savedValue;
+        $savedValue = empty( $savedValue ) ? [] : $savedValue;
 
         $html .= '<div class="field__content">';
 
