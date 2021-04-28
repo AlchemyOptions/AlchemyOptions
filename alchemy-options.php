@@ -863,7 +863,7 @@ class Options {
     private function add_metaboxes() {
         $metaBoxes = self::get_metaboxes();
 
-        if( empty( $metaBoxes ) || wp_doing_ajax() ) {
+        if( empty( $metaBoxes ) ) {
             return;
         }
 
@@ -1030,4 +1030,10 @@ class Options {
     }
 }
 
-add_action( 'after_setup_theme', function() { new Options(); } );
+add_action( 'after_setup_theme', function() {
+    if( wp_doing_ajax() ) {
+        return;
+    }
+
+    new Options();
+} );
