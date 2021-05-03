@@ -116,9 +116,23 @@ class Field implements Field_Interface {
     }
 
     function prepare_value( $value, $id ) {
-        $validValue = apply_filters( 'alch_prepared_editor_value', $value );
+        $modifiedValue = apply_filters( 'the_content', wp_specialchars_decode( $value ) );
+
+        if( apply_filters( 'alch_autop_editor_value', '__return_true' ) ) {
+            $modifiedValue = wpautop( $modifiedValue );
+        }
+
+        if( apply_filters( 'alch_unwrap_editor_images', '__return_false' ) ) {
+            $modifiedValue = $this->filter_ptags_on_images( $modifiedValue );
+        }
+
+        $validValue = apply_filters( 'alch_prepared_editor_value', $modifiedValue );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 
         return $validValue;
+    }
+
+    private function filter_ptags_on_images( $content ) {
+        return preg_replace( '/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content );
     }
 }
