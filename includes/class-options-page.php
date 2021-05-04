@@ -181,6 +181,7 @@ class Options_Page {
 
     protected function filter_options( $options ) {
         $hasTabs = ! empty( $this->page['tabs'] );
+        $activeTab = '';
 
         if( $hasTabs ) {
             $activeTab = $this->get_active_tab_id( $this->page['tabs'] );
