@@ -118,7 +118,7 @@
 
     $document.on('alch_repeatee_added', (e, data) => {
         const $repeatee = data.repeatee;
-        const $editors = $repeatee.children('.repeatee__fields').children('.field--editor').find('.jsAlchemyEditor');
+        const $editors = $repeatee.children('.repeatee__fields').find('.field--editor').find('.jsAlchemyEditor');
 
         if( $editors[0] ) {
             AO.tinymce.create_editors( $editors );
@@ -127,7 +127,7 @@
 
     $document.on('alch_repeatee_closed', (e, data) => {
         const $repeatee = data.repeatee;
-        const $editors = $repeatee.children('.repeatee__fields').children('.field--editor');
+        const $editors = $repeatee.children('.repeatee__fields').find('.field--editor');
 
         if( $editors[0] ) {
             $editors.find('.wp-editor-tools').remove();
@@ -138,7 +138,7 @@
 
     $document.on('alch_repeatee_opened', (e, data) => {
         const $repeatee = data.repeatee;
-        const $editors = $repeatee.children('.repeatee__fields').children('.field--editor');
+        const $editors = $repeatee.children('.repeatee__fields').find('.field--editor');
 
         if( $editors[0] ) {
             AO.tinymce.create_editors( $editors.find('.jsAlchemyEditor') );
