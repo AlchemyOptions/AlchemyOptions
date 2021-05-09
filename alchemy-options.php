@@ -106,7 +106,8 @@ class Options {
         add_action( 'rest_api_init', array( $this, 'create_rest_endpoints' ) );
 
         add_action( 'block_editor_meta_box_hidden_fields', array( $this, 'append_temp_editor' ) ); // Gutenberg
-        add_action( 'edit_form_advanced', array( $this, 'append_temp_editor' ) ); // pre-Gutenberg metabox
+        add_action( 'edit_form_advanced', array( $this, 'append_temp_editor' ) ); // pre-Gutenberg metabox for everything but pages
+        add_action( 'edit_page_form', array( $this, 'append_temp_editor' ) ); // pre-Gutenberg metabox for pages
         add_action( 'alch_output_after_options', array( $this, 'append_temp_editor' ) );
 
         add_action( 'show_user_profile', array( $this, 'add_user_meta_fields' ) );
