@@ -159,15 +159,19 @@
                     e.preventDefault();
                 });
             } else if( wp.data && wp.data.subscribe ) {
-                let saved = false; // helps against multiple save calls
+                let saved = true; // helps against multiple save calls
 
                 wp.data.subscribe(() => {
                     const editor = wp.data.select('core/editor');
 
-                    if ( editor.isSavingPost() && ! editor.isAutosavingPost() && ! saved ) {
-                        save_metadata();
+                    if ( editor.isSavingPost() ) {
+                        saved = false;
+                    } else {
+                        if ( ! saved ) {
+                            save_metadata();
 
-                        saved = true;
+                            saved = true;
+                        }
                     }
                 });
             }
