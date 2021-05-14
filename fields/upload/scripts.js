@@ -56,11 +56,9 @@
                 }
 
                 if( 'image' === json.type ) {
-                    $results.html($('<img />', {
-                        src: json.sizes.thumbnail ? json.sizes.thumbnail.url : json.sizes.full.url,
-                        alt: json.caption,
-                        title: json.title
-                    }));
+                    const source = json.sizes.thumbnail ? json.sizes.thumbnail.url : json.sizes.full.url;
+
+                    $results.html(`<div class="field__image"><img src="${source}" alt="" /></div>`);
 
                     $input.val(json.id);
                 } else if ( 'video' === json.type || 'audio' === json.type ) {
