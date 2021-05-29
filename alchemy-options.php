@@ -38,6 +38,7 @@ use Alchemy\Fields\Checkbox_Image;
 use Alchemy\Fields\Checkbox;
 use Alchemy\Fields\Button_Group;
 use Alchemy\Fields\Field_Group;
+use Alchemy\Fields\Spacer;
 use Alchemy\Fields\Repeater;
 
 use Alchemy\Includes;
@@ -80,6 +81,7 @@ new Checkbox_Image\Field();
 new Checkbox\Field();
 new Button_Group\Field();
 new Field_Group\Field();
+new Spacer\Field();
 new Repeater\Field();
 
 class Options {
