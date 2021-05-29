@@ -110,27 +110,6 @@ class Field implements Field_Interface {
             $html .= '</div>';
         }
 
-        $html .= '<div class="spacer__result">';
-
-        foreach ( ['top', 'right', 'bottom', 'left'] as $side ) {
-            $value = ! empty( $savedValue )
-                ? esc_attr( $savedValue[$side] )
-                : '0';
-
-            if( in_array( $side, ['left', 'right'] ) ) {
-                $property = "width";
-            } else {
-                $property = "height";
-            }
-
-            $html .= sprintf( '<div class="spacer__item" style="%s: %spx;"></div>',
-                $property,
-                $value
-            );
-        }
-
-        $html .= '</div>';
-
         $html .= alch_get_validation_tooltip();
 
         $html .= '</div></div>';
