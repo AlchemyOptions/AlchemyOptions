@@ -1,13 +1,12 @@
 # Alchemy Options
 
-Alchemy Options is an options plugin for Wordpress, simple but powerful. Inspired by [OptionTree](https://wordpress.org/plugins/option-tree/) and [Archetype](https://our.umbraco.org/projects/backoffice-extensions/archetype/).
+Alchemy Options is an options plugin for WordPress, simple but powerful. Inspired by [OptionTree](https://wordpress.org/plugins/option-tree/) and [Archetype](https://github.com/kgiszewski/Archetype).
 
 ## Features
 
 * Multiple [WYSIWYG editors](https://docs.alchemy-options.com/fields/editor.html) (including dynamic creation in a [Repeater](https://docs.alchemy-options.com/fields/repeater.html) field)
 * Multisite compatible with [network options](https://docs.alchemy-options.com/samples.html#network-options) stored on the Network admin page
 * Can be used in [Meta Boxes](https://docs.alchemy-options.com/Meta-boxes.html)
-* Can be used as [part of a theme](https://docs.alchemy-options.com/Installation.html#using-alchemy-options-in-your-theme)
 * [Field groups](https://docs.alchemy-options.com/fields/field-group.html) and [Sections](https://docs.alchemy-options.com/fields/sections.html)
 * [Repeater](https://docs.alchemy-options.com/fields/repeater.html) fields can be [nested](https://docs.alchemy-options.com/fields/repeater.html#nested-repeaters) and allow adding repeatees of [different types](https://docs.alchemy-options.com/fields/repeater.html#typed-repeaters).
 * [Dynamic filter](https://docs.alchemy-options.com/filters/alch_value_option_id.html) for each option before returning its value
