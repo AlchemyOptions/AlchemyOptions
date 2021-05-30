@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_action( 'alch_prepare_spacer_value', array( $this, 'prepare_value' ), 10, 3 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_spacer_field',
             AlCHEMY_DIR_URL . 'fields/spacer/scripts.min.js',
@@ -42,7 +42,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_spacer_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'spacer',
@@ -58,7 +58,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         $html = sprintf( '<div class="alchemy__field field field--%1$s spacer clearfix jsAlchemyField" data-alchemy="%2$s" id="%3$s">',
             $data['type'],
             esc_attr( json_encode( array(
@@ -119,7 +119,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : array {
         $value = (array) $value;
 
         $sanitisedValue = array();
@@ -131,7 +131,7 @@ class Field implements Field_Interface {
         return $sanitisedValue;
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = '';
 
         foreach ( ['top', 'right', 'bottom', 'left'] as $side ) {
@@ -158,7 +158,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : array {
         $validValue = apply_filters( 'alch_prepared_spacer_value', $value );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 

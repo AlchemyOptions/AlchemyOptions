@@ -11,13 +11,13 @@ if( class_exists( __NAMESPACE__ . '\Admin_Bar_Menu' ) ) {
 }
 
 class Admin_Bar_Menu {
-    private $admin_bar;
+    private \WP_Admin_Bar $admin_bar;
 
     function __construct( \WP_Admin_Bar $wp_admin_bar ) {
         $this->admin_bar = $wp_admin_bar;
     }
 
-    function create_menu( $pages ) {
+    function create_menu( array $pages ) : void {
         foreach ( $pages as $page ) {
             $pageCapabilities = Options_Page::get_page_capabilities( $page['id'] );
 

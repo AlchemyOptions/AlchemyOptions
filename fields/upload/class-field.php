@@ -23,7 +23,7 @@ class Field implements Field_Interface {
         //todo: add validity filter
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_upload_field',
             AlCHEMY_DIR_URL . 'fields/upload/scripts.min.js',
@@ -43,7 +43,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_upload_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'upload',
@@ -59,7 +59,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $isMeta ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -113,7 +113,7 @@ class Field implements Field_Interface {
         $html .= '</div>';
 
         $html .= sprintf( '<div class="field__results jsAlchemyUploaderResults">%s</div>',
-            empty( $savedValue ) ? '' : $this->render_saved_upload( $savedValue )
+            empty( $savedValue ) ? '' : $this->get_saved_upload_html( $savedValue )
         );
 
         $html .= '</div>';
@@ -125,7 +125,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         return sanitize_text_field( $value );
     }
 
@@ -138,7 +138,7 @@ class Field implements Field_Interface {
         return $validValue;
     }
 
-    private function render_saved_upload( $value ) {
+    private function get_saved_upload_html( $value ) : string {
         $savedUpload = '';
 
         if( ! empty( $value ) ) {

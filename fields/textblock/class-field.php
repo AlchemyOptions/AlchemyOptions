@@ -17,11 +17,11 @@ class Field {
         add_filter( 'alch_get_textblock_option_html', array( $this, 'get_option_html' ) );
     }
 
-    function add_as_ok_if_no_id( $types ) {
+    function add_as_ok_if_no_id( array $types ) : array {
         return array_merge( $types, ['textblock'] );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'textblock',
@@ -37,7 +37,7 @@ class Field {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data ) {
+    function get_option_html( array $data ) : string {
         $html = sprintf( '<div class="alchemy__field field field--%1$s clearfix">',
             $data['type']
         );

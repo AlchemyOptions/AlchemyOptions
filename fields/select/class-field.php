@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_action( 'alch_prepare_select_value', array( $this, 'prepare_value' ), 10, 3 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_select_field',
             AlCHEMY_DIR_URL . 'fields/select/scripts.min.js',
@@ -34,7 +34,7 @@ class Field implements Field_Interface {
         wp_enqueue_script( 'alch_select_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'select',
@@ -50,7 +50,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -95,7 +95,7 @@ class Field implements Field_Interface {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_select_value', '', $value );
 
         if( empty( $error ) ) {
@@ -123,7 +123,7 @@ class Field implements Field_Interface {
         return $validValue;
     }
 
-    private function get_select_optgroups_html( $optgroups, $savedValue ) {
+    private function get_select_optgroups_html( array $optgroups, $savedValue ) : string {
         return join( '', array_map( function( $optgroup ) use ( $savedValue ) {
             $optgroup['choices'] = empty( $optgroup['choices'] ) ? [] : $optgroup['choices'];
 
@@ -135,13 +135,13 @@ class Field implements Field_Interface {
         }, $optgroups ) );
     }
 
-    private function get_select_choices_html( $choices, $savedValue ) {
+    private function get_select_choices_html( array $choices, $savedValue ) : string {
         return join( '', array_map( function( $choice ) use ( $savedValue ) {
             return $this->get_select_option_html( $choice, $savedValue );
         }, $choices ) );
     }
 
-    private function get_select_option_html( $choice, $savedValue ) {
+    private function get_select_option_html( $choice, $savedValue ) : string {
         $html = '';
 
         if( is_string( $choice ) ) {
@@ -152,14 +152,14 @@ class Field implements Field_Interface {
         }
 
         if( empty( $savedValue ) ) {
-            $choice['selected'] = isset( $choice['selected'] ) ? $choice['selected'] : false;
+            $choice['selected'] = $choice['selected'] ?? false;
         } else {
             $choice['selected'] = is_array( $savedValue )
                 ? in_array( $choice['value'], $savedValue )
                 : $choice['value'] === $savedValue;
         }
 
-        $choice['disabled'] = isset( $choice['disabled'] ) ? $choice['disabled'] : false;
+        $choice['disabled'] = $choice['disabled'] ?? false;
 
         $html .= sprintf( '<option value="%1$s"%2$s%3$s>%4$s</option>',
             esc_attr( $choice['value'] ),

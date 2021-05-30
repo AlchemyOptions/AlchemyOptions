@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_datalist_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_select_2',
             AlCHEMY_DIR_URL . 'fields/datalist/vendor/select2/js/select2.full.min.js',
@@ -73,7 +73,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_datalist_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'datalist',
@@ -89,7 +89,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -105,7 +105,7 @@ class Field implements Field_Interface {
         $html .= alch_admin_get_field_sidebar( $data );
 
         $multiple = isset( $data['multiple'] ) && true === $data['multiple'];
-        $options = isset( $data['options'] ) ? $data['options'] : [];
+        $options = $data['options'] ?? [];
         $savedValue = is_null( $savedValue ) ? '' : $savedValue;
 
         $html .= '<div class="field__content">';
@@ -141,7 +141,7 @@ class Field implements Field_Interface {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_datalist_value', '', $value );
 
         if( empty( $error ) ) {
@@ -165,7 +165,7 @@ class Field implements Field_Interface {
         return $validValue;
     }
 
-    private function get_datalist_options_html( $options, $savedValue ) {
+    private function get_datalist_options_html( array $options, $savedValue ) : string {
         if( is_string( $savedValue ) ) {
             $savedValue = [$savedValue];
         }

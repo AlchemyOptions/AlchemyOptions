@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_action( 'alch_prepare_slider_value', array( $this, 'prepare_value' ), 10, 3 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_slider_field',
             AlCHEMY_DIR_URL . 'fields/slider/scripts.min.js',
@@ -42,7 +42,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_slider_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'slider',
@@ -58,7 +58,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         $html = sprintf( '<div class="alchemy__field field field--%1$s slider clearfix jsAlchemyField" data-alchemy="%2$s">',
             $data['type'],
             esc_attr( json_encode( array(
@@ -70,9 +70,9 @@ class Field implements Field_Interface {
         if( empty( $data['values'] ) ) {
             $data['values'] = array();
         } else {
-            $data['values']['min'] = isset( $data['values']['min'] ) ? $data['values']['min'] : 0;
-            $data['values']['max'] = isset( $data['values']['max'] ) ? $data['values']['max'] : 100;
-            $data['values']['step'] = isset( $data['values']['step'] ) ? $data['values']['step'] : 1;
+            $data['values']['min'] = $data['values']['min'] ?? 0;
+            $data['values']['max'] = $data['values']['max'] ?? 100;
+            $data['values']['step'] = $data['values']['step'] ?? 1;
         }
 
         $html .= alch_admin_get_field_sidebar( $data, false );
@@ -94,11 +94,11 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = '';
 
         if( ! is_numeric( $value ) && '' !== $value ) {

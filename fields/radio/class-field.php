@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_radio_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_radio_field',
             AlCHEMY_DIR_URL . 'fields/radio/scripts.min.js',
@@ -42,7 +42,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_radio_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'radio',
@@ -58,7 +58,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) || empty( $data['choices'] ) ) {
             return '';
         }
@@ -90,12 +90,12 @@ class Field implements Field_Interface {
             ) );
 
             if( empty( $savedValue ) ) {
-                $choice['checked'] = isset( $choice['checked'] ) ? $choice['checked'] : false;
+                $choice['checked'] = $choice['checked'] ?? false;
             } else {
                 $choice['checked'] = $choice['value'] === $savedValue;
             }
 
-            $choice['disabled'] = isset( $choice['disabled'] ) ? $choice['disabled'] : false;
+            $choice['disabled'] = $choice['disabled'] ?? false;
 
             $html .= sprintf( '<label class="radio__label" for="%1$s"><input id="%1$s" name="%2$s" type="radio" data-value="%3$s"%4$s%5$s />%6$s</label><br>',
                 $radioID,
@@ -116,11 +116,11 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_radio_value', '', $value );
 
         if( empty( $error ) ) {
@@ -137,7 +137,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : string {
         $validValue = apply_filters( 'alch_prepared_radio_value', $value );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 

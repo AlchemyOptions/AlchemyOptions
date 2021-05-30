@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_editor_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_editor_field',
             AlCHEMY_DIR_URL . 'fields/editor/scripts.min.js',
@@ -42,7 +42,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_editor_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'editor',
@@ -58,7 +58,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -89,7 +89,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         global $allowedposttags;
 
         $allowed_html = apply_filters( 'alch_allowed_editor_html_tags', $allowedposttags );
@@ -98,7 +98,7 @@ class Field implements Field_Interface {
         return wp_kses( $value, $allowed_html, $allowed_protocols );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_editor_value', '', $value );
 
         if( empty( $error ) ) {
@@ -115,7 +115,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : string {
         $modifiedValue = apply_filters( 'the_content', wp_specialchars_decode( $value ) );
 
         if( apply_filters( 'alch_autop_editor_value', '__return_true' ) ) {
@@ -132,7 +132,7 @@ class Field implements Field_Interface {
         return $validValue;
     }
 
-    private function filter_ptags_on_images( $content ) {
+    private function filter_ptags_on_images( $content ) : string {
         return preg_replace( '/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content );
     }
 }

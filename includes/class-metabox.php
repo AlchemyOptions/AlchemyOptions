@@ -13,13 +13,13 @@ if( class_exists( __NAMESPACE__ . '\Metabox' ) ) {
 }
 
 class Metabox {
-    private $metabox;
+    private array $metabox;
 
-    function __construct( $metabox ) {
+    function __construct( array $metabox ) {
         $this->metabox = $metabox;
     }
 
-    function add_metabox() {
+    function add_metabox() : void {
         foreach ( $this->metabox['post-types'] as $postType ) {
             if( post_type_exists( $postType ) ) {
                 add_action( 'add_meta_boxes_' . $postType, array( $this, 'create_meta_box' ) );
@@ -27,8 +27,8 @@ class Metabox {
         }
     }
 
-    function create_meta_box() {
-        $metaBoxId = isset( $this->metabox['id'] ) ? $this->metabox['id'] : '';
+    function create_meta_box() : void {
+        $metaBoxId = $this->metabox['id'] ?? '';
 
         if( empty( $metaBoxId ) ) {
             return;
@@ -42,7 +42,7 @@ class Metabox {
         );
     }
 
-    function meta_box_html( $post ) {
+    function meta_box_html( \WP_Post $post ) : void {
         $html = '<div class="alchemy__metabox metabox jsAlchemyMetaBox">';
 
         $html .= sprintf( '<div class="metabox__fields">%s</div>',

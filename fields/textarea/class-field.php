@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_action( 'alch_prepare_textarea_value', array( $this, 'prepare_value' ), 10, 3 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_textarea_field',
             AlCHEMY_DIR_URL . 'fields/textarea/scripts.min.js',
@@ -34,7 +34,7 @@ class Field implements Field_Interface {
         wp_enqueue_script( 'alch_textarea_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'textarea',
@@ -50,7 +50,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -81,7 +81,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         $allow_html = apply_filters( 'alch_allow_html_in_textarea', false );
 
         if ( ! $allow_html ) {
@@ -91,7 +91,7 @@ class Field implements Field_Interface {
         return $value;
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_textarea_value', '', $value );
 
         if( empty( $error ) ) {
@@ -108,7 +108,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : string {
         $validValue = apply_filters( 'alch_prepared_textarea_value', $value );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 

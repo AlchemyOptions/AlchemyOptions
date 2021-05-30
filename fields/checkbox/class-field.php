@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_checkbox_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_checkbox_field',
             AlCHEMY_DIR_URL . 'fields/checkbox/scripts.min.js',
@@ -42,7 +42,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_checkbox_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'checkbox',
@@ -58,7 +58,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) || empty( $data['choices'] ) ) {
             return '';
         }
@@ -90,14 +90,14 @@ class Field implements Field_Interface {
             ) );
 
             if( empty( $savedValue ) ) {
-                $choice['checked'] = isset( $choice['checked'] ) ? $choice['checked'] : false;
+                $choice['checked'] = $choice['checked'] ?? false;
             } else {
                 $choice['checked'] = is_array( $savedValue )
                     ? in_array( $choice['value'], $savedValue )
                     : $choice['value'] === $savedValue;
             }
 
-            $choice['disabled'] = isset( $choice['disabled'] ) ? $choice['disabled'] : false;
+            $choice['disabled'] = $choice['disabled'] ?? false;
 
             $html .= sprintf( '<label class="checkbox__label" for="%1$s"><input id="%1$s" name="%2$s" type="checkbox" data-value="%3$s"%4$s%5$s />%6$s</label><br>',
                 $checkboxID,
@@ -118,11 +118,11 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : array {
         return array_map( 'sanitize_text_field', $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_checkbox_value', '', $value );
 
         if( empty( $error ) ) {

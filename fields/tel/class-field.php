@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_tel_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_tel_field',
             AlCHEMY_DIR_URL . 'fields/tel/scripts.min.js',
@@ -34,7 +34,7 @@ class Field implements Field_Interface {
         wp_enqueue_script( 'alch_tel_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'tel',
@@ -50,7 +50,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         $html = sprintf( '<div class="alchemy__field field field--%1$s clearfix jsAlchemyField" data-alchemy="%2$s">',
             $data['type'],
             esc_attr( json_encode( array(
@@ -77,11 +77,11 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = '';
 
         if( ! preg_match( '%^[+]?[0-9()/ -]*$%', $value ) ) {
@@ -106,7 +106,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : string {
         $validValue = apply_filters( 'alch_prepared_tel_value', $value );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 

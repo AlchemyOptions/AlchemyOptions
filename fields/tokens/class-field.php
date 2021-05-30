@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_tokens_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_select_2',
             AlCHEMY_DIR_URL . 'fields/tokens/vendor/select2/js/select2.full.min.js',
@@ -73,7 +73,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_tokens_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'tokens',
@@ -89,7 +89,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -130,11 +130,11 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : array {
         return array_map( 'sanitize_text_field', $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_tokens_value', '', $value );
 
         if( empty( $error ) ) {
@@ -151,14 +151,14 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : array {
         $validValue = apply_filters( 'alch_prepared_tokens_value', $value );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 
         return $validValue;
     }
 
-    private function get_tokens_options_html( $savedValue = [] ) {
+    private function get_tokens_options_html( array $savedValue = [] ) : string {
         $optionsHTML = '';
 
         $optionsHTML .= join( '', array_map( function( $option ) {

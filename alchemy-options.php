@@ -21,6 +21,7 @@ use WP_Admin_Bar;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Server;
+use WP_User;
 
 if( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -96,7 +97,7 @@ class Options {
         $this->add_metaboxes();
     }
 
-    function create_admin_bar_menu( WP_Admin_Bar $wp_admin_bar ) {
+    function create_admin_bar_menu( WP_Admin_Bar $wp_admin_bar ) : void {
         if( empty( self::$optionPages ) ) {
             return;
         }
@@ -105,8 +106,8 @@ class Options {
         $adminBarMenu->create_menu( self::$optionPages );
     }
 
-    function permission_callback() {
-        $pageID = isset( $_POST['page-id'] ) ? $_POST['page-id'] : null;
+    function permission_callback() : bool {
+        $pageID = $_POST['page-id'] ?? null;
 
         if( ! empty( $pageID ) ) {
             $pageCap = Includes\Options_Page::get_page_capabilities( $pageID );
@@ -277,7 +278,7 @@ class Options {
 		) );
     }
 
-    function append_temp_editor() {
+    function append_temp_editor() : void {
         //hack to include editor assets. Will be removed when there's a way to get the full tinyMCE settings and assets
 
         echo '<div class="hidden jsAlchemyTempEditor">';
@@ -285,7 +286,7 @@ class Options {
         echo '</div>';
     }
 
-    function create_rest_endpoints() {
+    function create_rest_endpoints() : void {
         register_rest_route( 'alchemy/v1', '/save-options/', array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => array( $this, 'handle_save_options' ),
@@ -316,7 +317,7 @@ class Options {
         ) );
     }
 
-    function enqueue_admin_assets() {
+    function enqueue_admin_assets() : void {
         if( ! is_admin() ) {
             return;
         }
@@ -364,7 +365,7 @@ class Options {
         wp_enqueue_style( 'alch_admin_styles' );
     }
 
-    function add_user_meta_fields( $user ) {
+    function add_user_meta_fields( WP_User $user ) : void {
         $userMetaFields = self::get_user_meta_fields();
 
         if( empty( $userMetaFields ) || wp_doing_ajax() ) {
@@ -374,7 +375,7 @@ class Options {
         printf( '<div class="alchemy alchemy--profile jsAlchemy jsAlchemyUserProfile">%s</div>', $this->get_user_meta_html( $user->ID, $userMetaFields ) );
     }
 
-    static function get_registered_field_types() {
+    static function get_registered_field_types() : array {
         if( empty( self::$registeredTypes ) ) {
             self::register_types( apply_filters( 'alch_register_field_type', [] ) );
         }
@@ -382,7 +383,7 @@ class Options {
         return self::$registeredTypes;
     }
 
-    static function get_registered_repeaters() {
+    static function get_registered_repeaters() : array {
         if( empty( self::$registeredRepeaters ) ) {
             self::register_repeater_types( apply_filters( 'alch_repeaters', [] ) );
         }
@@ -390,7 +391,7 @@ class Options {
         return self::$registeredRepeaters;
     }
 
-    static function get_options() {
+    static function get_options() : array {
         if( empty( self::$options ) ) {
             self::$options = apply_filters( 'alch_options', [] );
         }
@@ -398,7 +399,7 @@ class Options {
         return self::$options;
     }
 
-    static function get_network_options() {
+    static function get_network_options() : array {
         if( empty( self::$networkOptions ) ) {
             self::$networkOptions = apply_filters( 'alch_network_options', [] );
         }
@@ -406,7 +407,7 @@ class Options {
         return self::$networkOptions;
     }
 
-    static function get_metaboxes() {
+    static function get_metaboxes() : array {
         if( empty( self::$metaBoxes ) ) {
             self::$metaBoxes = apply_filters( 'alch_meta_boxes', [] );
         }
@@ -414,7 +415,7 @@ class Options {
         return self::$metaBoxes;
     }
 
-    static function get_user_meta_fields() {
+    static function get_user_meta_fields() : array {
         if( empty( self::$userMetaFields ) ) {
             self::$userMetaFields = apply_filters( 'alch_user_meta_fields', [] );
         }
@@ -422,7 +423,7 @@ class Options {
         return self::$userMetaFields;
     }
 
-    static function get_field_type_settings( $type ) {
+    static function get_field_type_settings( string $type ) : array {
         $fieldTypes = self::get_registered_field_types();
         $fieldTypeSettings = $fieldTypes[$type]['available-for'];
 
@@ -438,17 +439,17 @@ class Options {
         return $fieldTypeSettings;
     }
 
-    static function get_repeater_id_details( $type ) {
+    static function get_repeater_id_details( string $type ) : array {
         $typeParts = explode( ':', $type );
 
         if( count( $typeParts ) > 1 && 'repeater' === $typeParts[0] ) {
             return array( 'type' => 'repeater', 'id' => $typeParts[1] );
         }
 
-        return false;
+        return [];
     }
 
-    static function get_options_html( $options ) {
+    static function get_options_html( array $options ) : string {
         $html = '';
         $parsedOptions = [];
         $registeredTypes = self::get_registered_field_types();
@@ -528,7 +529,7 @@ class Options {
         return $html;
     }
 
-    static function get_network_options_html( $options ) {
+    static function get_network_options_html( array $options ) : string {
         $html = '';
         $parsedOptions = [];
         $registeredTypes = self::get_registered_field_types();
@@ -608,7 +609,7 @@ class Options {
         return $html;
     }
 
-    static function get_meta_html( $postID, $fields ) {
+    static function get_meta_html( int $postID, array $fields ) : string {
         $html = '';
         $parsedOptions = [];
         $registeredTypes = self::get_registered_field_types();
@@ -688,7 +689,7 @@ class Options {
         return $html;
     }
 
-    static function get_user_meta_html( $userID, $fields ) {
+    static function get_user_meta_html( int $userID, array $fields ) : string {
         $html = '';
         $parsedOptions = [];
         $registeredTypes = self::get_registered_field_types();
@@ -768,7 +769,7 @@ class Options {
         return $html;
     }
 
-    static function create_options_pages() {
+    static function create_options_pages() : void {
         $pages = apply_filters( 'alch_options_pages', [] );
 
         if( empty( $pages ) ) {
@@ -788,7 +789,7 @@ class Options {
         }
     }
 
-    static function create_network_options_pages() {
+    static function create_network_options_pages() : void {
         $pages = apply_filters( 'alch_network_options_pages', [] );
 
         if( empty( $pages ) ) {
@@ -808,17 +809,17 @@ class Options {
         }
     }
 
-    private function get_user_ID() {
+    private function get_user_ID() : int {
         if ( defined('IS_PROFILE_PAGE') && IS_PROFILE_PAGE ) {
             return get_current_user_id();
         } else if ( ! empty( $_GET['user_id'] ) && is_numeric( $_GET['user_id'] ) ) {
             return $_GET['user_id'];
         }
 
-        return '';
+        return 0;
     }
 
-    private function check_values( $values ) {
+    private function check_values( array $values ) : array {
         $checks = [];
 
         foreach ( $values as $passed ) {
@@ -837,7 +838,7 @@ class Options {
         return $checks;
     }
 
-    private function add_metaboxes() {
+    private function add_metaboxes() : void {
         $metaBoxes = self::get_metaboxes();
 
         if( empty( $metaBoxes ) ) {
@@ -850,7 +851,7 @@ class Options {
         }
     }
 
-    private function save_values( $values ) {
+    private function save_values( array $values ) : bool {
         do_action( 'alchemy_options_before_save', $values );
 
         $saved = true;
@@ -881,7 +882,7 @@ class Options {
         return $saved;
     }
 
-    private function save_network_values( $values ) {
+    private function save_network_values( array $values ) : bool {
         do_action( 'alchemy_network_options_before_save', $values );
 
         $saved = true;
@@ -912,7 +913,7 @@ class Options {
         return $saved;
     }
 
-    private function save_meta_values( $postID, $values ) {
+    private function save_meta_values( int $postID, array $values ) : bool {
         do_action( 'alchemy_metaboxes_before_save', $values );
 
         $saved = true;
@@ -943,7 +944,7 @@ class Options {
         return $saved;
     }
 
-    private function save_user_profile_values( $userID, $values ) {
+    private function save_user_profile_values( int $userID, array $values ) : bool {
         do_action( 'alchemy_userprofile_before_save', $values );
 
         $saved = true;
@@ -974,7 +975,7 @@ class Options {
         return $saved;
     }
 
-    private static function register_types( $types ) {
+    private static function register_types( array $types ) : void {
         if( empty( $types ) ) {
             return;
         }
@@ -990,7 +991,7 @@ class Options {
         }
     }
 
-    private static function register_repeater_types( $types ) {
+    private static function register_repeater_types( array $types ) : void {
         if( empty( $types ) ) {
             return;
         }

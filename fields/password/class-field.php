@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_password_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_password_field',
             AlCHEMY_DIR_URL . 'fields/password/scripts.min.js',
@@ -42,7 +42,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_password_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'password',
@@ -58,7 +58,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -89,7 +89,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         if( apply_filters( 'alch_sanitize_password_as_text', true ) ) {
             return sanitize_text_field( $value );
         }
@@ -97,7 +97,7 @@ class Field implements Field_Interface {
         return $value;
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_password_value', '', $value );
 
         if( empty( $error ) ) {
@@ -114,7 +114,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : string {
         $validValue = apply_filters( 'alch_prepared_password_value', $value );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 

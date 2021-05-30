@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_url_field',
             AlCHEMY_DIR_URL . 'fields/url/scripts.min.js',
@@ -34,7 +34,7 @@ class Field implements Field_Interface {
         wp_enqueue_script( 'alch_url_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'url',
@@ -50,7 +50,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -81,11 +81,11 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : string {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = '';
 
         if( false === filter_var( $value, FILTER_VALIDATE_URL ) && '' !== $value ) {
@@ -110,7 +110,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : string {
         $validValue = apply_filters( 'alch_prepared_url_value', $value );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 

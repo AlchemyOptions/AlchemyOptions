@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_button_group_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_button_group_field',
             AlCHEMY_DIR_URL . 'fields/button-group/scripts.min.js',
@@ -34,7 +34,7 @@ class Field implements Field_Interface {
         wp_enqueue_script( 'alch_button_group_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'button_group',
@@ -50,7 +50,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) || empty( $data['choices'] ) ) {
             return '';
         }
@@ -86,7 +86,7 @@ class Field implements Field_Interface {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_button_group_value', '', $value );
 
         if( empty( $error ) ) {
@@ -110,7 +110,7 @@ class Field implements Field_Interface {
         return $validValue;
     }
 
-    private function get_btn_group_choices( $choices, $savedValue ) {
+    private function get_btn_group_choices( array $choices, $savedValue ) : string {
         $choicesHTML = "";
 
         foreach ( $choices as $choice ) {
@@ -122,14 +122,14 @@ class Field implements Field_Interface {
             }
 
             if( empty( $savedValue ) ) {
-                $choice['checked'] = isset( $choice['checked'] ) ? $choice['checked'] : false;
+                $choice['checked'] = $choice['checked'] ?? false;
             } else {
                 $choice['checked'] = is_array( $savedValue )
                     ? in_array( $choice['value'], $savedValue )
                     : $choice['value'] === $savedValue;
             }
 
-            $choice['disabled'] = isset( $choice['disabled'] ) ? $choice['disabled'] : false;
+            $choice['disabled'] = $choice['disabled'] ?? false;
 
             $buttonClasses = ['button', 'button-secondary', 'jsAlchemyButtonGroupChoice'];
 

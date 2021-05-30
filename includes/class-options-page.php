@@ -13,10 +13,10 @@ if( class_exists( __NAMESPACE__ . '\Options_Page' ) ) {
 }
 
 class Options_Page {
-    private $page;
-    private $subpages = [];
+    private array $page;
+    private array $subpages = [];
 
-    function __construct( $data ) {
+    function __construct( array $data ) {
         $this->page = $data;
 
         if( ! $this->is_valid_page() ) {
@@ -24,7 +24,7 @@ class Options_Page {
         }
     }
 
-    function add_page( $type = '' ) {
+    function add_page( string $type = '' ) : void {
         $callBack = 'create_options_page';
 
         if( 'network' === $type ) {
@@ -66,7 +66,7 @@ class Options_Page {
         }
     }
 
-    function create_options_page() {
+    function create_options_page() : void {
         add_action( 'admin_footer_text', array( $this, 'edit_admin_footer_text' ) );
 
         $filteredOptions = $this->filter_options( Options::get_options() );
@@ -90,7 +90,7 @@ class Options_Page {
 
             echo '</div></div>'; // need to close .wrap and .alchemy earlier
 
-            return false;
+            return;
         }
 
         do_action( 'alch_output_before_options' );
@@ -117,7 +117,7 @@ class Options_Page {
         echo '</div>';
     }
 
-    function create_network_options_page() {
+    function create_network_options_page() : void {
         add_action( 'admin_footer_text', array( $this, 'edit_admin_footer_text' ) );
 
         $filteredOptions = $this->filter_options( Options::get_network_options() );
@@ -141,7 +141,7 @@ class Options_Page {
 
             echo '</div></div>'; // need to close .wrap and .alchemy earlier
 
-            return false;
+            return;
         }
 
         do_action( 'alch_output_before_options' );
@@ -168,18 +168,18 @@ class Options_Page {
         echo '</div>';
     }
 
-    function edit_admin_footer_text( $text ) {
+    function edit_admin_footer_text( string $text ) : string {
         return str_replace( '.</span>', ' and <a href="https://docs.alchemy-options.com">Alchemy Options</a>.</span>', $text );
     }
 
-    static function get_page_capabilities( $id ) {
+    static function get_page_capabilities( string $id ) : string {
         return apply_filters(
             "alch_{$id}_capabilities",
             apply_filters( 'alch_default_page_capabilities', 'manage_options' )
         );
     }
 
-    protected function filter_options( $options ) {
+    protected function filter_options( array $options ) : array {
         $hasTabs = ! empty( $this->page['tabs'] );
         $activeTab = '';
 
@@ -196,35 +196,35 @@ class Options_Page {
         } );
     }
 
-    protected function is_valid_page() {
+    protected function is_valid_page() : bool {
         return isset( $this->page['id'] );
     }
 
-    protected function get_page_title() {
+    protected function get_page_title() : string {
         return empty( $this->page['name'] )
             ? 'Alchemy Options'
             : sprintf( '%s | Alchemy Options', $this->page['name'] );
     }
 
-    protected function get_page_position() {
+    protected function get_page_position() : int {
         return apply_filters(
             "alch_{$this->page['id']}_position",
             apply_filters( 'alch_default_page_position', 60 )
         );
     }
 
-    protected function get_page_icon() {
+    protected function get_page_icon() : string {
         return apply_filters(
             "alch_{$this->page['id']}_icon",
             apply_filters( 'alch_default_page_icon', 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJmaWxsOiM4MDgwODAiIHZpZXdCb3g9IjAgMCAyMCAyMCI+PHBhdGggZD0iTTE4LjQgMTMuOGMuMy0xIC41LTIgLjUtMy4xIDAtNC40LTMuMi04LjEtNy40LTguOHYtLjFjMC0uOS0uNy0xLjYtMS42LTEuNi0uNy4xLTEuNC44LTEuNCAxLjZ2LjFDNC4zIDIuNyAxIDYuNCAxIDEwLjhjMCAxLjEuMiAyLjEuNSAzLS41LjItLjguOC0uOCAxLjQgMCAuOS43IDEuNiAxLjYgMS42LjMgMCAuNi0uMS45LS4zIDEuNiAyIDQuMSAzLjIgNi45IDMuMiAyLjggMCA1LjItMS4yIDYuOS0zLjIuMy4yLjYuMy45LjMuOSAwIDEuNi0uNyAxLjYtMS42LS4yLS42LS42LTEuMS0xLjEtMS40em0tMy40LThjMS4zIDEuMyAyLjEgMy4xIDIuMSA1IDAgLjktLjIgMS43LS40IDIuNWwtNS40LTkuNGMxLjMuMiAyLjYuOSAzLjcgMS45em0tLjYgNy41SDUuNkwxMCA1LjdsNC40IDcuNnpNNSA1LjhjMS4xLTEuMSAyLjQtMS43IDMuOC0ybC01LjQgOS40Yy0uMy0uNy0uNC0xLjYtLjQtMi40IDAtMS45LjctMy43IDItNXptNSAxMmMtMS45IDAtMy42LS43LTUtMi4xbC0uNS0uNWgxMC45Yy0uMS4yLS4zLjMtLjUuNS0xLjMgMS40LTMgMi4xLTQuOSAyLjF6Ii8+PC9zdmc+' )
         );
     }
 
-    protected function get_page_name() {
+    protected function get_page_name() : string {
         return empty( $this->page['name'] ) ? 'Alchemy Options' : $this->page['name'];
     }
 
-    private function get_active_tab_id( $tabs ) {
+    private function get_active_tab_id( array $tabs ) : string {
         $activeTab = $tabs[0]['id'];
 
         if( isset( $_GET[ 'tab' ] ) ) {
@@ -234,7 +234,7 @@ class Options_Page {
         return $activeTab;
     }
 
-    protected function get_tabs_html( $data ) {
+    protected function get_tabs_html( array $data ) : string {
         if( empty( $data['tabs'] ) ) {
             return '';
         }

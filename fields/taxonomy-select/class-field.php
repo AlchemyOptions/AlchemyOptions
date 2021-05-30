@@ -3,6 +3,7 @@
 namespace Alchemy\Fields\Taxonomy_Select;
 
 use Alchemy\Fields\Field_Interface;
+use Alchemy\Includes\Options_Page;
 use WP_Error;
 
 if( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +25,7 @@ class Field implements Field_Interface {
         add_action( 'rest_api_init', array( $this, 'add_rest_endpoints' ) );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_select_2',
             AlCHEMY_DIR_URL . 'fields/taxonomy-select/vendor/select2/js/select2.full.min.js',
@@ -82,7 +83,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_taxonomy_select_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'taxonomy_select',
@@ -98,7 +99,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function add_rest_endpoints() {
+    function add_rest_endpoints() : void {
         register_rest_route( 'alchemy/v1', '/taxonomy-search/', array(
             'methods' => \WP_REST_Server::READABLE,
             'callback' => array( $this, 'handle_taxonomy_search' ),
@@ -106,7 +107,7 @@ class Field implements Field_Interface {
                 $pageID = isset( $_GET['page-id'] ) ? $_GET['page-id'] : null;
 
                 if( ! empty( $pageID ) ) {
-                    $pageCap = \Alchemy\Includes\Options_Page::get_page_capabilities( $pageID );
+                    $pageCap = Options_Page::get_page_capabilities( $pageID );
 
                     return current_user_can( $pageCap );
                 }
@@ -145,7 +146,7 @@ class Field implements Field_Interface {
         ) );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -161,7 +162,7 @@ class Field implements Field_Interface {
         $html .= alch_admin_get_field_sidebar( $data );
 
         $multiple = isset( $data['multiple'] ) && true === $data['multiple'];
-        $taxonomies = isset( $data['taxonomy'] ) ? $data['taxonomy'] : ['category'];
+        $taxonomies = $data['taxonomy'] ?? ['category'];
 
         $html .= '<div class="field__content">';
 
@@ -199,7 +200,7 @@ class Field implements Field_Interface {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_taxonomy_select_value', '', $value );
 
         if( empty( $error ) ) {
@@ -223,7 +224,7 @@ class Field implements Field_Interface {
         return $validValue;
     }
 
-    private function get_taxonomy_options_html( $ids, $taxonomies ) {
+    private function get_taxonomy_options_html( $ids, $taxonomies ) : string {
         $optionsHTML = '';
 
         if( is_string( $ids ) ) {

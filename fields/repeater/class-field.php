@@ -27,7 +27,7 @@ class Field implements Field_Interface {
         add_action( 'rest_api_init', array( $this, 'add_rest_endpoints' ) );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_repeater_field',
             AlCHEMY_DIR_URL . 'fields/repeater/scripts.min.js',
@@ -61,7 +61,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_repeater_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myType = array(
             'id' => 'repeater',
             'available-for' => array(
@@ -74,7 +74,7 @@ class Field implements Field_Interface {
         return array_merge( $types, [$myType] );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         $registeredRepeaters = Options::get_registered_repeaters();
         $repeater = Options::get_repeater_id_details( $data['type'] );
         $settings = $registeredRepeaters[$repeater['id']];
@@ -105,7 +105,7 @@ class Field implements Field_Interface {
         $html .= alch_admin_get_field_sidebar( $data, false );
 
         $html .= sprintf( '<div class="field__content">%1$s%2$s%3$s</div>',
-            $this->get_repeatees( array(
+            $this->get_repeatees_html( array(
                 'savedValue' => $savedValue,
                 'type' => $type,
                 'repeater' => array(
@@ -118,8 +118,8 @@ class Field implements Field_Interface {
                     ),
                 )
             ) ),
-            $this->get_add_new_button( $settings ),
-            $this->get_get_color_choices( array(
+            $this->get_add_new_button_html( $settings ),
+            $this->get_get_color_choices_html( array(
                 'enabled' => $canColorCode,
                 'colors' => $colorCodeColors,
             ) )
@@ -130,7 +130,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_repeater_value', '', $value );
 
         if( empty( $error ) ) {
@@ -147,7 +147,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : array {
         $sanitisedValues = [];
 
         foreach ( $value as $repeatee ) {
@@ -179,7 +179,7 @@ class Field implements Field_Interface {
         return $sanitisedValues;
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : array {
         $modifiedValues = [];
 
         foreach ( $value as $savedRepeatee ) {
@@ -220,7 +220,7 @@ class Field implements Field_Interface {
         return $validValue;
     }
 
-    function add_rest_endpoints() {
+    function add_rest_endpoints() : void {
         register_rest_route( 'alchemy/v1', '/add-repeatee/', array(
             'methods' => \WP_REST_Server::CREATABLE,
             'callback' => array( $this, 'handle_add_repeatee' ),
@@ -234,11 +234,11 @@ class Field implements Field_Interface {
         ) );
     }
 
-    function permission_callback() {
-        $pageID = isset( $_POST['page-id'] ) ? $_POST['page-id'] : null;
+    function permission_callback() : bool {
+        $pageID = $_POST['page-id'] ?? null;
 
         if( ! empty( $pageID ) ) {
-            $pageCap = \Alchemy\Includes\Options_Page::get_page_capabilities( $pageID );
+            $pageCap = Options_Page::get_page_capabilities( $pageID );
 
             return current_user_can( $pageCap );
         }
@@ -251,8 +251,8 @@ class Field implements Field_Interface {
 
         $this->security_checks( $body_params );
 
-        $repeateeType = isset( $body_params['type-id'] ) ? $body_params['type-id'] : '';
-        $repeateeTypeHuman = isset( $body_params['type-title'] ) ? $body_params['type-title'] : '';
+        $repeateeType = $body_params['type-id'] ?? '';
+        $repeateeTypeHuman = $body_params['type-title'] ?? '';
 
         if( isset( $body_params['repeater-id'] ) && isset( $body_params['repeatees-number'] ) ) {
             $response = $this->get_repeatee_html( array(
@@ -315,7 +315,7 @@ class Field implements Field_Interface {
         ) );
     }
 
-    private function get_repeatees( $data ) {
+    private function get_repeatees_html( array $data ) : string {
         $itemsClasses = ['repeater__items', 'jsAlchemyRepeaterItems'];
 
         if( isset( $data['repeater']['data']['field-types'] ) ) {
@@ -341,7 +341,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    private function get_repeatee_html( $data ) {
+    private function get_repeatee_html( array $data ) : string {
         $classes = [ 'repeatee', 'jsAlchemyRepeatee' ];
         $repeatee = $data['repeatee'];
         $meta = $repeatee['meta'];
@@ -351,9 +351,7 @@ class Field implements Field_Interface {
             'index' => $data['index']
         ) );
         $fieldsHTML = '';
-        $colorCode = isset( $data['colorcode'] )
-            ? $data['colorcode']
-            : array( 'enabled' => false, 'colors' => [] );
+        $colorCode = $data['colorcode'] ?? array('enabled' => false, 'colors' => []);
 
         if( ! empty( $data['renderOpen'] ) ) {
             $classes[] = 'repeatee--expanded';
@@ -384,7 +382,7 @@ class Field implements Field_Interface {
             break;
         }
 
-        $html .= $this->generate_actions_group( $meta, $colorCode );
+        $html .= $this->get_actions_group_html( $meta, $colorCode );
         $html .= sprintf( '<div class="repeatee__fields">%s</div>', $fieldsHTML );
 
         $html .= alch_get_validation_tooltip();
@@ -394,15 +392,15 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    private function modify_values( $data ) {
+    private function modify_values( array $data ) : array {
         $registeredRepeaters = Options::get_registered_repeaters();
         $settings = $registeredRepeaters[$data['repeater']['repeater-id']];
         $modifiedValues = [];
 
-        $neededFields = isset( $settings['fields'] ) ? $settings['fields'] : [];
+        $neededFields = $settings['fields'] ?? [];
 
         if( isset( $settings['field-types'] ) ) {
-            $repeateeType = isset( $data['repeatee']['meta']['id'] ) ? $data['repeatee']['meta']['id'] : null;
+            $repeateeType = $data['repeatee']['meta']['id'] ?? null;
 
             $foundFields = $this->get_fields_for_type( $settings, $repeateeType );
 
@@ -434,20 +432,20 @@ class Field implements Field_Interface {
         return $modifiedValues;
     }
 
-    private function get_fields_for_type( $settings, $type ) {
+    private function get_fields_for_type( array $settings, $type ) : array {
         return array_values( array_filter( $settings['field-types'], function( $fieldType ) use( $type ) {
             return $fieldType['id'] === $type;
         } ) )[0];
     }
 
-    private function get_add_new_button( $settings ) {
+    private function get_add_new_button_html( array $settings ) : string {
         $html = '<div class="repeater__add-new">';
 
         if( ! empty( $settings['field-types'] ) ) {
             $html .= '<div class="repeater__add-from-type">';
 
 			if( count( $settings['field-types'] ) > 10 ) {
-				$html .= $this->get_field_types_select( $settings );
+				$html .= $this->get_field_types_select_html( $settings );
 			} else {
 				$html .= sprintf( '<button type="button" class="%1$s">%2$s %3$s</button>%4$s',
 					'repeater__add-new button button-primary jsAlchemyRepeaterTypeTrigger',
@@ -457,7 +455,7 @@ class Field implements Field_Interface {
 				);
 
 				$html .= sprintf( '<div class="repeater__field-types jsAlchemyRepeaterFieldTypes">%s</div>',
-					$this->get_field_types_list( $settings )
+					$this->get_field_types_list_html( $settings )
 				);
 			}
 
@@ -475,7 +473,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    private function get_field_types_select( $data ) {
+    private function get_field_types_select_html( array $data ) : string {
 		$html = '<div class="repeater__select jsAlchRepeaterSelect"><select><option></option>';
 
 		foreach ( $data['field-types'] as $fieldType ) {
@@ -496,7 +494,7 @@ class Field implements Field_Interface {
 		return $html;
 	}
 
-    private function get_field_types_list( $data ) {
+    private function get_field_types_list_html( array $data ) : string {
 		$html = '<ul>';
 
 		foreach ( $data['field-types'] as $fieldType ) {
@@ -518,21 +516,19 @@ class Field implements Field_Interface {
 		return $html;
 	}
 
-    private function get_get_color_choices( $data ) {
+    private function get_get_color_choices_html( array $data ) : string {
         if( ! $data['enabled'] ) {
             return '';
         }
 
-        $html = sprintf( '<div class="repeater__color-choices">%s</div>',
+        return sprintf( '<div class="repeater__color-choices">%s</div>',
             join( '', array_map( function( $color ) {
                 return sprintf( '<button type="button" data-color="%1$s" class="repeater__color-choice jsRepeaterColorChoice" style="background-color: %1$s;"></button>', $color );
             }, $data['colors'] ) )
         );
-
-        return $html;
     }
 
-    private function security_checks( $body_params ) {
+    private function security_checks( array $body_params ) {
         if( empty( $body_params['_wpnonce'] ) || ! wp_verify_nonce( $body_params['_wpnonce'], 'wp_rest' ) ) {
             return rest_ensure_response( new WP_Error(
                 'alch-repeater-nonce-failure',
@@ -542,7 +538,7 @@ class Field implements Field_Interface {
         }
     }
 
-    private function get_fields_data( $settings ) {
+    private function get_fields_data( array $settings ) : array {
         $repeaterFieldsData = array();
 
         if( ! empty( $settings['field-types'] ) ) {
@@ -569,7 +565,7 @@ class Field implements Field_Interface {
         return $repeaterFieldsData;
     }
 
-    private function generate_actions_group( $meta = [], $colorCode = [] ) {
+    private function get_actions_group_html( array $meta = [], array $colorCode = [] ) : string {
         $toolbarClasses = ['repeatee__toolbar', 'jsAlchemyRepeateeToolbar', 'clearfix'];
 
         if( $colorCode['enabled'] ) {
@@ -583,8 +579,8 @@ class Field implements Field_Interface {
             ( ! empty( $meta ) && ! empty( $meta['title'] ) ) ? sprintf( '<small class="repeatee__type">%s</small>', $meta['title'] ) : ''
         );
 
-        $repeateeVisible = isset( $meta['visible'] ) ? $meta['visible'] : true;
-		$meta['label'] = isset( $meta['label'] ) ? $meta['label'] : '';
+        $repeateeVisible = $meta['visible'] ?? true;
+		$meta['label'] = $meta['label'] ?? '';
 
         $visibilityIcon = 'dashicons';
         $visibilityIconClasses = ['repeatee__btn', 'button', 'button-secondary', 'jsAlchemyRepeateeAction'];

@@ -22,7 +22,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_checkbox_image_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_checkbox_image_field',
             AlCHEMY_DIR_URL . 'fields/checkbox-image/scripts.min.js',
@@ -42,7 +42,7 @@ class Field implements Field_Interface {
         wp_enqueue_style( 'alch_checkbox_image_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'checkbox_image',
@@ -58,7 +58,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) || empty( $data['choices'] ) ) {
             return '';
         }
@@ -90,14 +90,14 @@ class Field implements Field_Interface {
             $labelClasses = ['checkbox__label', 'jsAlchemyCheckboxImageLabel'];
 
             if( empty( $savedValue ) ) {
-                $choice['checked'] = isset( $choice['checked'] ) ? $choice['checked'] : false;
+                $choice['checked'] = $choice['checked'] ?? false;
             } else {
                 $choice['checked'] = is_array( $savedValue )
                     ? in_array( $choice['value'], $savedValue )
                     : $choice['value'] === $savedValue;
             }
 
-            $choice['disabled'] = isset( $choice['disabled'] ) ? $choice['disabled'] : false;
+            $choice['disabled'] = $choice['disabled'] ?? false;
 
             if( $choice['checked'] ) {
                 $labelClasses[] = 'checkbox__label--active';
@@ -135,7 +135,7 @@ class Field implements Field_Interface {
         return sanitize_text_field( $value );
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_checkbox_image_value', '', $value );
 
         if( empty( $error ) ) {

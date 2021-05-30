@@ -23,7 +23,7 @@ class Field implements Field_Interface {
         add_filter( 'alch_validate_field_group_value', array( $this, 'validate_value' ), 10, 2 );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_field_group_field',
             AlCHEMY_DIR_URL . 'fields/field-group/scripts.min.js',
@@ -35,7 +35,7 @@ class Field implements Field_Interface {
         wp_enqueue_script( 'alch_field_group_field' );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'field_group',
@@ -51,7 +51,7 @@ class Field implements Field_Interface {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['id'] ) ) {
             return '';
         }
@@ -117,7 +117,7 @@ class Field implements Field_Interface {
         return $html;
     }
 
-    function sanitize_value( $value ) {
+    function sanitize_value( $value ) : array {
         $sanitisedValues = [];
 
         foreach ( $value as $field ) {
@@ -138,7 +138,7 @@ class Field implements Field_Interface {
         return $sanitisedValues;
     }
 
-    function validate_value( $id, $value ) {
+    function validate_value( $id, $value ) : array {
         $error = apply_filters( 'alch_do_validate_field_group_value', '', $value );
 
         if( empty( $error ) ) {
@@ -155,7 +155,7 @@ class Field implements Field_Interface {
         return array( 'is_valid' => true );
     }
 
-    function prepare_value( $value, $id ) {
+    function prepare_value( $value, $id ) : array {
         $preparedValue = [];
 
         foreach ( $value as $item ) {

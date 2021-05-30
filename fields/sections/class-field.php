@@ -20,7 +20,7 @@ class Field {
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
     }
 
-    function enqueue_assets() {
+    function enqueue_assets() : void {
         wp_register_script(
             'alch_sections_field',
             AlCHEMY_DIR_URL . 'fields/sections/scripts.min.js',
@@ -40,11 +40,11 @@ class Field {
         wp_enqueue_style( 'alch_sections_field' );
     }
 
-    function add_as_ok_if_no_id( $types ) {
+    function add_as_ok_if_no_id( array $types ) : array {
         return array_merge( $types, ['sections'] );
     }
 
-    function register_type( $types ) {
+    function register_type( array $types ) : array {
         $myTypes = array(
             array(
                 'id' => 'sections',
@@ -60,7 +60,7 @@ class Field {
         return array_merge( $types, $myTypes );
     }
 
-    function get_option_html( $data, $savedValue, $type ) {
+    function get_option_html( array $data, $savedValue, string $type ) : string {
         if( empty( $data['sections'] ) ) {
             return '';
         }
@@ -71,7 +71,7 @@ class Field {
         );
 
         $html .= sprintf( '<div class="field__content clearfix">%s</div>',
-            $this->create_sections_fields( $data['sections'], $type )
+            $this->get_sections_fields_html( $data['sections'], $type )
         );
 
         $html .= '</div>';
@@ -79,7 +79,7 @@ class Field {
         return $html;
     }
 
-    private function create_sections_fields( $sections, $type ) {
+    private function get_sections_fields_html( array $sections, string $type ) : string {
         $navHTML = '<div class="field__tabs-nav jsAlchemySectionsNav">';
         $tabsHTML = '<div class="field__tabs jsAlchemySectionsTabs">';
 
