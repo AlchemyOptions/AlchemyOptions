@@ -15,37 +15,11 @@
 
 namespace Alchemy;
 
-use Alchemy\Fields\Upload;
-use Alchemy\Fields\Textblock;
-use Alchemy\Fields\Url;
-use Alchemy\Fields\Textarea;
-use Alchemy\Fields\Text;
-use Alchemy\Fields\Tel;
-use Alchemy\Fields\Taxonomy_Select;
-use Alchemy\Fields\Slider;
-use Alchemy\Fields\Select;
-use Alchemy\Fields\Sections;
-use Alchemy\Fields\Radio;
-use Alchemy\Fields\Post_Type_Select;
-use Alchemy\Fields\Password;
-use Alchemy\Fields\Email;
-use Alchemy\Fields\Editor;
-use Alchemy\Fields\Datepicker;
-use Alchemy\Fields\Tokens;
-use Alchemy\Fields\Datalist;
-use Alchemy\Fields\Colorpicker;
-use Alchemy\Fields\Checkbox_Image;
-use Alchemy\Fields\Checkbox;
-use Alchemy\Fields\Button_Group;
-use Alchemy\Fields\Field_Group;
-use Alchemy\Fields\Spacer;
-use Alchemy\Fields\Repeater;
-
+use Alchemy\Fields\{ Upload, Textblock, Url, Textarea, Text, Tel, Taxonomy_Select, Slider, Select, Sections, Radio, Post_Type_Select, Password, Email, Editor, Datepicker, Tokens, Datalist, Colorpicker, Checkbox_Image, Checkbox, Button_Group, Field_Group, Spacer, Repeater };
 use Alchemy\Includes;
 use WP_Admin_Bar;
 use WP_Error;
 use WP_REST_Request;
-use WP_REST_Response;
 use WP_REST_Server;
 
 if( ! defined( 'ABSPATH' ) ) {
