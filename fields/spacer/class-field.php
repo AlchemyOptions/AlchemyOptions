@@ -59,6 +59,13 @@ class Field implements Field_Interface {
     }
 
     function get_option_html( array $data, $savedValue, string $type ) : string {
+        $data['default'] = $data['default'] ?? array(
+            'top' => 0,
+            'right' => 0,
+            'bottom' => 0,
+            'left' => 0
+        );
+
         $html = sprintf( '<div class="alchemy__field field field--%1$s spacer clearfix jsAlchemyField" data-alchemy="%2$s" id="%3$s">',
             $data['type'],
             esc_attr( json_encode( array(
@@ -86,7 +93,7 @@ class Field implements Field_Interface {
 
             $value = ! empty( $savedValue )
                 ? esc_attr( $savedValue[$side] )
-                : '0';
+                : esc_attr( $data['default'][$side] );
 
             $html .= '<div class="spacer__controls">';
 
