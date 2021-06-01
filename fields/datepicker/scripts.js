@@ -30,8 +30,8 @@
 
         let datepickerSettings = {};
 
-        if( AlchemyDatepickersData && AlchemyDatepickersData[$datepicker.attr('id')] ) {
-            datepickerSettings = AlchemyDatepickersData[$datepicker.attr('id')];
+        if( 'undefined' !== typeof ( window.AlchemyDatepickersData ) && window.AlchemyDatepickersData[$datepicker.attr('id')] ) {
+            datepickerSettings = window.AlchemyDatepickersData[$datepicker.attr('id')];
         }
 
         const settings = $.extend({}, defaultSettings, datepickerSettings);
