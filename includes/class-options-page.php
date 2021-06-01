@@ -78,15 +78,19 @@ class Options_Page {
         echo '<div class="alchemy jsAlchemy">';
 
         do_action( 'alch_output_before_options_tabs' );
+        do_action( 'alch_' . $this->page['id'] . '_output_before_options_tabs' );
 
         echo $this->get_tabs_html( $this->page );
 
         if( empty( $filteredOptions ) ) {
-            $noOptionsDefaultContent = sprintf( '<p>%s</p>',
+            $noOptionsDefaultHTML = sprintf( '<p>%s</p>',
                 __( 'Looks like there are no options to show.', 'alchemy' )
             );
 
-            echo apply_filters( 'alch_output_no_options', $noOptionsDefaultContent );
+            $noOptionsFilteredHTML = apply_filters( 'alch_output_no_options', $noOptionsDefaultHTML );
+            $noOptionsHTML = apply_filters( 'alch_' . $this->page['id'] . '_output_no_options', $noOptionsFilteredHTML );
+
+            echo $noOptionsHTML;
 
             echo '</div></div>'; // need to close .wrap and .alchemy earlier
 
@@ -94,6 +98,7 @@ class Options_Page {
         }
 
         do_action( 'alch_output_before_options' );
+        do_action( 'alch_' . $this->page['id'] . '_output_before_options' );
 
         printf( '<button type="button" class="button button-primary jsAlchemySaveOptions">%1$s</button><img src="%2$s" class="alchemy__spinner alchemy__spinner--hidden jsAlchemyLoader" width="20" height="20" />',
             __( 'Save options', 'alchemy' ),
@@ -105,6 +110,7 @@ class Options_Page {
         );
 
         do_action( 'alch_output_after_options' );
+        do_action( 'alch_' . $this->page['id'] . '_output_after_options' );
 
         printf( '<button type="button" class="button button-primary jsAlchemySaveOptions">%1$s</button>%2$s',
             __( 'Save options', 'alchemy' ),
@@ -112,6 +118,7 @@ class Options_Page {
         );
 
         do_action( 'alch_output_after_save_button' );
+        do_action( 'alch_' . $this->page['id'] . '_output_after_save_button' );
 
         echo '</div>';
         echo '</div>';
@@ -129,15 +136,19 @@ class Options_Page {
         echo '<div class="alchemy jsAlchemy">';
 
         do_action( 'alch_output_before_options_tabs' );
+        do_action( 'alch_' . $this->page['id'] . '_output_before_options_tabs' );
 
         echo $this->get_tabs_html( $this->page );
 
         if( empty( $filteredOptions ) ) {
-            $noOptionsDefaultContent = sprintf( '<p>%s</p>',
+            $noOptionsDefaultHTML = sprintf( '<p>%s</p>',
                 __( 'Looks like there are no options to show.', 'alchemy' )
             );
 
-            echo apply_filters( 'alch_output_no_options', $noOptionsDefaultContent );
+            $noOptionsFilteredHTML = apply_filters( 'alch_output_no_options', $noOptionsDefaultHTML );
+            $noOptionsHTML = apply_filters( 'alch_' . $this->page['id'] . '_output_no_options', $noOptionsFilteredHTML );
+
+            echo $noOptionsHTML;
 
             echo '</div></div>'; // need to close .wrap and .alchemy earlier
 
@@ -145,6 +156,7 @@ class Options_Page {
         }
 
         do_action( 'alch_output_before_options' );
+        do_action( 'alch_' . $this->page['id'] . '_output_before_options' );
 
         printf( '<button type="button" class="button button-primary jsAlchemySaveOptions">%1$s</button><img src="%2$s" class="alchemy__spinner alchemy__spinner--hidden jsAlchemyLoader" width="20" height="20" />',
             __( 'Save options', 'alchemy' ),
@@ -156,6 +168,7 @@ class Options_Page {
         );
 
         do_action( 'alch_output_after_options' );
+        do_action( 'alch_' . $this->page['id'] . '_output_after_options' );
 
         printf( '<button type="button" class="button button-primary jsAlchemySaveOptions" data-type="network">%1$s</button>%2$s',
             __( 'Save options', 'alchemy' ),
@@ -163,6 +176,7 @@ class Options_Page {
         );
 
         do_action( 'alch_output_after_save_button' );
+        do_action( 'alch_' . $this->page['id'] . '_output_after_save_button' );
 
         echo '</div>';
         echo '</div>';
