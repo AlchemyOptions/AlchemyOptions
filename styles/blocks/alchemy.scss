@@ -48,6 +48,10 @@
 
     &__metabox {
         padding: 2em 0;
+
+        .select2-container {
+            min-width: 200px;
+        }
     }
 
     &__tabs {
