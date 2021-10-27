@@ -977,7 +977,7 @@ class Options {
 
     private static function register_types( array $types ) : void {
         if( empty( $types ) ) {
-            self::$registeredTypes = [];
+            self::$registeredTypes = self::$registeredTypes ?? [];
 
             return;
         }
@@ -995,7 +995,7 @@ class Options {
 
     private static function register_repeater_types( array $types ) : void {
         if( empty( $types ) ) {
-            self::$registeredRepeaters = [];
+            self::$registeredRepeaters = self::$registeredRepeaters ?? [];
 
             return;
         }
