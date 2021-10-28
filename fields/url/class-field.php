@@ -82,7 +82,7 @@ class Field implements Field_Interface {
     }
 
     function sanitize_value( $value ) : string {
-        return sanitize_text_field( $value );
+        return esc_url_raw( $value );
     }
 
     function validate_value( $id, $value ) : array {
