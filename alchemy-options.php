@@ -1012,7 +1012,7 @@ class Options {
     }
 }
 
-add_action( 'after_setup_theme', function() {
+add_action( 'init', function() {
     if( wp_doing_ajax() ) {
         return;
     }
