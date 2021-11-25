@@ -151,10 +151,12 @@
             $postBox.find('.handle-order-lower').remove();
 
             if( $postForm[0] ) {
-                $('#publish').on('click', function(e) {
-                    $(this).attr('disabled', true);
+                $('#publish').one('click', function(e) {
+                    const $trigger = $(this);
 
-                    save_metadata($postForm);
+                    $trigger.attr('disabled', true);
+
+                    save_metadata($trigger);
 
                     e.preventDefault();
                 });
@@ -242,7 +244,7 @@
             }
         }
 
-        function save_metadata($postForm) {
+        function save_metadata($trigger) {
             const $fields = $metaboxes.children('.metabox__fields').children('.jsAlchemyField');
             const constrFields = [];
 
@@ -283,8 +285,8 @@
                     contentType: false,
                     data: data,
                     success: () => {
-                        if( $postForm && $postForm[0] ) {
-                            $postForm.submit();
+                        if( $trigger && $trigger[0] ) {
+                            $trigger.removeAttr('disabled').click();
                         }
                     }
                 });
