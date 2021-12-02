@@ -151,14 +151,14 @@
             $postBox.find('.handle-order-lower').remove();
 
             if( $postForm[0] ) {
-                $('#publish').one('click', function(e) {
+                $('#publish, #save-post').one('click', function(e) {
+                    e.preventDefault();
+
                     const $trigger = $(this);
 
                     $trigger.attr('disabled', true);
 
                     save_metadata($trigger);
-
-                    e.preventDefault();
                 });
             } else if( wp.data && wp.data.subscribe ) {
                 let saved = true; // helps against multiple save calls
