@@ -14,6 +14,16 @@ if( class_exists( __NAMESPACE__ . '\Field' ) ) {
 
 class Field implements Field_Interface {
     function __construct() {
+        // default the_content filters from wp-includes/default-filters.php except for wpautop
+        add_filter( 'alch_editor_content', 'wptexturize' );
+        add_filter( 'alch_editor_content', 'convert_smilies', 20 );
+        add_filter( 'alch_editor_content', 'shortcode_unautop' );
+        add_filter( 'alch_editor_content', 'prepend_attachment' );
+        add_filter( 'alch_editor_content', 'do_shortcode', 11 );
+        add_filter( 'alch_editor_content', 'wp_filter_content_tags' );
+        add_filter( 'alch_editor_content', 'wp_replace_insecure_home_url' );
+        add_filter( 'alch_editor_content', array( $this, 'autop' ) );
+        add_filter( 'alch_editor_content', array( $this, 'unwrap_editor_images' ) );
         add_filter( 'alch_register_field_type', array( $this, 'register_type' ) );
         add_filter( 'alch_get_editor_option_html', array( $this, 'get_option_html' ), 10, 3 );
         add_filter( 'alch_sanitize_editor_value', array( $this, 'sanitize_value' ) );
@@ -116,20 +126,28 @@ class Field implements Field_Interface {
     }
 
     function prepare_value( $value, $id ) : string {
-        $modifiedValue = apply_filters( 'the_content', wp_specialchars_decode( $value ) );
-
-        if( apply_filters( 'alch_autop_editor_value', '__return_true' ) ) {
-            $modifiedValue = wpautop( $modifiedValue );
-        }
-
-        if( apply_filters( 'alch_unwrap_editor_images', '__return_false' ) ) {
-            $modifiedValue = $this->filter_ptags_on_images( $modifiedValue );
-        }
+        $modifiedValue = apply_filters( 'alch_editor_content', wp_specialchars_decode( $value ) );
 
         $validValue = apply_filters( 'alch_prepared_editor_value', $modifiedValue );
         $validValue = apply_filters( "alch_prepared_{$id}_value", $validValue );
 
         return $validValue;
+    }
+
+    function autop( $content ) : string {
+        if( apply_filters( 'alch_autop_editor_value', '__return_true' ) ) {
+            return wpautop( $content );
+        }
+
+        return $content;
+    }
+
+    function unwrap_editor_images( $content ) : string {
+        if( apply_filters( 'alch_unwrap_editor_images', '__return_false' ) ) {
+            return $this->filter_ptags_on_images( $content );
+        }
+
+        return $content;
     }
 
     private function filter_ptags_on_images( $content ) : string {
