@@ -144,13 +144,9 @@ class Field implements Field_Interface {
 
     function unwrap_editor_images( $content ) : string {
         if( apply_filters( 'alch_unwrap_editor_images', '__return_false' ) ) {
-            return $this->filter_ptags_on_images( $content );
+            return preg_replace( '/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content );
         }
 
         return $content;
-    }
-
-    private function filter_ptags_on_images( $content ) : string {
-        return preg_replace( '/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content );
     }
 }
