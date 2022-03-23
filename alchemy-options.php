@@ -1018,4 +1018,4 @@ add_action( 'init', function() {
     }
 
     new Options();
-} );
+}, apply_filters( 'alch_init_priority', 11 ) );
