@@ -31,7 +31,7 @@
         const fieldData = $select.data('alchemy');
         const ptsData = AlchemyTaxonomySelectData['search'];
         const currentUrl = new URL(window.location.href);
-        const pageID = currentUrl.searchParams.get('page');
+        const pageID = currentUrl.searchParams.get('page') || currentUrl.searchParams.get('post');
 
         $select.select2({
             language: fieldData.locale,

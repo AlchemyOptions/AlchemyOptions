@@ -19,7 +19,7 @@
 
         const $alchOptions = $('.jsAlchemyOptions');
         const currentUrl = new URL(window.location.href);
-        const pageID = currentUrl.searchParams.get('page');
+        const pageID = currentUrl.searchParams.get('page') || currentUrl.searchParams.get('post');
         const data = new FormData();
         const popperInstances = {};
 
