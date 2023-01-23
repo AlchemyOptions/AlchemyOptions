@@ -92,8 +92,8 @@ class Field implements Field_Interface {
             if( empty( $savedValue ) ) {
                 $choice['checked'] = $choice['checked'] ?? false;
             } else {
-                $choice['checked'] = is_array( $savedValue )
-                    ? in_array( $choice['value'], $savedValue )
+                $choice['checked'] = is_array($savedValue)
+                    ? in_array( $choice['value'], $savedValue ) || ( $choice['checked'] ?? false )
                     : $choice['value'] === $savedValue;
             }
 
