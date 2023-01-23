@@ -322,8 +322,8 @@ class Options {
             return;
         }
 
-        wp_register_script( 'alch_popper', AlCHEMY_DIR_URL . 'scripts/vendor/popper.min.js', true, '2.4.0' );
-        wp_register_script( 'alch_bluebird', AlCHEMY_DIR_URL . 'scripts/vendor/bluebird.min.js', true, '3.5.0' );
+        wp_register_script( 'alch_popper', AlCHEMY_DIR_URL . 'scripts/vendor/popper.min.js', [], '2.4.0' );
+        wp_register_script( 'alch_bluebird', AlCHEMY_DIR_URL . 'scripts/vendor/bluebird.min.js', [], '3.5.0' );
 
         wp_register_script(
             'alch_admin_scripts',
