@@ -89,6 +89,10 @@ class Field implements Field_Interface {
                 sanitize_title( $choice['value'] )
             ) );
 
+            if( isset( $choice['checked'] ) ) {
+                $choice['readonly'] = $choice['checked'];
+            }
+
             if( empty( $savedValue ) ) {
                 $choice['checked'] = $choice['checked'] ?? false;
             } else {
@@ -99,12 +103,19 @@ class Field implements Field_Interface {
 
             $choice['disabled'] = $choice['disabled'] ?? false;
 
-            $html .= sprintf( '<label class="checkbox__label" for="%1$s"><input id="%1$s" name="%2$s" type="checkbox" data-value="%3$s"%4$s%5$s />%6$s</label><br>',
+            $readonly = '';
+
+            if( isset( $choice['readonly'] ) ) {
+                $readonly = ' readonly onclick="return false;"';
+            }
+
+            $html .= sprintf( '<label class="checkbox__label" for="%1$s"><input id="%1$s" name="%2$s" type="checkbox" data-value="%3$s"%4$s%5$s%6$s />%7$s</label><br>',
                 $checkboxID,
                 $data['id'] . '[]',
                 esc_attr( $choice['value'] ),
                 disabled( $choice['disabled'], true, false ),
                 checked( $choice['checked'], true, false ),
+                $readonly,
                 $choice['label']
             );
         }
