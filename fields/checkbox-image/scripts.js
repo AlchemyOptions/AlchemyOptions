@@ -38,7 +38,7 @@
 
             const $label = $(this);
 
-            if( $label.hasClass( 'checkbox__label--disabled' ) ) {
+            if( $label.hasClass( 'checkbox__label--disabled' ) || $label.hasClass( 'checkbox__label--readonly' ) ) {
                 return;
             }
 

@@ -89,12 +89,22 @@ class Field implements Field_Interface {
 
             $labelClasses = ['checkbox__label', 'jsAlchemyCheckboxImageLabel'];
 
+            if( isset( $choice['checked'] ) ) {
+                $choice['readonly'] = $choice['checked'];
+            }
+
             if( empty( $savedValue ) ) {
                 $choice['checked'] = $choice['checked'] ?? false;
             } else {
                 $choice['checked'] = is_array( $savedValue )
-                    ? in_array( $choice['value'], $savedValue )
+                    ? in_array( $choice['value'], $savedValue ) || ( $choice['checked'] ?? false )
                     : $choice['value'] === $savedValue;
+            }
+
+            $readonly = '';
+
+            if( isset( $choice['readonly'] ) ) {
+                $readonly = ' readonly onclick="return false;"';
             }
 
             $choice['disabled'] = $choice['disabled'] ?? false;
@@ -106,14 +116,19 @@ class Field implements Field_Interface {
             if( $choice['disabled'] ) {
                 $labelClasses[] = 'checkbox__label--disabled';
             }
+            
+            if( ! empty( $choice['readonly'] ) ) {
+                $labelClasses[] = 'checkbox__label--readonly';
+            }
 
-            $html .= sprintf( '<input id="%2$s" name="%3$s" type="checkbox" data-value="%4$s"%5$s%6$s /><label class="%1$s" for="%2$s"><img src="%7$s" alt="" /></label>',
+            $html .= sprintf( '<input id="%2$s" name="%3$s" type="checkbox" data-value="%4$s"%5$s%6$s%7$s /><label class="%1$s" for="%2$s"><img src="%8$s" alt="" /></label>',
                 join( ' ', $labelClasses ),
                 $checkboxID,
                 $data['id'] . '[]',
                 esc_attr( $choice['value'] ),
                 disabled( $choice['disabled'], true, false ),
                 checked( $choice['checked'], true, false ),
+                $readonly,
                 $choice['image']
             );
         }
